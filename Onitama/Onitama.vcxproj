@@ -147,12 +147,20 @@
   <ItemGroup>
     <ClCompile Include="Board.cpp" />
     <ClCompile Include="Color.cpp" />
+    <ClCompile Include="Game.cpp" />
     <ClCompile Include="Onitama.cpp" />
+    <ClCompile Include="Piece.cpp" />
+    <ClCompile Include="Player.cpp" />
+    <ClCompile Include="Vector2.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Board.h" />
     <ClInclude Include="Color.h" />
     <ClInclude Include="Defines.h" />
+    <ClInclude Include="Game.h" />
+    <ClInclude Include="Piece.h" />
+    <ClInclude Include="Player.h" />
+    <ClInclude Include="Vector2.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

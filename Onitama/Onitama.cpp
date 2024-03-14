@@ -1,6 +1,6 @@
 #include <iostream>
 #include "SDL.h"
-#include "Board.h"
+#include "Game.h"
 #include "Color.h"
 #include "Defines.h"
 
@@ -16,8 +16,9 @@ int main(int argc, char* argv[])
 		if (SDL_CreateWindowAndRenderer(WINDOWWIDTHSIZE, WINDOWLENGTHSIZE, 0, &window, &renderer) == 0)
 		{
 			SDL_bool done = SDL_FALSE;
-			Board* board = new Board();
-			board->InitBoard(renderer);
+
+			Game* game = new Game();
+			game->InitGame(renderer, window);
 
 			while (!done)
 			{

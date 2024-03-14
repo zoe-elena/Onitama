@@ -2,6 +2,11 @@
 
 #define DEFINES_H
 #define BOARDSIZE 5
+#define PLAYERS 2
+#define STUDENTS 4
+#define MASTER 1
+enum E_PLAYERCOLOR { red, blue };
+enum E_PIECETYPE { master, student };
 
 #define TILESIZE 100
 #define SIDEPANELWIDTH 250
