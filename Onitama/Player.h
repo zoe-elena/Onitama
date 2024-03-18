@@ -10,7 +10,8 @@ private:
 public:
 	Player(E_PLAYERCOLOR _color);
 
-	void SetInitStudentPositions();
+	void SetInitPiecePositions();
+	void InitPlayerPieces();
 
 	inline E_PLAYERCOLOR GetColor() { return color; }
 

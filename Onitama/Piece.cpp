@@ -1,11 +1,11 @@
+#include "Player.h"
 #include "Piece.h"
 
-Piece::Piece(Vector2 _position) {
-	position = _position;
-}
+Piece::Piece(Player* _player, E_PIECETYPE _type, Vector2 _position) : player(_player), type(_type), position(_position) { }
 
-Piece::Piece() {
-	position = Vector2(-1, -1);
+E_PLAYERCOLOR Piece::GetColor()
+{
+	return player->GetColor();
 }
 
 bool Piece::isOnBoard() {

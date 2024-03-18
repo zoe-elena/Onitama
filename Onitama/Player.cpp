@@ -1,12 +1,12 @@
 #include "Player.h"
 
-Player::Player(E_PLAYERCOLOR _color)
+Player::Player(E_PLAYERCOLOR _color) : color(_color)
 {
-	color = _color;
-	SetInitStudentPositions();
+	SetInitPiecePositions();
+	InitPlayerPieces();
 }
 
-void Player::SetInitStudentPositions()
+void Player::SetInitPiecePositions()
 {
 	switch (color)
 	{
@@ -34,3 +34,10 @@ void Player::SetInitStudentPositions()
 	}
 }
 
+void Player::InitPlayerPieces()
+{
+	for (int u = 0; u < InitStudentPositions.size(); u++) {
+		PlayerPieces.push_back(Piece(this, student, InitStudentPositions[u]));
+	}
+	PlayerPieces.push_back(Piece(this, master, InitMasterPosition));
+}
