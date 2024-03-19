@@ -1,16 +1,17 @@
 #include "Game.h"
 #include "Defines.h"
 
-Game::Game() { }
+Game::Game(SDL_Renderer* _SDLRenderer)
+{
+	InitGame(_SDLRenderer);
+}
 
 void Game::InitGame(SDL_Renderer* _SDLRenderer)
 {
 	SDLRenderer = _SDLRenderer;
-	// Create Players
 	playerRed = new Player(red);
 	playerBlue = new Player(blue);
-
-	// Create Renderer
+	tilemanager = new Tilemanager();
 	renderer = new Renderer(_SDLRenderer, this);
 }
 

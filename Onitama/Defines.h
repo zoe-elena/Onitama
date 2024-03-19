@@ -5,8 +5,12 @@
 #define PLAYERS 2
 #define STUDENTS 4
 #define MASTER 1
-enum E_PLAYERCOLOR { red, blue };
-enum E_PIECETYPE { master, student };
+#define TEMPLEREDX BOARDSIZE / 2
+#define TEMPLEREDY 0
+#define TEMPLEBLUEX BOARDSIZE / 2
+#define TEMPLEBLUEY BOARDSIZE - 1
+enum E_PLAYERCOLOR { grey, red, blue };
+enum E_PIECETYPE { DEFAULT, master, student };
 
 #define TILESIZE 100
 #define SIDEPANELWIDTH 250

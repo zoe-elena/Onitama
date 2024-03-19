@@ -13,8 +13,7 @@ int main(int argc, char* argv[])
 
 		if (SDL_CreateWindowAndRenderer(WINDOWWIDTHSIZE, WINDOWLENGTHSIZE, 0, &SDLWindow, &SDLRenderer) == 0)
 		{
-			Game* game = new Game();
-			game->InitGame(SDLRenderer);
+			Game* game = new Game(SDLRenderer);
 
 			while (game->HasQuit() == SDL_FALSE)
 			{
