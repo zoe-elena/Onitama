@@ -13,12 +13,16 @@ Renderer::~Renderer()
 	SDL_DestroyTexture(textureMaster);
 }
 
-void Renderer::RenderGame()
+void Renderer::DrawGame()
 {
 	DrawBackground(backgroundColor);
 	DrawTiles(tileColor);
 	InitPlayerPieces(game->GetPlayerRed());
 	InitPlayerPieces(game->GetPlayerBlue());
+}
+
+void Renderer::RenderGame()
+{
 	SDL_RenderPresent(SDLRenderer);
 }
 
@@ -80,11 +84,10 @@ void Renderer::DrawTemple(const int _xIndex, const int _yIndex)
 	Tile.w = TILESIZE;
 	Tile.h = TILESIZE;
 
-	Color color = GetPlayerColor(game->GetTile(_xIndex, _yIndex)->GetTemple()->GetColor());
+	Color color = GetTempleColor(game->GetTile(_xIndex, _yIndex)->GetTemple()->GetColor());
 	SDL_SetTextureColorMod(textureTemple, color.r, color.g, color.b);
 	SDL_RenderCopy(SDLRenderer, textureTemple, nullptr, &Tile);
 }
-
 
 void Renderer::InitPlayerPieces(Player* _player)
 {
@@ -94,17 +97,17 @@ void Renderer::InitPlayerPieces(Player* _player)
 }
 
 
-void Renderer::DrawSinglePiece(Piece _piece)
+void Renderer::DrawSinglePiece(Piece* _piece)
 {
 	SDL_SetRenderDrawColor(SDLRenderer, 255, 0, 0, SDL_ALPHA_OPAQUE);
 	SDL_Rect Tile;
-	Tile.x = SIDEPANELWIDTH + TILEPADDING + _piece.GetXIndex() * TILESIZE + _piece.GetXIndex() * TILEPADDING;
-	Tile.y = CARDPANELHEIGHT + TILEPADDING + _piece.GetYIndex() * TILESIZE + _piece.GetYIndex() * TILEPADDING;
+	Tile.x = SIDEPANELWIDTH + TILEPADDING + _piece->GetXIndex() * TILESIZE + _piece->GetXIndex() * TILEPADDING;
+	Tile.y = CARDPANELHEIGHT + TILEPADDING + _piece->GetYIndex() * TILESIZE + _piece->GetYIndex() * TILEPADDING;
 	Tile.w = TILESIZE;
 	Tile.h = TILESIZE;
 
 	SDL_Texture* texture;
-	if (_piece.GetType() == master)
+	if (_piece->GetType() == master)
 	{
 		texture = textureMaster;
 	}
@@ -113,20 +116,55 @@ void Renderer::DrawSinglePiece(Piece _piece)
 		texture = textureStudent;
 	}
 
-	Color color = GetPlayerColor(_piece.GetOwnerPlayer()->GetColor());
+	Color color = GetPieceColor(_piece);
 	SDL_SetTextureColorMod(texture, color.r, color.g, color.b);
 	SDL_RenderCopy(SDLRenderer, texture, nullptr, &Tile);
 }
 
-Color Renderer::GetPlayerColor(E_PLAYERCOLOR _playerColor)
+Color Renderer::GetPieceColor(Piece* _piece)
 {
-	if (_playerColor == red)
+	E_PLAYERCOLOR playerColor = _piece->GetOwnerPlayer()->GetColor();
+	bool isHovered = _piece->GetIsHovered();
+
+	if (isHovered)
 	{
-		return redPlayerColor;
+		if (playerColor == red)
+		{
+			return redPieceColorHovered;
+		}
+		else if (playerColor == blue)
+		{
+			return bluePieceColorHovered;
+		}
+		else {
+			return Color::White();
+		}
 	}
-	else if (_playerColor == blue)
+	else
 	{
-		return bluePlayerColor;
+		if (playerColor == red)
+		{
+			return redPieceColor;
+		}
+		else if (playerColor == blue)
+		{
+			return bluePieceColor;
+		}
+		else {
+			return Color::White();
+		}
+	}
+}
+
+Color Renderer::GetTempleColor(E_PLAYERCOLOR _templeColor)
+{
+	if (_templeColor == red)
+	{
+		return redPieceColor;
+	}
+	else if (_templeColor == blue)
+	{
+		return bluePieceColor;
 	}
 	else {
 		return Color::White();

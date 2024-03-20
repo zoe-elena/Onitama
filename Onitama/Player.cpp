@@ -3,7 +3,6 @@
 Player::Player(E_PLAYERCOLOR _color) : color(_color)
 {
 	SetInitPiecePositions();
-	InitPlayerPieces();
 }
 
 void Player::SetInitPiecePositions()
@@ -37,7 +36,7 @@ void Player::SetInitPiecePositions()
 void Player::InitPlayerPieces()
 {
 	for (int u = 0; u < InitStudentPositions.size(); u++) {
-		PlayerPieces.push_back(Piece(this, student, InitStudentPositions[u]));
+		PlayerPieces.push_back(new Piece(this, student, InitStudentPositions[u]));
 	}
-	PlayerPieces.push_back(Piece(this, master, InitMasterPosition));
+	PlayerPieces.push_back(new Piece(this, master, InitMasterPosition));
 }

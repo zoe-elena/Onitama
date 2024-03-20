@@ -17,8 +17,11 @@ public:
 	Tile();
 	Tile(Vector2 _index, Temple* _tempel);
 
-	inline bool GetIsOccupied() const { return piece; }
+	inline bool GetIsOccupied() const { return piece != nullptr; }
 	inline Player* GetOccupyingPlayer() const { return piece->GetOwnerPlayer(); }
+
+	inline Piece* GetPiece() const { return piece; }
+	inline void SetPiece(Piece* _piece) { piece = _piece; }
 
 	inline bool HasTemple() const { return temple; }
 	inline Temple* GetTemple() const { return temple; }

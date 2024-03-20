@@ -145,6 +145,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="InputManager.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="Color.cpp" />
     <ClCompile Include="Game.cpp" />
@@ -153,10 +154,11 @@
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Temple.cpp" />
     <ClCompile Include="Tile.cpp" />
-    <ClCompile Include="Tilemanager.cpp" />
+    <ClCompile Include="TileManager.cpp" />
     <ClCompile Include="Vector2.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="InputManager.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="Color.h" />
     <ClInclude Include="Defines.h" />
@@ -165,7 +167,7 @@
     <ClInclude Include="Player.h" />
     <ClInclude Include="Temple.h" />
     <ClInclude Include="Tile.h" />
-    <ClInclude Include="Tilemanager.h" />
+    <ClInclude Include="TileManager.h" />
     <ClInclude Include="Vector2.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

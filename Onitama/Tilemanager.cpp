@@ -1,30 +1,31 @@
-#include "Tilemanager.h"
+#include "TileManager.h"
 #include "Player.h"
+#include <iostream>
 
-Tilemanager::Tilemanager()
+TileManager::TileManager()
 {
 	InitializeTiles();
 }
 
-void Tilemanager::InitializeTiles()
+void TileManager::InitializeTiles()
 {
 	for (int y = 0; y < BOARDSIZE; y++) {
 		for (int x = 0; x < BOARDSIZE; x++) {
-			Temple* tempel = nullptr;
+			Temple* temple = nullptr;
 			if (x == TEMPLEREDX && y == TEMPLEREDY)
 			{
-				tempel = new Temple(red);
+				temple = new Temple(red);
 			}
 			else if (x == TEMPLEBLUEX && y == TEMPLEBLUEY)
 			{
-				tempel = new Temple(blue);
+				temple = new Temple(blue);
 			}
-			tiles[x][y] = Tile(Vector2(x, y), tempel);
+			tiles[x][y] = Tile(Vector2(x, y), temple);
 		}
 	}
 }
 
-Tile* Tilemanager::GetTile(const int _xIndex, const int _yIndex)
+Tile* TileManager::GetTile(const int _xIndex, const int _yIndex)
 {
 	if (IsInBounds(_xIndex, _yIndex))
 	{
@@ -35,25 +36,44 @@ Tile* Tilemanager::GetTile(const int _xIndex, const int _yIndex)
 	}
 }
 
-bool Tilemanager::IsInBounds(const int _xIndex, const int _yIndex) const {
-	if (_xIndex < BOARDSIZE)
+bool TileManager::IsInBounds(const int _xIndex, const int _yIndex) const {
+	if ((_xIndex < BOARDSIZE) && (_xIndex >= 0) && (_yIndex < BOARDSIZE) && (_yIndex >= 0))
+	{
 		return true;
-	if (_xIndex >= 0)
-		return true;
-	if (_yIndex < BOARDSIZE)
-		return true;
-	if (_yIndex >= 0)
-		return true;
-
-	return false;
+	}
+	else
+	{
+		return false;
+	}
 }
 
-bool Tilemanager::HasTemple(const int _xIndex, const int _yIndex) const
+bool TileManager::HasTemple(const int _xIndex, const int _yIndex) const
 {
 	return tiles[_xIndex][_yIndex].HasTemple();
 }
 
-E_PLAYERCOLOR Tilemanager::GetTempleColor(const int _xIndex, const int _yIndex) const
+E_PLAYERCOLOR TileManager::GetTempleColor(const int _xIndex, const int _yIndex) const
 {
 	return tiles[_xIndex][_yIndex].GetOccupyingPlayer()->GetColor();
+}
+
+Vector2 TileManager::GetClosestTile(int _xPosition, int _yPosition) const
+{
+	float xTilePosition = (_xPosition - SIDEPANELWIDTH - TILEPADDING / 2.0f) / (float)(TILESIZE + TILEPADDING);
+	float yTilePosition = (_yPosition - CARDPANELHEIGHT - TILEPADDING / 2.0f) / (float)(TILESIZE + TILEPADDING);
+
+	int xIndex = xTilePosition < 0 ? xTilePosition - 1 : xTilePosition;
+	int yIndex = yTilePosition < 0 ? yTilePosition - 1 : yTilePosition;
+
+	if (!IsInBounds(xIndex, yIndex))
+	{
+		xIndex = yIndex = -1;
+	}
+
+	return Vector2(xIndex, yIndex);
+}
+
+void TileManager::SetTilePiece(const int _xIndex, const int _yIndex, Piece* piece)
+{
+	tiles[_xIndex][_yIndex].SetPiece(piece);
 }
