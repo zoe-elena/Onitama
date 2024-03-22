@@ -14,7 +14,7 @@ void Game::InitGame(SDL_Renderer* _SDLRenderer)
 	inputManager = new InputManager();
 	playerRed->InitPlayerPieces();
 	playerBlue->InitPlayerPieces();
-	activePlayer = playerBlue;
+	activePlayer = playerRed;
 	UpdateAllTiles();
 
 	cardManager = new CardManager();
@@ -62,7 +62,18 @@ std::vector<Vector2> Game::GetPossibleMoveTiles() const
 Vector2 Game::GetTileFromMove(Vector2 _move) const
 {
 	Vector2 pieceIndex = selectedPiece->GetIndex();
-	return Vector2(pieceIndex.x - _move.x, pieceIndex.y - _move.y);
+	if (activePlayer == playerRed)
+	{
+		return Vector2(pieceIndex.x + _move.x, pieceIndex.y + _move.y);
+	}
+	else if (activePlayer == playerBlue)
+	{
+		return Vector2(pieceIndex.x - _move.x, pieceIndex.y - _move.y);
+	}
+	else
+	{
+		Vector2(0, 0);
+	}
 }
 
 void Game::UpdateAllTiles()
