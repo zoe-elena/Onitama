@@ -8,15 +8,20 @@ Game::Game(SDL_Renderer* _SDLRenderer)
 
 void Game::InitGame(SDL_Renderer* _SDLRenderer)
 {
-	SDLRenderer = _SDLRenderer;
-	playerRed = new Player(red);
-	playerBlue = new Player(blue);
+	playerRed = new Player(E_PLAYERCOLOR::red);
+	playerBlue = new Player(E_PLAYERCOLOR::blue);
 	tileManager = new TileManager();
 	inputManager = new InputManager();
 	playerRed->InitPlayerPieces();
 	playerBlue->InitPlayerPieces();
-	activePlayer = playerRed;
+	activePlayer = playerBlue;
 	UpdateAllTiles();
+
+	cardManager = new CardManager();
+	cardManager->InitCards();
+	cardManager->GetCard(E_CARDTYPE::debug)->SetOwner(playerRed);
+
+	SDLRenderer = _SDLRenderer;
 	renderer = new Renderer(_SDLRenderer, this);
 }
 
@@ -51,44 +56,39 @@ void Game::DoTurn()
 {
 	Vector2 currentMousePos = inputManager->GetMousePosition();
 	Vector2 currentMouseIndex = tileManager->GetClosestTile(currentMousePos.x, currentMousePos.y);
+	bool leftMouseButtonDown = inputManager->GetMouseButtonDown();
 
-	CheckHoverPiece(currentMouseIndex);
+	CheckHoverSelectPiece(currentMouseIndex, leftMouseButtonDown);
 }
 
-void Game::CheckHoverPiece(Vector2 _mouseIndex)
+void Game::CheckHoverSelectPiece(Vector2 _mouseIndex, bool _leftMouseButtonDown)
 {
 	Tile* tile = tileManager->GetTile(_mouseIndex.x, _mouseIndex.y);
+	Piece* lastHoveredPiece = hoveredPiece;
 
-	Piece* lastHoveredPiece = activePlayer->GetHoveredPiece();
-
-	if (tile != nullptr) {
+	if (tile != nullptr)
+	{
 		if (tile->GetIsOccupied())
 		{
 			Piece* currentHoveredPiece = tile->GetPiece();
 
-			if (currentHoveredPiece == lastHoveredPiece)
+			if (selectedPiece != currentHoveredPiece && _leftMouseButtonDown)
+			{
+				selectedPiece = currentHoveredPiece;
+			}
+
+			if (currentHoveredPiece == lastHoveredPiece || currentHoveredPiece->GetOwnerPlayer() != activePlayer)
 			{
 				return;
 			}
-			else
-			{
-				currentHoveredPiece->SetIsHovered(true);
-				activePlayer->SetHoveredPiece(currentHoveredPiece);
 
-				if (lastHoveredPiece != nullptr)
-				{
-					lastHoveredPiece->SetIsHovered(false);
-				}
-
-				return;
-			}
+			hoveredPiece = currentHoveredPiece;
+			return;
 		}
 	}
 
 	if (lastHoveredPiece != nullptr)
 	{
-		activePlayer->SetHoveredPiece(nullptr);
-		lastHoveredPiece->SetIsHovered(false);
+		hoveredPiece = nullptr;
 	}
 }
-

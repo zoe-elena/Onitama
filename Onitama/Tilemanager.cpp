@@ -1,6 +1,5 @@
 #include "TileManager.h"
 #include "Player.h"
-#include <iostream>
 
 TileManager::TileManager()
 {
@@ -14,11 +13,11 @@ void TileManager::InitializeTiles()
 			Temple* temple = nullptr;
 			if (x == TEMPLEREDX && y == TEMPLEREDY)
 			{
-				temple = new Temple(red);
+				temple = new Temple(E_PLAYERCOLOR::red);
 			}
 			else if (x == TEMPLEBLUEX && y == TEMPLEBLUEY)
 			{
-				temple = new Temple(blue);
+				temple = new Temple(E_PLAYERCOLOR::blue);
 			}
 			tiles[x][y] = Tile(Vector2(x, y), temple);
 		}
@@ -57,7 +56,7 @@ E_PLAYERCOLOR TileManager::GetTempleColor(const int _xIndex, const int _yIndex) 
 	return tiles[_xIndex][_yIndex].GetOccupyingPlayer()->GetColor();
 }
 
-Vector2 TileManager::GetClosestTile(int _xPosition, int _yPosition) const
+Vector2 TileManager::GetClosestTile(const int _xPosition, const int _yPosition) const
 {
 	float xTilePosition = (_xPosition - SIDEPANELWIDTH - TILEPADDING / 2.0f) / (float)(TILESIZE + TILEPADDING);
 	float yTilePosition = (_yPosition - CARDPANELHEIGHT - TILEPADDING / 2.0f) / (float)(TILESIZE + TILEPADDING);

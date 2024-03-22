@@ -2,6 +2,7 @@
 
 #define DEFINES_H
 #define BOARDSIZE 5
+#define CARDS 1
 #define PLAYERS 2
 #define STUDENTS 4
 #define MASTER 1
@@ -9,8 +10,10 @@
 #define TEMPLEREDY 0
 #define TEMPLEBLUEX BOARDSIZE / 2
 #define TEMPLEBLUEY BOARDSIZE - 1
-enum E_PLAYERCOLOR { grey, red, blue };
-enum E_PIECETYPE { DEFAULT, master, student };
+
+enum class E_PLAYERCOLOR { none, red, blue };
+enum class E_PIECETYPE { none, master, student };
+enum class E_CARDTYPE { none, debug };
 
 #define TILESIZE 100
 #define SIDEPANELWIDTH 250

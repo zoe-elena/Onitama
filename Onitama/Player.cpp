@@ -9,34 +9,34 @@ void Player::SetInitPiecePositions()
 {
 	switch (color)
 	{
-	case red:
-		InitStudentPositions.push_back(Vector2(0, 0));
-		InitStudentPositions.push_back(Vector2(1, 0));
-		InitMasterPosition = Vector2(2, 0);
-		InitStudentPositions.push_back(Vector2(3, 0));
-		InitStudentPositions.push_back(Vector2(4, 0));
+	case E_PLAYERCOLOR::red:
+		initStudentPositions.push_back(Vector2(0, 0));
+		initStudentPositions.push_back(Vector2(1, 0));
+		initMasterPosition = Vector2(2, 0);
+		initStudentPositions.push_back(Vector2(3, 0));
+		initStudentPositions.push_back(Vector2(4, 0));
 		break;
-	case blue:
-		InitStudentPositions.push_back(Vector2(0, 4));
-		InitStudentPositions.push_back(Vector2(1, 4));
-		InitMasterPosition = Vector2(2, 4);
-		InitStudentPositions.push_back(Vector2(3, 4));
-		InitStudentPositions.push_back(Vector2(4, 4));
+	case E_PLAYERCOLOR::blue:
+		initStudentPositions.push_back(Vector2(0, 4));
+		initStudentPositions.push_back(Vector2(1, 4));
+		initMasterPosition = Vector2(2, 4);
+		initStudentPositions.push_back(Vector2(3, 4));
+		initStudentPositions.push_back(Vector2(4, 4));
 		break;
 	default:
-		InitStudentPositions.push_back(Vector2(-1, -1));
-		InitStudentPositions.push_back(Vector2(-1, -1));
-		InitMasterPosition = Vector2(-1, -1);
-		InitStudentPositions.push_back(Vector2(-1, -1));
-		InitStudentPositions.push_back(Vector2(-1, -1));
+		initStudentPositions.push_back(Vector2(-1, -1));
+		initStudentPositions.push_back(Vector2(-1, -1));
+		initMasterPosition = Vector2(-1, -1);
+		initStudentPositions.push_back(Vector2(-1, -1));
+		initStudentPositions.push_back(Vector2(-1, -1));
 		break;
 	}
 }
 
 void Player::InitPlayerPieces()
 {
-	for (int u = 0; u < InitStudentPositions.size(); u++) {
-		PlayerPieces.push_back(new Piece(this, student, InitStudentPositions[u]));
+	for (int u = 0; u < initStudentPositions.size(); u++) {
+		PlayerPieces.push_back(new Piece(this, E_PIECETYPE::student, initStudentPositions[u]));
 	}
-	PlayerPieces.push_back(new Piece(this, master, InitMasterPosition));
+	PlayerPieces.push_back(new Piece(this, E_PIECETYPE::master, initMasterPosition));
 }

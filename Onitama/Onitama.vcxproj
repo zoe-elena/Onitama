@@ -145,6 +145,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Card.cpp" />
+    <ClCompile Include="CardManager.cpp" />
     <ClCompile Include="InputManager.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="Color.cpp" />
@@ -158,6 +160,8 @@
     <ClCompile Include="Vector2.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Card.h" />
+    <ClInclude Include="CardManager.h" />
     <ClInclude Include="InputManager.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="Color.h" />

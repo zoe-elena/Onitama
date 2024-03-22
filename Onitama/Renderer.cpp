@@ -84,14 +84,17 @@ void Renderer::DrawTemple(const int _xIndex, const int _yIndex)
 	Tile.w = TILESIZE;
 	Tile.h = TILESIZE;
 
-	Color color = GetTempleColor(game->GetTile(_xIndex, _yIndex)->GetTemple()->GetColor());
+	E_PLAYERCOLOR playerTempleColor = game->GetTile(_xIndex, _yIndex)->GetTemple()->GetColor();
+	Color color = GetColorByPlayerColor(playerTempleColor, redTempleColor, blueTempleColor);
+
 	SDL_SetTextureColorMod(textureTemple, color.r, color.g, color.b);
 	SDL_RenderCopy(SDLRenderer, textureTemple, nullptr, &Tile);
 }
 
 void Renderer::InitPlayerPieces(Player* _player)
 {
-	for (int u = 0; u < _player->PlayerPieces.size(); u++) {
+	for (int u = 0; u < _player->PlayerPieces.size(); u++)
+	{
 		DrawSinglePiece(_player->PlayerPieces[u]);
 	}
 }
@@ -107,7 +110,7 @@ void Renderer::DrawSinglePiece(Piece* _piece)
 	Tile.h = TILESIZE;
 
 	SDL_Texture* texture;
-	if (_piece->GetType() == master)
+	if (_piece->GetType() == E_PIECETYPE::master)
 	{
 		texture = textureMaster;
 	}
@@ -124,49 +127,33 @@ void Renderer::DrawSinglePiece(Piece* _piece)
 Color Renderer::GetPieceColor(Piece* _piece)
 {
 	E_PLAYERCOLOR playerColor = _piece->GetOwnerPlayer()->GetColor();
-	bool isHovered = _piece->GetIsHovered();
-
-	if (isHovered)
+	bool isHovered = game->GetHoveredPiece() == _piece;
+	bool isSelected = game->GetSelectedPiece() == _piece;
+	
+	if (isSelected)
 	{
-		if (playerColor == red)
-		{
-			return redPieceColorHovered;
-		}
-		else if (playerColor == blue)
-		{
-			return bluePieceColorHovered;
-		}
-		else {
-			return Color::White();
-		}
+		return GetColorByPlayerColor(playerColor, redPieceColorSelected, bluePieceColorSelected);
+	}
+	else if (isHovered)
+	{
+		return GetColorByPlayerColor(playerColor, redPieceColorHovered, bluePieceColorHovered);
+	}
+
+	return GetColorByPlayerColor(playerColor, redPieceColor, bluePieceColor);
+}
+
+Color Renderer::GetColorByPlayerColor(E_PLAYERCOLOR _playerColor, Color _redColor, Color _blueColor)
+{
+	if (_playerColor == E_PLAYERCOLOR::red)
+	{
+		return _redColor;
+	}
+	else if (_playerColor == E_PLAYERCOLOR::blue)
+	{
+		return _blueColor;
 	}
 	else
 	{
-		if (playerColor == red)
-		{
-			return redPieceColor;
-		}
-		else if (playerColor == blue)
-		{
-			return bluePieceColor;
-		}
-		else {
-			return Color::White();
-		}
-	}
-}
-
-Color Renderer::GetTempleColor(E_PLAYERCOLOR _templeColor)
-{
-	if (_templeColor == red)
-	{
-		return redPieceColor;
-	}
-	else if (_templeColor == blue)
-	{
-		return bluePieceColor;
-	}
-	else {
 		return Color::White();
 	}
 }

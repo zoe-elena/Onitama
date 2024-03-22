@@ -3,6 +3,7 @@
 #include "Renderer.h"
 #include "TileManager.h"
 #include "InputManager.h"
+#include "CardManager.h"
 #include "SDL.h"
 
 class Game
@@ -15,6 +16,12 @@ private:
 	Renderer* renderer;
 	TileManager* tileManager;
 	InputManager* inputManager;
+	CardManager* cardManager;
+
+	Piece* hoveredPiece;
+	Piece* selectedPiece;
+	Card* selectedCard;
+
 	SDL_bool hasQuit = SDL_FALSE;
 
 public:
@@ -26,10 +33,13 @@ public:
 	inline Player* GetPlayerBlue() const { return playerBlue; }
 	inline Tile* GetTile(const int _xIndex, const int _yIndex) const { return tileManager->GetTile(_xIndex, _yIndex); }
 	inline SDL_bool HasQuit() const { return hasQuit; }
+	inline Piece* GetHoveredPiece() const { return hoveredPiece; }
+	inline Piece* GetSelectedPiece() const { return selectedPiece; }
+	inline Card* GetSelectedCard() const { return selectedCard; }
 
 	void UpdateAllTiles();
 	void DoTurn();
-	void CheckHoverPiece(Vector2 _mouseIndex);
+	void CheckHoverSelectPiece(Vector2 _mouseIndex, bool _leftMouseButtonDown);
 
 	void Update();
 };

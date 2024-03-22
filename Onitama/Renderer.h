@@ -17,12 +17,18 @@ private:
 	SDL_Texture* textureMaster;
 	SDL_Texture* textureTemple;
 
-	Color backgroundColor = Color(89, 53, 46);
-	Color tileColor = Color(115, 86, 78);
-	Color redPieceColor = Color(255, 100, 100);
-	Color redPieceColorHovered = Color(255, 200, 200);
-	Color bluePieceColor = Color(170, 160, 255);
-	Color bluePieceColorHovered = Color(210, 200, 255);
+	const Color backgroundColor = Color(89, 53, 46);
+	const Color tileColor = Color(115, 86, 78);
+
+	const Color redPieceColor = Color(255, 100, 100);
+	const Color redPieceColorHovered = Color(255, 150, 150);
+	const Color redPieceColorSelected = Color(255, 255, 255);
+	const Color redTempleColor = Color(130, 50, 50);
+
+	const Color bluePieceColor = Color(170, 160, 255);
+	const Color bluePieceColorHovered = Color(200, 200, 255);
+	const Color bluePieceColorSelected = Color(255, 255, 255);
+	const Color blueTempleColor = Color(100, 90, 150);
 
 	void LoadTextures();
 	void DrawBackground(Color _color);
@@ -33,7 +39,7 @@ private:
 
 	bool IsTempleTile(const int _xIndex, const int _yIndex);
 	Color GetPieceColor(Piece* _piece);
-	Color GetTempleColor(E_PLAYERCOLOR _templeColor);
+	Color GetColorByPlayerColor(E_PLAYERCOLOR _playerColor, Color _redColor, Color _blueColor);
 
 public:
 	Renderer(SDL_Renderer* _SDLRenderer, Game* _game);
