@@ -37,9 +37,11 @@ public:
 	inline Piece* GetSelectedPiece() const { return selectedPiece; }
 	inline Card* GetSelectedCard() const { return selectedCard; }
 
+	std::vector<Vector2> GetPossibleMoveTiles() const;
+	Vector2 GetTileFromMove(Vector2 _move) const;
+
 	void UpdateAllTiles();
 	void DoTurn();
 	void CheckHoverSelectPiece(Vector2 _mouseIndex, bool _leftMouseButtonDown);
-
 	void Update();
 };

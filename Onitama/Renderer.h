@@ -19,6 +19,7 @@ private:
 
 	const Color backgroundColor = Color(89, 53, 46);
 	const Color tileColor = Color(115, 86, 78);
+	const Color moveTileColor = Color(150, 120, 115);
 
 	const Color redPieceColor = Color(255, 100, 100);
 	const Color redPieceColorHovered = Color(255, 150, 150);
@@ -31,15 +32,16 @@ private:
 	const Color blueTempleColor = Color(100, 90, 150);
 
 	void LoadTextures();
-	void DrawBackground(Color _color);
-	void DrawTiles(Color _color);
-	void DrawTemple(const int _xIndex, const int _yIndex);
+	void DrawBackground(Color _color) const;
+	void DrawTiles(Color _color) const;
+	void DrawMoveTiles(Color _color) const;
+	void DrawTemple(const int _xIndex, const int _yIndex)  const;
 	void InitPlayerPieces(Player* _player);
 	void DrawSinglePiece(Piece* _piece);
 
-	bool IsTempleTile(const int _xIndex, const int _yIndex);
+	bool IsTempleTile(const int _xIndex, const int _yIndex) const;
 	Color GetPieceColor(Piece* _piece);
-	Color GetColorByPlayerColor(E_PLAYERCOLOR _playerColor, Color _redColor, Color _blueColor);
+	Color GetColorByPlayerColor(E_PLAYERCOLOR _playerColor, Color _redColor, Color _blueColor) const;
 
 public:
 	Renderer(SDL_Renderer* _SDLRenderer, Game* _game);

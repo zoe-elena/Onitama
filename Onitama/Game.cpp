@@ -20,6 +20,7 @@ void Game::InitGame(SDL_Renderer* _SDLRenderer)
 	cardManager = new CardManager();
 	cardManager->InitCards();
 	cardManager->GetCard(E_CARDTYPE::debug)->SetOwner(playerRed);
+	selectedCard = cardManager->GetCard(E_CARDTYPE::debug);
 
 	SDLRenderer = _SDLRenderer;
 	renderer = new Renderer(_SDLRenderer, this);
@@ -33,6 +34,35 @@ void Game::Update()
 
 	renderer->DrawGame();
 	renderer->RenderGame();
+}
+
+std::vector<Vector2> Game::GetPossibleMoveTiles() const
+{
+	if (selectedPiece == nullptr || selectedCard == nullptr)
+	{
+		return std::vector<Vector2>();
+	}
+
+	std::vector<Vector2> possibleMoves = cardManager->GetCard(E_CARDTYPE::debug)->GetMoves();
+
+	std::vector<Vector2> possibleMoveTiles;
+	for (size_t i = 0; i < possibleMoves.size(); i++)
+	{
+		Vector2 possibleTile = GetTileFromMove(possibleMoves[i]);
+
+		if (tileManager->IsInBounds(possibleTile.x, possibleTile.y))
+		{
+			possibleMoveTiles.push_back(possibleTile);
+		}
+	}
+
+	return possibleMoveTiles;
+}
+
+Vector2 Game::GetTileFromMove(Vector2 _move) const
+{
+	Vector2 pieceIndex = selectedPiece->GetIndex();
+	return Vector2(pieceIndex.x - _move.x, pieceIndex.y - _move.y);
 }
 
 void Game::UpdateAllTiles()
@@ -66,27 +96,39 @@ void Game::CheckHoverSelectPiece(Vector2 _mouseIndex, bool _leftMouseButtonDown)
 	Tile* tile = tileManager->GetTile(_mouseIndex.x, _mouseIndex.y);
 	Piece* lastHoveredPiece = hoveredPiece;
 
+	// Check for Piece on mouse position
 	if (tile != nullptr)
 	{
 		if (tile->GetIsOccupied())
 		{
 			Piece* currentHoveredPiece = tile->GetPiece();
 
-			if (selectedPiece != currentHoveredPiece && _leftMouseButtonDown)
+			// Check if Piece is from the active player
+			if (currentHoveredPiece->GetOwnerPlayer() == activePlayer)
 			{
-				selectedPiece = currentHoveredPiece;
-			}
+				if (selectedPiece != currentHoveredPiece && _leftMouseButtonDown)
+				{
+					selectedPiece = currentHoveredPiece;
+				}
 
-			if (currentHoveredPiece == lastHoveredPiece || currentHoveredPiece->GetOwnerPlayer() != activePlayer)
-			{
+				if (currentHoveredPiece == lastHoveredPiece)
+				{
+					return;
+				}
+
+				hoveredPiece = currentHoveredPiece;
 				return;
 			}
-
-			hoveredPiece = currentHoveredPiece;
-			return;
 		}
 	}
 
+	// Unselect if clicking anywhere else
+	if (_leftMouseButtonDown)
+	{
+		selectedPiece = nullptr;
+	}
+
+	// Unhover last hovered piece if not hovered anymore
 	if (lastHoveredPiece != nullptr)
 	{
 		hoveredPiece = nullptr;

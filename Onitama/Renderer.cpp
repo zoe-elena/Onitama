@@ -17,6 +17,7 @@ void Renderer::DrawGame()
 {
 	DrawBackground(backgroundColor);
 	DrawTiles(tileColor);
+	DrawMoveTiles(moveTileColor);
 	InitPlayerPieces(game->GetPlayerRed());
 	InitPlayerPieces(game->GetPlayerBlue());
 }
@@ -41,13 +42,13 @@ void Renderer::LoadTextures()
 	SDL_FreeSurface(surfaceTemple);
 }
 
-void Renderer::DrawBackground(Color _color)
+void Renderer::DrawBackground(Color _color) const
 {
 	SDL_SetRenderDrawColor(SDLRenderer, _color.r, _color.g, _color.b, SDL_ALPHA_OPAQUE);
 	SDL_RenderClear(SDLRenderer);
 }
 
-void Renderer::DrawTiles(Color _color)
+void Renderer::DrawTiles(Color _color) const
 {
 	for (size_t i = 0; i < BOARDSIZE; i++)
 	{
@@ -70,12 +71,30 @@ void Renderer::DrawTiles(Color _color)
 	}
 }
 
-bool Renderer::IsTempleTile(const int _xIndex, const int _yIndex)
+void Renderer::DrawMoveTiles(Color _color) const
+{
+	std::vector<Vector2> possibleMoveTiles = game->GetPossibleMoveTiles();
+
+	for (size_t i = 0; i < possibleMoveTiles.size(); i++)
+	{
+		SDL_SetRenderDrawColor(SDLRenderer, _color.r, _color.g, _color.b, _color.a);
+
+		SDL_Rect Tile;
+		Vector2 possibleMoveTile = possibleMoveTiles[i];
+		Tile.x = SIDEPANELWIDTH + TILEPADDING + possibleMoveTile.x * TILESIZE + possibleMoveTile.x * TILEPADDING;
+		Tile.y = CARDPANELHEIGHT + TILEPADDING + possibleMoveTile.y * TILESIZE + possibleMoveTile.y * TILEPADDING;
+		Tile.w = TILESIZE;
+		Tile.h = TILESIZE;
+		SDL_RenderFillRect(SDLRenderer, &Tile);
+	}
+}
+
+bool Renderer::IsTempleTile(const int _xIndex, const int _yIndex) const
 {
 	return game->GetTile(_xIndex, _yIndex)->HasTemple();
 }
 
-void Renderer::DrawTemple(const int _xIndex, const int _yIndex)
+void Renderer::DrawTemple(const int _xIndex, const int _yIndex) const
 {
 	SDL_SetRenderDrawColor(SDLRenderer, 255, 0, 0, SDL_ALPHA_OPAQUE);
 	SDL_Rect Tile;
@@ -142,7 +161,7 @@ Color Renderer::GetPieceColor(Piece* _piece)
 	return GetColorByPlayerColor(playerColor, redPieceColor, bluePieceColor);
 }
 
-Color Renderer::GetColorByPlayerColor(E_PLAYERCOLOR _playerColor, Color _redColor, Color _blueColor)
+Color Renderer::GetColorByPlayerColor(E_PLAYERCOLOR _playerColor, Color _redColor, Color _blueColor) const
 {
 	if (_playerColor == E_PLAYERCOLOR::red)
 	{
