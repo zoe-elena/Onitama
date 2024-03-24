@@ -18,8 +18,13 @@ void Renderer::DrawGame()
 	DrawBackground(backgroundColor);
 	DrawTiles(tileColor);
 	DrawMoveTiles(moveTileColor);
+	// TODO: Combine the following pairs of function
+	DrawTemple(game->GetPlayerRed());
+	DrawTemple(game->GetPlayerBlue());
 	InitPlayerPieces(game->GetPlayerRed());
 	InitPlayerPieces(game->GetPlayerBlue());
+	DrawCards(game->GetPlayerRed());
+	DrawCards(game->GetPlayerBlue());
 }
 
 void Renderer::RenderGame()
@@ -62,11 +67,6 @@ void Renderer::DrawTiles(Color _color) const
 			Tile.w = TILESIZE;
 			Tile.h = TILESIZE;
 			SDL_RenderFillRect(SDLRenderer, &Tile);
-
-			if (IsTempleTile(i, j))
-			{
-				DrawTemple(i, j);
-			}
 		}
 	}
 }
@@ -74,6 +74,11 @@ void Renderer::DrawTiles(Color _color) const
 void Renderer::DrawMoveTiles(Color _color) const
 {
 	std::vector<Vector2> possibleMoveTiles = game->GetPossibleMoveTiles();
+
+	if (possibleMoveTiles.size() == 0)
+	{
+		return;
+	}
 
 	for (size_t i = 0; i < possibleMoveTiles.size(); i++)
 	{
@@ -89,22 +94,19 @@ void Renderer::DrawMoveTiles(Color _color) const
 	}
 }
 
-bool Renderer::IsTempleTile(const int _xIndex, const int _yIndex) const
+void Renderer::DrawTemple(Player* _player) const
 {
-	return game->GetTile(_xIndex, _yIndex)->HasTemple();
-}
+	Vector2 templePosition = _player->GetTemplePosition();
 
-void Renderer::DrawTemple(const int _xIndex, const int _yIndex) const
-{
 	SDL_SetRenderDrawColor(SDLRenderer, 255, 0, 0, SDL_ALPHA_OPAQUE);
 	SDL_Rect Tile;
-	Tile.x = SIDEPANELWIDTH + TILEPADDING + _xIndex * TILESIZE + _xIndex * TILEPADDING;
-	Tile.y = CARDPANELHEIGHT + TILEPADDING + _yIndex * TILESIZE + _yIndex * TILEPADDING;
+	Tile.x = SIDEPANELWIDTH + TILEPADDING + templePosition.x * TILESIZE + templePosition.x * TILEPADDING;
+	Tile.y = CARDPANELHEIGHT + TILEPADDING + templePosition.y * TILESIZE + templePosition.y * TILEPADDING;
 	Tile.w = TILESIZE;
 	Tile.h = TILESIZE;
 
-	E_PLAYERCOLOR playerTempleColor = game->GetTile(_xIndex, _yIndex)->GetTemple()->GetColor();
-	Color color = GetColorByPlayerColor(playerTempleColor, redTempleColor, blueTempleColor);
+	E_PLAYERCOLOR playerColor = _player->GetColor();
+	Color color = GetColorByPlayerColor(playerColor, redTempleColor, blueTempleColor);
 
 	SDL_SetTextureColorMod(textureTemple, color.r, color.g, color.b);
 	SDL_RenderCopy(SDLRenderer, textureTemple, nullptr, &Tile);
@@ -141,6 +143,25 @@ void Renderer::DrawSinglePiece(Piece* _piece)
 	Color color = GetPieceColor(_piece);
 	SDL_SetTextureColorMod(texture, color.r, color.g, color.b);
 	SDL_RenderCopy(SDLRenderer, texture, nullptr, &Tile);
+	// Use for cards flip: SDL_RenderCopyEx(SDLRenderer, texture, nullptr, &Tile, 0, nullptr, SDL_FLIP_VERTICAL);
+}
+
+void Renderer::DrawCards(Player* _player)
+{
+	SDL_SetRenderDrawColor(SDLRenderer, 0, 0, 0, 255);
+	SDL_Rect Tile;
+
+	Tile.x = _player->GetLeftCardSlotPosition().x;
+	Tile.y = _player->GetLeftCardSlotPosition().y;
+	Tile.w = CARDWIDTH;
+	Tile.h = CARDHEIGHT;
+	SDL_RenderFillRect(SDLRenderer, &Tile);
+
+	Tile.x = _player->GetRightCardSlotPosition().x;
+	Tile.y = _player->GetRightCardSlotPosition().y;
+	Tile.w = CARDWIDTH;
+	Tile.h = CARDHEIGHT;
+	SDL_RenderFillRect(SDLRenderer, &Tile);
 }
 
 Color Renderer::GetPieceColor(Piece* _piece)
@@ -148,7 +169,7 @@ Color Renderer::GetPieceColor(Piece* _piece)
 	E_PLAYERCOLOR playerColor = _piece->GetOwnerPlayer()->GetColor();
 	bool isHovered = game->GetHoveredPiece() == _piece;
 	bool isSelected = game->GetSelectedPiece() == _piece;
-	
+
 	if (isSelected)
 	{
 		return GetColorByPlayerColor(playerColor, redPieceColorSelected, bluePieceColorSelected);

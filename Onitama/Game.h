@@ -43,5 +43,6 @@ public:
 	void UpdateAllTiles();
 	void DoTurn();
 	void CheckHoverSelectPiece(Vector2 _mouseIndex, bool _leftMouseButtonDown);
+	void TrySelectTile(Vector2 _mousePos);
 	void Update();
 };

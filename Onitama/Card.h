@@ -1,6 +1,6 @@
 #pragma once
 #include "Vector2.h"
-#include<vector>
+#include <vector>
 #include "Defines.h"
 #include "SDL.h"
 

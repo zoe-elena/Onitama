@@ -35,11 +35,11 @@ private:
 	void DrawBackground(Color _color) const;
 	void DrawTiles(Color _color) const;
 	void DrawMoveTiles(Color _color) const;
-	void DrawTemple(const int _xIndex, const int _yIndex)  const;
+	void DrawTemple(Player* _player)  const;
 	void InitPlayerPieces(Player* _player);
 	void DrawSinglePiece(Piece* _piece);
+	void DrawCards(Player* _player);
 
-	bool IsTempleTile(const int _xIndex, const int _yIndex) const;
 	Color GetPieceColor(Piece* _piece);
 	Color GetColorByPlayerColor(E_PLAYERCOLOR _playerColor, Color _redColor, Color _blueColor) const;
 

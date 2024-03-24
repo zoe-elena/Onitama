@@ -2,9 +2,9 @@
 
 Tile::Tile()
 {
-	Tile(Vector2(0, 0), nullptr);
+	Tile(Vector2(0, 0));
 }
 
-Tile::Tile(Vector2 _index, Temple* _temple) : index(_index), temple(_temple)
+Tile::Tile(Vector2 _index) : index(_index)
 {
 }

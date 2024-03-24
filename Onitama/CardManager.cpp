@@ -1,8 +1,9 @@
 #include "CardManager.h"
+#include "Player.h"
 
 void CardManager::InitCards()
 {
-	std::vector<Vector2> movesDebug{ Vector2(1, 1), Vector2(-1, 1), Vector2(0, -1) };
+	std::vector<Vector2> movesDebug{ Vector2(0, 1) };
 	cards[0] = new Card(E_CARDTYPE::debug, movesDebug);
 }
 
@@ -15,6 +16,15 @@ Card* CardManager::GetCard(E_CARDTYPE _cardType)
 			return cards[i];
 		}
 	}
+}
+
+Card* CardManager::GetCard(Vector2 _mousePos)
+{
+	for (size_t i = 0; i < sizeof(cards); i++)
+	{
+		
+	}
+	return nullptr;
 }
 
 std::vector<Vector2> CardManager::GetCardMovement(E_CARDTYPE _cardType)

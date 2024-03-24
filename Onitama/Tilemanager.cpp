@@ -8,18 +8,11 @@ TileManager::TileManager()
 
 void TileManager::InitializeTiles()
 {
-	for (int y = 0; y < BOARDSIZE; y++) {
-		for (int x = 0; x < BOARDSIZE; x++) {
-			Temple* temple = nullptr;
-			if (x == TEMPLEREDX && y == TEMPLEREDY)
-			{
-				temple = new Temple(E_PLAYERCOLOR::red);
-			}
-			else if (x == TEMPLEBLUEX && y == TEMPLEBLUEY)
-			{
-				temple = new Temple(E_PLAYERCOLOR::blue);
-			}
-			tiles[x][y] = Tile(Vector2(x, y), temple);
+	for (int y = 0; y < BOARDSIZE; y++)
+	{
+		for (int x = 0; x < BOARDSIZE; x++)
+		{
+			tiles[x][y] = Tile(Vector2(x, y));
 		}
 	}
 }
@@ -44,16 +37,6 @@ bool TileManager::IsInBounds(const int _xIndex, const int _yIndex) const {
 	{
 		return false;
 	}
-}
-
-bool TileManager::HasTemple(const int _xIndex, const int _yIndex) const
-{
-	return tiles[_xIndex][_yIndex].HasTemple();
-}
-
-E_PLAYERCOLOR TileManager::GetTempleColor(const int _xIndex, const int _yIndex) const
-{
-	return tiles[_xIndex][_yIndex].GetOccupyingPlayer()->GetColor();
 }
 
 Vector2 TileManager::GetClosestTile(const int _xPosition, const int _yPosition) const

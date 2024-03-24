@@ -1,8 +1,9 @@
 #pragma once
-#include<vector>
+#include <vector>
 #include "Card.h"
-#include "Player.h"
 #include "Defines.h"
+
+class Player;
 
 class CardManager
 {
@@ -13,6 +14,7 @@ public:
 	void InitCards();
 
 	Card* GetCard(E_CARDTYPE _cardType);
+	Card* GetCard(Vector2 _mousePos);
 	std::vector<Vector2> GetCardMovement(E_CARDTYPE _cardType);
 	Player* GetCardOwner(E_CARDTYPE _cardType);
 };
