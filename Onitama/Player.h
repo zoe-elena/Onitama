@@ -18,19 +18,25 @@ private:
 	Vector2 leftCardSlotPosition;
 	Vector2 rightCardSlotPosition;
 
-public:
-	Player(E_PLAYERCOLOR _color);
-
 	void SetInitPiecePositions(int _row);
 	void SetInitTemplePositions(int _row);
 	void SetInitCardPositions(int _pixelHeight);
+
+public:
+	Player(E_PLAYERCOLOR _color);
+
 	void InitPieces();
-	void InitCards();
+	void SetLeftCard(Card* _leftCard);
+	void SetRightCard(Card* _rightCard);
 
 	inline E_PLAYERCOLOR GetColor() { return color; }
 	inline Vector2 GetTemplePosition() { return templePosition; }
 	inline Vector2 GetLeftCardSlotPosition() { return leftCardSlotPosition; }
 	inline Vector2 GetRightCardSlotPosition() { return rightCardSlotPosition; }
+	inline Card* GetLeftCard() { return leftCard; }
+	inline Card* GetRightCard() { return rightCard; }
+	bool IsOnLeftCard(Vector2 _mousePos);
+	bool IsOnRightCard(Vector2 _mousePos);
 
 	std::vector<Piece*> PlayerPieces;
 };

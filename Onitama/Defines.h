@@ -2,7 +2,7 @@
 
 #define DEFINES_H
 #define BOARDSIZE 5
-#define CARDS 1
+#define CARDS 5
 #define PLAYERS 2
 #define STUDENTS 4
 #define MASTER 1

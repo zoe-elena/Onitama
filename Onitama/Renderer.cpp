@@ -73,21 +73,20 @@ void Renderer::DrawTiles(Color _color) const
 
 void Renderer::DrawMoveTiles(Color _color) const
 {
-	std::vector<Vector2> possibleMoveTiles = game->GetPossibleMoveTiles();
+	std::vector<Vector2> moveTiles = game->GetMoveTiles();
 
-	if (possibleMoveTiles.size() == 0)
+	if (moveTiles.size() == 0 || game->GetSelectedPiece() == nullptr)
 	{
 		return;
 	}
 
-	for (size_t i = 0; i < possibleMoveTiles.size(); i++)
+	for (size_t i = 0; i < moveTiles.size(); i++)
 	{
 		SDL_SetRenderDrawColor(SDLRenderer, _color.r, _color.g, _color.b, _color.a);
 
 		SDL_Rect Tile;
-		Vector2 possibleMoveTile = possibleMoveTiles[i];
-		Tile.x = SIDEPANELWIDTH + TILEPADDING + possibleMoveTile.x * TILESIZE + possibleMoveTile.x * TILEPADDING;
-		Tile.y = CARDPANELHEIGHT + TILEPADDING + possibleMoveTile.y * TILESIZE + possibleMoveTile.y * TILEPADDING;
+		Tile.x = SIDEPANELWIDTH + TILEPADDING + moveTiles[i].x * TILESIZE + moveTiles[i].x * TILEPADDING;
+		Tile.y = CARDPANELHEIGHT + TILEPADDING + moveTiles[i].y * TILESIZE + moveTiles[i].y * TILEPADDING;
 		Tile.w = TILESIZE;
 		Tile.h = TILESIZE;
 		SDL_RenderFillRect(SDLRenderer, &Tile);
@@ -148,19 +147,37 @@ void Renderer::DrawSinglePiece(Piece* _piece)
 
 void Renderer::DrawCards(Player* _player)
 {
-	SDL_SetRenderDrawColor(SDLRenderer, 0, 0, 0, 255);
 	SDL_Rect Tile;
+	Color colorLeftCard = Color(0, 0, 0, 255);
+	Color colorRightCard = Color(0, 0, 0, 255);
+	Card* selectedCard = game->GetSelectedCard();
+	if (selectedCard != nullptr && game->IsActivePlayer(_player))
+	{
+		if (selectedCard->GetCardPosition() == E_CARDPOSITIONS::topLeft
+			|| selectedCard->GetCardPosition() == E_CARDPOSITIONS::lowLeft)
+		{
+			colorLeftCard = Color(100, 100, 100, 255);
+		}
+
+		if (selectedCard->GetCardPosition() == E_CARDPOSITIONS::topRight
+			|| selectedCard->GetCardPosition() == E_CARDPOSITIONS::lowRight)
+		{
+			colorRightCard = Color(100, 100, 100, 255);
+		}
+	}
 
 	Tile.x = _player->GetLeftCardSlotPosition().x;
 	Tile.y = _player->GetLeftCardSlotPosition().y;
 	Tile.w = CARDWIDTH;
 	Tile.h = CARDHEIGHT;
+	SDL_SetRenderDrawColor(SDLRenderer, colorLeftCard.r, colorLeftCard.g, colorLeftCard.b, colorLeftCard.a);
 	SDL_RenderFillRect(SDLRenderer, &Tile);
 
 	Tile.x = _player->GetRightCardSlotPosition().x;
 	Tile.y = _player->GetRightCardSlotPosition().y;
 	Tile.w = CARDWIDTH;
 	Tile.h = CARDHEIGHT;
+	SDL_SetRenderDrawColor(SDLRenderer, colorRightCard.r, colorRightCard.g, colorRightCard.b, colorRightCard.a);
 	SDL_RenderFillRect(SDLRenderer, &Tile);
 }
 

@@ -11,10 +11,9 @@ private:
 	Card* cards[CARDS];
 
 public:
-	void InitCards();
+	CardManager();
+
+	void InitCards(Player* _playerRed, Player* _playerBlue);
 
 	Card* GetCard(E_CARDTYPE _cardType);
-	Card* GetCard(Vector2 _mousePos);
-	std::vector<Vector2> GetCardMovement(E_CARDTYPE _cardType);
-	Player* GetCardOwner(E_CARDTYPE _cardType);
 };

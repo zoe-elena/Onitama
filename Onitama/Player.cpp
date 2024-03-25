@@ -38,15 +38,52 @@ void Player::SetInitCardPositions(int _pixelHeight)
 	rightCardSlotPosition = Vector2(SIDEPANELWIDTH + CARDWIDTH + TILEPADDING * 3, _pixelHeight);
 }
 
+void Player::SetLeftCard(Card* _leftCard)
+{
+	leftCard = _leftCard;
+	leftCard->SetOwner(this);
+}
+
+void Player::SetRightCard(Card* _rightCard)
+{
+	rightCard = _rightCard;
+	rightCard->SetOwner(this);
+}
+
+bool Player::IsOnLeftCard(Vector2 _mousePos)
+{
+	if (_mousePos.x > leftCardSlotPosition.x
+		&& _mousePos.y > leftCardSlotPosition.y
+		&& _mousePos.x < leftCardSlotPosition.x + CARDWIDTH
+		&& _mousePos.y < leftCardSlotPosition.y + CARDHEIGHT)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+bool Player::IsOnRightCard(Vector2 _mousePos)
+{
+	if (_mousePos.x > rightCardSlotPosition.x
+		&& _mousePos.y > rightCardSlotPosition.y
+		&& _mousePos.x < rightCardSlotPosition.x + CARDWIDTH
+		&& _mousePos.y < rightCardSlotPosition.y + CARDHEIGHT)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
 void Player::InitPieces()
 {
 	for (int u = 0; u < initStudentPositions.size(); u++) {
 		PlayerPieces.push_back(new Piece(this, E_PIECETYPE::student, initStudentPositions[u]));
 	}
 	PlayerPieces.push_back(new Piece(this, E_PIECETYPE::master, initMasterPosition));
-}
-
-void Player::InitCards()
-{
-
 }

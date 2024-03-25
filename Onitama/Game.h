@@ -22,7 +22,11 @@ private:
 	Piece* selectedPiece;
 	Card* selectedCard;
 
+	std::vector<Vector2> moveTiles;
+
 	SDL_bool hasQuit = SDL_FALSE;
+
+	std::vector<Vector2> SetMoveTiles();
 
 public:
 	Game(SDL_Renderer* _SDLRenderer);
@@ -35,14 +39,16 @@ public:
 	inline SDL_bool HasQuit() const { return hasQuit; }
 	inline Piece* GetHoveredPiece() const { return hoveredPiece; }
 	inline Piece* GetSelectedPiece() const { return selectedPiece; }
+	inline std::vector<Vector2> GetMoveTiles() const { return moveTiles; }
 	inline Card* GetSelectedCard() const { return selectedCard; }
+	inline bool IsActivePlayer(Player* _player) const { return activePlayer == _player; }
+	inline bool IsSelectedCard(Card* _card) const { return selectedCard == _card; }
 
-	std::vector<Vector2> GetPossibleMoveTiles() const;
 	Vector2 GetTileFromMove(Vector2 _move) const;
 
 	void UpdateAllTiles();
 	void DoTurn();
-	void CheckHoverSelectPiece(Vector2 _mouseIndex, bool _leftMouseButtonDown);
 	void TrySelectTile(Vector2 _mousePos);
+	void TryHoverTile(Vector2 _mousePos);
 	void Update();
 };
