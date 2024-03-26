@@ -5,7 +5,7 @@
 #include "InputManager.h"
 #include "CardManager.h"
 #include "SDL.h"
-
+#include <iostream>
 class Game
 {
 private:
@@ -21,12 +21,11 @@ private:
 	Piece* hoveredPiece;
 	Piece* selectedPiece;
 	Card* selectedCard;
-
-	std::vector<Vector2> moveTiles;
+	std::vector<Vector2> validMoves;
 
 	SDL_bool hasQuit = SDL_FALSE;
 
-	std::vector<Vector2> SetMoveTiles();
+	bool TrySetMoveTiles(Piece* _piece);
 
 public:
 	Game(SDL_Renderer* _SDLRenderer);
@@ -39,16 +38,22 @@ public:
 	inline SDL_bool HasQuit() const { return hasQuit; }
 	inline Piece* GetHoveredPiece() const { return hoveredPiece; }
 	inline Piece* GetSelectedPiece() const { return selectedPiece; }
-	inline std::vector<Vector2> GetMoveTiles() const { return moveTiles; }
+	inline std::vector<Vector2> GetMoveTiles() const { return validMoves; }
 	inline Card* GetSelectedCard() const { return selectedCard; }
 	inline bool IsActivePlayer(Player* _player) const { return activePlayer == _player; }
 	inline bool IsSelectedCard(Card* _card) const { return selectedCard == _card; }
+	inline void UnselectAll() { selectedCard = nullptr; selectedPiece = nullptr; }
 
-	Vector2 GetTileFromMove(Vector2 _move) const;
+
+	Vector2 GetMoveTile(Piece* _piece, Vector2 _move) const;
 
 	void UpdateAllTiles();
 	void DoTurn();
-	void TrySelectTile(Vector2 _mousePos);
-	void TryHoverTile(Vector2 _mousePos);
+	void ResolveLeftMouseDown(Vector2 _mousePos);
+	void TryHoverPiece(Vector2 _mousePos);
+	bool TryMovePiece(Tile* _tile);
+	bool TrySelectPiece(Tile* _tile);
+	void SelectPiece(Piece* _piece);
+	bool IsValidMove(Vector2 _move);
 	void Update();
 };

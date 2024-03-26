@@ -23,6 +23,7 @@ void CardManager::InitCards(Player* _playerRed, Player* _playerBlue)
 
 	// Side Card
 	cards[4] = new Card(E_CARDTYPE::debug, E_CARDPOSITIONS::sideLeft, movesDebug);
+	sideCard = cards[4];
 }
 
 Card* CardManager::GetCard(E_CARDTYPE _cardType)

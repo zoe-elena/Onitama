@@ -18,7 +18,6 @@ void Renderer::DrawGame()
 	DrawBackground(backgroundColor);
 	DrawTiles(tileColor);
 	DrawMoveTiles(moveTileColor);
-	// TODO: Combine the following pairs of function
 	DrawTemple(game->GetPlayerRed());
 	DrawTemple(game->GetPlayerBlue());
 	InitPlayerPieces(game->GetPlayerRed());
@@ -151,6 +150,7 @@ void Renderer::DrawCards(Player* _player)
 	Color colorLeftCard = Color(0, 0, 0, 255);
 	Color colorRightCard = Color(0, 0, 0, 255);
 	Card* selectedCard = game->GetSelectedCard();
+
 	if (selectedCard != nullptr && game->IsActivePlayer(_player))
 	{
 		if (selectedCard->GetCardPosition() == E_CARDPOSITIONS::topLeft
@@ -183,7 +183,7 @@ void Renderer::DrawCards(Player* _player)
 
 Color Renderer::GetPieceColor(Piece* _piece)
 {
-	E_PLAYERCOLOR playerColor = _piece->GetOwnerPlayer()->GetColor();
+	E_PLAYERCOLOR playerColor = _piece->GetOwner()->GetColor();
 	bool isHovered = game->GetHoveredPiece() == _piece;
 	bool isSelected = game->GetSelectedPiece() == _piece;
 

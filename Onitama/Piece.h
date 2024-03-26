@@ -3,6 +3,7 @@
 #include "Defines.h"
 
 class Player;
+class Tile;
 
 class Piece
 {
@@ -17,9 +18,7 @@ public:
 	Piece(Player* _player, E_PIECETYPE _type, Vector2 _index);
 
 	inline void SetIndex(int _xIndex, int _yIndex) { index = Vector2(_xIndex, _yIndex); }
-	inline void SetIndex(Vector2 _index) { index = _index; }
-
-	inline Player* GetOwnerPlayer() const { return player; }
+	inline Player* GetOwner() const { return player; }
 	inline Vector2 GetIndex() const { return index; }
 	inline int GetXIndex() const { return index.x; }
 	inline int GetYIndex() const { return index.y; }
@@ -27,5 +26,6 @@ public:
 
 	E_PLAYERCOLOR GetColor();
 	bool isOnBoard();
+	void Move(Tile* _tile);
 };
 

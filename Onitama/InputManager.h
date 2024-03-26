@@ -14,4 +14,3 @@ public:
 	inline Vector2 GetMousePosition() { return mousePosition; }
 	inline bool GetMouseButtonDown() { return leftButtonDown; }
 };
-

@@ -1,5 +1,6 @@
 #include "Player.h"
 #include "Piece.h"
+#include "Tile.h"
 
 Piece::Piece()
 {
@@ -17,4 +18,10 @@ bool Piece::isOnBoard() {
 		return false;
 	else
 		return true;
+}
+
+void Piece::Move(Tile* _tile)
+{
+	index = _tile->GetIndex();
+	_tile->SetPiece(this);
 }

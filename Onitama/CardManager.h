@@ -9,6 +9,7 @@ class CardManager
 {
 private:
 	Card* cards[CARDS];
+	Card* sideCard;
 
 public:
 	CardManager();
