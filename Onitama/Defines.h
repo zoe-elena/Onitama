@@ -24,7 +24,3 @@ enum class E_CARDPOSITIONS { none, topLeft, topRight, sideRight, lowRight, lowLe
 #define WINDOWWIDTHSIZE SIDEPANELWIDTH * 2 + TILESIZE * BOARDSIZE + 2 * TILEPADDING + (BOARDSIZE - 1) * TILEPADDING
 #define CARDWIDTH TILESIZE * 2 + TILEPADDING * 2 + (TILESIZE - TILEPADDING * 2) / 2
 #define CARDHEIGHT CARDPANELHEIGHT - TILEPADDING * 2
-
-// TODO: Render Temple after highlighted Tile
-
-// TODO: What happends if no move possible

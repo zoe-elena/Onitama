@@ -5,8 +5,6 @@ public:
 	Vector2();
 	Vector2(int _x, int _y);
 
-	Vector2 normalize() const;
-
 	inline Vector2 operator+(const Vector2& B) const { return Vector2(x + B.x, y + B.y); }
 	inline bool operator!= (const Vector2& B) const { return !(*this == B); }
 	inline bool operator== (const Vector2& B) const { return x == B.x && y == B.y; }
@@ -14,6 +12,11 @@ public:
 	inline Vector2 operator-() {
 		this->x = -this->x;
 		this->y = -this->y;
+		return *this;
+	}
+	inline Vector2 operator* (const Vector2& B) {
+		this->x = this->x * B.x;
+		this->y = this->y * B.y;
 		return *this;
 	}
 	inline Vector2 operator* (const int B) {

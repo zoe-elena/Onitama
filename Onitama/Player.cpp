@@ -16,6 +16,9 @@ Player::Player(E_PLAYERCOLOR _color) : color(_color)
 		SetInitTemplePositions(4);
 		SetInitCardPositions(TILEPADDING * 4 + CARDHEIGHT + BOARDSIZE * TILESIZE + BOARDSIZE * TILEPADDING);
 	}
+
+	leftCard = nullptr;
+	rightCard = nullptr;
 }
 
 void Player::SetInitPiecePositions(int _row)
@@ -41,13 +44,13 @@ void Player::SetInitCardPositions(int _pixelHeight)
 void Player::SetLeftCard(Card* _leftCard)
 {
 	leftCard = _leftCard;
-	leftCard->SetOwner(this);
+	leftCard->Player = this;
 }
 
 void Player::SetRightCard(Card* _rightCard)
 {
 	rightCard = _rightCard;
-	rightCard->SetOwner(this);
+	rightCard->Player = this;
 }
 
 bool Player::IsOnLeftCard(Vector2 _mousePos)

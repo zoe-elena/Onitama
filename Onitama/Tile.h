@@ -9,17 +9,14 @@ class Tile
 {
 private:
 	Vector2 index;
-	Piece* piece = nullptr;
 
 public:
+	Piece* Piece = nullptr;
 	Tile();
 	Tile(Vector2 _index);
 
-	inline bool IsOccupied() const { return piece != nullptr; }
-	inline Player* GetOccupyingPlayer() const { return piece->GetOwner(); }
-
-	inline Piece* GetPiece() const { return piece; }
-	inline void SetPiece(Piece* _piece) { piece = _piece; }
+	inline bool IsOccupied() const { return Piece; }
+	inline Player* GetOccupyingPlayer() const { return Piece->GetOwner(); }
 
 	inline int GetXIndex() const { return index.x; }
 	inline int GetYIndex() const { return index.y; }

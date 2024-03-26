@@ -2,7 +2,7 @@
 
 Card::Card(E_CARDTYPE _cardType, E_CARDPOSITIONS _cardPosition, const std::vector<Vector2> _moves)
 {
-	player = nullptr;
+	Player = nullptr;
 	cardType = _cardType;
 	cardPosition = _cardPosition;
 

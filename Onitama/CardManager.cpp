@@ -3,6 +3,11 @@
 
 CardManager::CardManager()
 {
+	for (size_t i = 0; i < sizeof(cards); i++)
+	{
+		cards[i] = nullptr;
+	}
+	sideCard = nullptr;
 }
 
 void CardManager::InitCards(Player* _playerRed, Player* _playerBlue)
@@ -28,7 +33,7 @@ void CardManager::InitCards(Player* _playerRed, Player* _playerBlue)
 
 Card* CardManager::GetCard(E_CARDTYPE _cardType)
 {
-	for (size_t i = 0; i < CARDS; i++)
+	for (size_t i = 0; i < sizeof(cards); i++)
 	{
 		if (cards[i]->GetCardType() == _cardType)
 		{

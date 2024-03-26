@@ -118,7 +118,6 @@ void Renderer::InitPlayerPieces(Player* _player)
 	}
 }
 
-
 void Renderer::DrawSinglePiece(Piece* _piece)
 {
 	SDL_SetRenderDrawColor(SDLRenderer, 255, 0, 0, SDL_ALPHA_OPAQUE);

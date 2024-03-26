@@ -1,6 +1,7 @@
 #include "Color.h"
 
-Color::Color() {
+Color::Color()
+{
 	r = g = b = a = 0;
 }
 

@@ -17,19 +17,19 @@ void TileManager::InitializeTiles()
 	}
 }
 
-Tile* TileManager::GetTile(const int _xIndex, const int _yIndex)
+Tile* TileManager::GetTile(const Vector2 _index)
 {
-	if (IsInBounds(_xIndex, _yIndex))
+	if (IsInBounds(_index))
 	{
-		return &tiles[_xIndex][_yIndex];
+		return &tiles[_index.x][_index.y];
 	}
 	else {
 		return nullptr;
 	}
 }
 
-bool TileManager::IsInBounds(const int _xIndex, const int _yIndex) const {
-	if ((_xIndex < BOARDSIZE) && (_xIndex >= 0) && (_yIndex < BOARDSIZE) && (_yIndex >= 0))
+bool TileManager::IsInBounds(const Vector2 _index) const {
+	if ((_index.x < BOARDSIZE) && (_index.x >= 0) && (_index.y < BOARDSIZE) && (_index.y >= 0))
 	{
 		return true;
 	}
@@ -39,15 +39,15 @@ bool TileManager::IsInBounds(const int _xIndex, const int _yIndex) const {
 	}
 }
 
-Vector2 TileManager::GetClosestTile(const int _xPosition, const int _yPosition) const
+Vector2 TileManager::GetClosestTile(const Vector2 _position) const
 {
-	float xTilePosition = (_xPosition - SIDEPANELWIDTH - TILEPADDING / 2.0f) / (float)(TILESIZE + TILEPADDING);
-	float yTilePosition = (_yPosition - CARDPANELHEIGHT - TILEPADDING / 2.0f) / (float)(TILESIZE + TILEPADDING);
+	float xTilePosition = (_position.x - SIDEPANELWIDTH - TILEPADDING / 2.0f) / (float)(TILESIZE + TILEPADDING);
+	float yTilePosition = (_position.y - CARDPANELHEIGHT - TILEPADDING / 2.0f) / (float)(TILESIZE + TILEPADDING);
 
 	int xIndex = xTilePosition < 0 ? xTilePosition - 1 : xTilePosition;
 	int yIndex = yTilePosition < 0 ? yTilePosition - 1 : yTilePosition;
 
-	if (!IsInBounds(xIndex, yIndex))
+	if (!IsInBounds(Vector2(xIndex, yIndex)))
 	{
 		xIndex = yIndex = -1;
 	}
@@ -55,9 +55,9 @@ Vector2 TileManager::GetClosestTile(const int _xPosition, const int _yPosition) 
 	return Vector2(xIndex, yIndex);
 }
 
-void TileManager::SetTilePiece(const int _xIndex, const int _yIndex, Piece* piece)
+void TileManager::SetTilePiece(const Vector2 _index, Piece* piece)
 {
-	tiles[_xIndex][_yIndex].SetPiece(piece);
+	tiles[_index.x][_index.y].Piece = piece;
 }
 
 std::vector<Vector2> TileManager::GetValidMoveTileIndices(std::vector<Vector2> _moves, Vector2 _pieceIndex, Player* _activePlayer)
@@ -68,7 +68,7 @@ std::vector<Vector2> TileManager::GetValidMoveTileIndices(std::vector<Vector2> _
 	for (size_t i = 0; i < _moves.size(); i++)
 	{
 		Tile* possibleTile = GetMoveTile(_pieceIndex, _moves[i], playerSideModifier);
-		if (possibleTile != nullptr)
+		if (possibleTile)
 		{
 			if (possibleTile->IsOccupied() == false || IsEnemyPlayerOnTile(possibleTile, _activePlayer))
 			{
@@ -83,7 +83,7 @@ std::vector<Vector2> TileManager::GetValidMoveTileIndices(std::vector<Vector2> _
 Tile* TileManager::GetMoveTile(Vector2 _pieceIndex, Vector2 _move, int _playerSideModifier)
 {
 	Vector2 moveTileIndex = _pieceIndex + (_move * _playerSideModifier);
-	return GetTile(moveTileIndex.x, moveTileIndex.y);
+	return GetTile(moveTileIndex);
 }
 
 bool TileManager::IsEnemyPlayerOnTile(Tile* _tile, Player* _activePlayer)

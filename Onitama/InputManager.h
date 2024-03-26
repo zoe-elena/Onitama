@@ -10,7 +10,9 @@ private:
 	bool leftButtonDown = false;
 
 public:
+	InputManager();
+
 	void PollEvents();
-	inline Vector2 GetMousePosition() { return mousePosition; }
-	inline bool GetMouseButtonDown() { return leftButtonDown; }
+	inline Vector2 GetMousePosition() const { return mousePosition; }
+	inline bool GetMouseButtonDown() const { return leftButtonDown; }
 };
