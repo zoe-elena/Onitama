@@ -15,7 +15,7 @@ public:
 	Tile();
 	Tile(Vector2 _index);
 
-	inline bool GetIsOccupied() const { return piece != nullptr; }
+	inline bool IsOccupied() const { return piece != nullptr; }
 	inline Player* GetOccupyingPlayer() const { return piece->GetOwner(); }
 
 	inline Piece* GetPiece() const { return piece; }

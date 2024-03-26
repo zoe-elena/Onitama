@@ -21,7 +21,7 @@ private:
 	Piece* hoveredPiece;
 	Piece* selectedPiece;
 	Card* selectedCard;
-	std::vector<Vector2> validMoves;
+	std::vector<Vector2> validMovesTileIndices;
 
 	SDL_bool hasQuit = SDL_FALSE;
 
@@ -38,21 +38,19 @@ public:
 	inline SDL_bool HasQuit() const { return hasQuit; }
 	inline Piece* GetHoveredPiece() const { return hoveredPiece; }
 	inline Piece* GetSelectedPiece() const { return selectedPiece; }
-	inline std::vector<Vector2> GetMoveTiles() const { return validMoves; }
+	inline std::vector<Vector2> GetValidMoves() const { return validMovesTileIndices; }
 	inline Card* GetSelectedCard() const { return selectedCard; }
 	inline bool IsActivePlayer(Player* _player) const { return activePlayer == _player; }
 	inline bool IsSelectedCard(Card* _card) const { return selectedCard == _card; }
+	inline bool IsPieceSelected() const { return selectedPiece; }
 	inline void UnselectAll() { selectedCard = nullptr; selectedPiece = nullptr; }
-
-
-	Vector2 GetMoveTile(Piece* _piece, Vector2 _move) const;
 
 	void UpdateAllTiles();
 	void DoTurn();
 	void ResolveLeftMouseDown(Vector2 _mousePos);
 	void TryHoverPiece(Vector2 _mousePos);
 	bool TryMovePiece(Tile* _tile);
-	bool TrySelectPiece(Tile* _tile);
+	bool TrySelectPiece(Piece* _piece);
 	void SelectPiece(Piece* _piece);
 	bool IsValidMove(Vector2 _move);
 	void Update();

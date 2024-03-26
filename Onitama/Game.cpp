@@ -34,23 +34,6 @@ void Game::Update()
 	renderer->RenderGame();
 }
 
-Vector2 Game::GetMoveTile(Piece* _piece, Vector2 _move) const
-{
-	Vector2 pieceIndex = _piece->GetIndex();
-	if (activePlayer == playerRed)
-	{
-		return Vector2(pieceIndex.x + _move.x, pieceIndex.y + _move.y);
-	}
-	else if (activePlayer == playerBlue)
-	{
-		return Vector2(pieceIndex.x - _move.x, pieceIndex.y - _move.y);
-	}
-	else
-	{
-		return Vector2(-1, -1);
-	}
-}
-
 void Game::UpdateAllTiles()
 {
 	for (size_t i = 0; i < playerRed->PlayerPieces.size(); i++)
@@ -77,7 +60,7 @@ void Game::DoTurn()
 	{
 		ResolveLeftMouseDown(currentMousePos);
 	}
-	else if (selectedCard != nullptr)
+	else if (selectedCard)
 	{
 		TryHoverPiece(currentMousePos);
 	}
@@ -88,22 +71,23 @@ void Game::ResolveLeftMouseDown(Vector2 _mousePos)
 	Vector2 mouseIndex = tileManager->GetClosestTile(_mousePos.x, _mousePos.y);
 	Tile* tile = tileManager->GetTile(mouseIndex.x, mouseIndex.y);
 
-	if (tile != nullptr)
+	if (tile)
 	{
-		if (selectedPiece)
+		if (tile->IsOccupied())
 		{
-			if (selectedPiece == tile->GetPiece())
+			Piece* tempPiece = tile->GetPiece();
+			if (selectedPiece == tempPiece)
 			{
 				selectedPiece = nullptr;
 			}
 			else
 			{
-				TryMovePiece(tile);
+				TrySelectPiece(tempPiece);
 			}
 		}
-		else
+		else if(selectedPiece)
 		{
-			TrySelectPiece(tile);
+			TryMovePiece(tile);
 		}
 	}
 	else if (activePlayer->IsOnLeftCard(_mousePos))
@@ -127,42 +111,31 @@ bool Game::TryMovePiece(Tile* _tile)
 		return false;
 	}
 
-	if (_tile->GetIsOccupied())
+	if (_tile->IsOccupied() == false)
 	{
-		Piece* currentSelectedPiece = _tile->GetPiece();
-
-		if (currentSelectedPiece->GetOwner() != activePlayer)
-		{
-			selectedPiece->Move(_tile);
-			validMoves.clear();
-			UnselectAll();
-			return true;
-		}
-	}
-	else
-	{
+		Vector2 lastIndex = selectedPiece->GetIndex();
+		tileManager->GetTile(lastIndex.x, lastIndex.y)->SetPiece(nullptr);
 		selectedPiece->Move(_tile);
-		validMoves.clear();
+		validMovesTileIndices.clear();
 		UnselectAll();
 		return true;
+	}
+	else if (_tile->GetOccupyingPlayer() != activePlayer)
+	{
+		// Capture Enemy Piece
 	}
 
 	return false;
 }
 
-bool Game::TrySelectPiece(Tile* _tile)
+bool Game::TrySelectPiece(Piece* _piece)
 {
-	if (_tile->GetIsOccupied())
+	if (_piece->GetOwner() == activePlayer)
 	{
-		Piece* tempPiece = _tile->GetPiece();
-
-		if (tempPiece->GetOwner() == activePlayer)
+		if (TrySetMoveTiles(_piece))
 		{
-			if (TrySetMoveTiles(tempPiece))
-			{
-				SelectPiece(tempPiece);
-				return true;
-			}
+			SelectPiece(_piece);
+			return true;
 		}
 	}
 
@@ -171,9 +144,9 @@ bool Game::TrySelectPiece(Tile* _tile)
 
 bool Game::IsValidMove(Vector2 _index)
 {
-	for (size_t i = 0; i < validMoves.size(); i++)
+	for (size_t i = 0; i < validMovesTileIndices.size(); i++)
 	{
-		if (validMoves[i] == _index)
+		if (validMovesTileIndices[i] == _index)
 		{
 			return true;
 		}
@@ -188,7 +161,7 @@ void Game::TryHoverPiece(Vector2 _mousePos)
 	Tile* tile = tileManager->GetTile(mouseIndex.x, mouseIndex.y);
 
 	// Check for Piece on mouse position
-	if (tile != nullptr && tile->GetIsOccupied())
+	if (tile && tile->IsOccupied())
 	{
 		Piece* currentHoveredPiece = tile->GetPiece();
 
@@ -212,21 +185,11 @@ bool Game::TrySetMoveTiles(Piece* _piece)
 	}
 
 	std::vector<Vector2> selectedCardMoves = selectedCard->GetMoves();
+	std::vector<Vector2> tempValidMovesTileIndices = tileManager->GetValidMoveTileIndices(selectedCardMoves, _piece->GetIndex(), activePlayer);
 
-	std::vector<Vector2> possibleMoveTiles;
-	for (size_t i = 0; i < selectedCardMoves.size(); i++)
+	if (tempValidMovesTileIndices.size() != 0)
 	{
-		Vector2 possibleTile = GetMoveTile(_piece, selectedCardMoves[i]);
-
-		if (tileManager->IsInBounds(possibleTile.x, possibleTile.y) && tileManager->GetTile(possibleTile.x, possibleTile.y)->GetIsOccupied() == false)
-		{
-			possibleMoveTiles.push_back(possibleTile);
-		}
-	}
-
-	if (possibleMoveTiles.size() != 0)
-	{
-		validMoves = possibleMoveTiles;
+		validMovesTileIndices = tempValidMovesTileIndices;
 		return true;
 	}
 	else

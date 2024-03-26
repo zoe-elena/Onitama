@@ -7,7 +7,7 @@ CardManager::CardManager()
 
 void CardManager::InitCards(Player* _playerRed, Player* _playerBlue)
 {
-	std::vector<Vector2> movesDebug{ Vector2(0, 1), Vector2(-1, 0), Vector2(1, 0), Vector2(0, -1) };
+	std::vector<Vector2> movesDebug{ Vector2(0, 1), Vector2(-2, 1), Vector2(1, -1), Vector2(0, -2) };
 
 	// Player Red Cards
 	cards[0] = new Card(E_CARDTYPE::debug, E_CARDPOSITIONS::lowLeft, movesDebug);

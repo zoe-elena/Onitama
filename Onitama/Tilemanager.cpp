@@ -59,3 +59,44 @@ void TileManager::SetTilePiece(const int _xIndex, const int _yIndex, Piece* piec
 {
 	tiles[_xIndex][_yIndex].SetPiece(piece);
 }
+
+std::vector<Vector2> TileManager::GetValidMoveTileIndices(std::vector<Vector2> _moves, Vector2 _pieceIndex, Player* _activePlayer)
+{
+	std::vector<Vector2> validMoves;
+	int playerSideModifier = _activePlayer->GetColor() == E_PLAYERCOLOR::blue ? 1 : -1;
+
+	for (size_t i = 0; i < _moves.size(); i++)
+	{
+		Tile* possibleTile = GetMoveTile(_pieceIndex, _moves[i], playerSideModifier);
+		if (possibleTile != nullptr)
+		{
+			if (possibleTile->IsOccupied() == false || IsEnemyPlayerOnTile(possibleTile, _activePlayer))
+			{
+				validMoves.push_back(possibleTile->GetIndex());
+			}
+		}
+	}
+
+	return validMoves;
+}
+
+Tile* TileManager::GetMoveTile(Vector2 _pieceIndex, Vector2 _move, int _playerSideModifier)
+{
+	Vector2 moveTileIndex = _pieceIndex + (_move * _playerSideModifier);
+	return GetTile(moveTileIndex.x, moveTileIndex.y);
+}
+
+bool TileManager::IsEnemyPlayerOnTile(Tile* _tile, Player* _activePlayer)
+{
+	if (_tile->IsOccupied() == false)
+	{
+		return false;
+	}
+
+	if (_tile->GetOccupyingPlayer() != _activePlayer)
+	{
+		return true;
+	}
+
+	return false;
+}

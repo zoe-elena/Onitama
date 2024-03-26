@@ -72,9 +72,9 @@ void Renderer::DrawTiles(Color _color) const
 
 void Renderer::DrawMoveTiles(Color _color) const
 {
-	std::vector<Vector2> moveTiles = game->GetMoveTiles();
+	std::vector<Vector2> moveTiles = game->GetValidMoves();
 
-	if (moveTiles.size() == 0 || game->GetSelectedPiece() == nullptr)
+	if (moveTiles.size() == 0 || game->IsPieceSelected() == false)
 	{
 		return;
 	}

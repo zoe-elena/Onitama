@@ -16,4 +16,9 @@ public:
 		this->y = -this->y;
 		return *this;
 	}
+	inline Vector2 operator* (const int B) {
+		this->x = this->x * B;
+		this->y = this->y * B;
+		return *this;
+	}
 };
