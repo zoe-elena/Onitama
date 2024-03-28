@@ -11,12 +11,12 @@ private:
 	Vector2 index;
 
 public:
-	Piece* Piece = nullptr;
+	Piece* OccupyingPiece = nullptr;
 	Tile();
 	Tile(Vector2 _index);
 
-	inline bool IsOccupied() const { return Piece; }
-	inline Player* GetOccupyingPlayer() const { return Piece->GetOwner(); }
+	inline bool IsOccupied() const { return OccupyingPiece; }
+	inline Player* GetOccupyingPlayer() const { return OccupyingPiece->GetOwner(); }
 
 	inline int GetXIndex() const { return index.x; }
 	inline int GetYIndex() const { return index.y; }

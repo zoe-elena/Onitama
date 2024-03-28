@@ -36,7 +36,7 @@ private:
 	void DrawTiles(Color _color) const;
 	void DrawMoveTiles(Color _color) const;
 	void DrawTemple(Player* _player)  const;
-	void InitPlayerPieces(Player* _player);
+	void DrawPieces(Player* _player);
 	void DrawSinglePiece(Piece* _piece);
 	void DrawCards(Player* _player);
 

@@ -57,7 +57,7 @@ Vector2 TileManager::GetClosestTile(const Vector2 _position) const
 
 void TileManager::SetTilePiece(const Vector2 _index, Piece* piece)
 {
-	tiles[_index.x][_index.y].Piece = piece;
+	tiles[_index.x][_index.y].OccupyingPiece = piece;
 }
 
 std::vector<Vector2> TileManager::GetValidMoveTileIndices(std::vector<Vector2> _moves, Vector2 _pieceIndex, Player* _activePlayer)
@@ -99,4 +99,14 @@ bool TileManager::IsEnemyPlayerOnTile(Tile* _tile, Player* _activePlayer)
 	}
 
 	return false;
+}
+
+void TileManager::ClearTile(Vector2 _index)
+{
+	tiles[_index.x][_index.y].OccupyingPiece = nullptr;
+}
+
+void TileManager::CapturePiece(Vector2 _index)
+{
+	tiles[_index.x][_index.y].OccupyingPiece->isCaptured = true;
 }

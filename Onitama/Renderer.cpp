@@ -20,8 +20,8 @@ void Renderer::DrawGame()
 	DrawMoveTiles(moveTileColor);
 	DrawTemple(game->GetPlayerRed());
 	DrawTemple(game->GetPlayerBlue());
-	InitPlayerPieces(game->GetPlayerRed());
-	InitPlayerPieces(game->GetPlayerBlue());
+	DrawPieces(game->GetPlayerRed());
+	DrawPieces(game->GetPlayerBlue());
 	DrawCards(game->GetPlayerRed());
 	DrawCards(game->GetPlayerBlue());
 }
@@ -110,11 +110,14 @@ void Renderer::DrawTemple(Player* _player) const
 	SDL_RenderCopy(SDLRenderer, textureTemple, nullptr, &Tile);
 }
 
-void Renderer::InitPlayerPieces(Player* _player)
+void Renderer::DrawPieces(Player* _player)
 {
 	for (int u = 0; u < _player->PlayerPieces.size(); u++)
 	{
-		DrawSinglePiece(_player->PlayerPieces[u]);
+		if (_player->PlayerPieces[u]->isCaptured == false)
+		{
+			DrawSinglePiece(_player->PlayerPieces[u]);
+		}
 	}
 }
 

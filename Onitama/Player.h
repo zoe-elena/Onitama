@@ -23,6 +23,7 @@ private:
 	void SetInitCardPositions(int _pixelHeight);
 
 public:
+	std::vector<Piece*> PlayerPieces;
 	Player(E_PLAYERCOLOR _color);
 
 	void InitPieces();
@@ -37,7 +38,5 @@ public:
 	inline Card* GetRightCard() { return rightCard; }
 	bool IsOnLeftCard(Vector2 _mousePos);
 	bool IsOnRightCard(Vector2 _mousePos);
-
-	std::vector<Piece*> PlayerPieces;
 };
 

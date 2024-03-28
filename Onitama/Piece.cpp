@@ -25,5 +25,5 @@ bool Piece::isOnBoard() {
 void Piece::Move(Tile* _tile)
 {
 	Index = _tile->GetIndex();
-	_tile->Piece = this;
+	_tile->OccupyingPiece = this;
 }

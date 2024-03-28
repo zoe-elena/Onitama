@@ -10,10 +10,10 @@ class Piece
 private:
 	Player* player;
 	E_PIECETYPE type;
-	bool isCaptured = false;
 
 public:
 	Vector2 Index;
+	bool isCaptured = false;
 	Piece();
 	Piece(Player* _player, E_PIECETYPE _type, Vector2 _index);
 

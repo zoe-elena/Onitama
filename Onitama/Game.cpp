@@ -79,22 +79,14 @@ void Game::ResolveLeftMouseDown(Vector2 _mousePos)
 
 	if (tile)
 	{
-		if (tile->IsOccupied())
+		Piece* tempSelectedPiece = tile->OccupyingPiece;
+
+		if (selectedPiece && TryMovePiece(tile))
 		{
-			Piece* tempPiece = tile->Piece;
-			if (selectedPiece == tempPiece)
-			{
-				selectedPiece = nullptr;
-			}
-			else
-			{
-				TrySelectPiece(tempPiece);
-			}
+			return;
 		}
-		else if(selectedPiece)
-		{
-			TryMovePiece(tile);
-		}
+
+		TrySelectPiece(tempSelectedPiece);
 	}
 	else if (activePlayer->IsOnLeftCard(_mousePos))
 	{
@@ -117,25 +109,25 @@ bool Game::TryMovePiece(Tile* _tile)
 		return false;
 	}
 
-	if (_tile->IsOccupied() == false)
+	if (_tile->IsOccupied())
 	{
-		Vector2 lastIndex = selectedPiece->Index;
-		tileManager->GetTile(lastIndex)->Piece = nullptr;
-		selectedPiece->Move(_tile);
-		validMovesTileIndices.clear();
-		UnselectAll();
-		return true;
+		tileManager->CapturePiece(_tile->GetIndex());
 	}
-	else if (_tile->GetOccupyingPlayer() != activePlayer)
-	{
-		// Capture Enemy Piece
-	}
-
-	return false;
+	tileManager->ClearTile(selectedPiece->Index);
+	selectedPiece->Move(_tile);
+	validMovesTileIndices.clear();
+	UnselectAll();
+	return true;
 }
 
 bool Game::TrySelectPiece(Piece* _piece)
 {
+	if (_piece == nullptr || selectedPiece == _piece)
+	{
+		selectedPiece = nullptr;
+		return false;
+	}
+
 	if (_piece->GetOwner() == activePlayer)
 	{
 		if (TrySetMoveTiles(_piece))
@@ -169,7 +161,7 @@ void Game::TryHoverPiece(Vector2 _mousePos)
 	// Check for Piece on mouse position
 	if (tile && tile->IsOccupied())
 	{
-		Piece* currentHoveredPiece = tile->Piece;
+		Piece* currentHoveredPiece = tile->OccupyingPiece;
 
 		// Check if Piece is from the active player and 
 		if (currentHoveredPiece->GetOwner() == activePlayer)
