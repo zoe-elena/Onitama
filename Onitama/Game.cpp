@@ -91,10 +91,12 @@ void Game::ResolveLeftMouseDown(Vector2 _mousePos)
 	else if (activePlayer->IsOnLeftCard(_mousePos))
 	{
 		selectedCard = activePlayer->GetLeftCard();
+		TrySetMoveTiles(selectedPiece);
 	}
 	else if (activePlayer->IsOnRightCard(_mousePos))
 	{
 		selectedCard = activePlayer->GetRightCard();
+		TrySetMoveTiles(selectedPiece);
 	}
 	else
 	{
@@ -132,7 +134,6 @@ bool Game::TrySelectPiece(Piece* _piece)
 	{
 		if (TrySetMoveTiles(_piece))
 		{
-			SelectPiece(_piece);
 			return true;
 		}
 	}
@@ -176,7 +177,7 @@ void Game::TryHoverPiece(Vector2 _mousePos)
 
 bool Game::TrySetMoveTiles(Piece* _piece)
 {
-	if (selectedCard == nullptr)
+	if (selectedCard == nullptr || _piece == nullptr)
 	{
 		return false;
 	}
@@ -187,16 +188,12 @@ bool Game::TrySetMoveTiles(Piece* _piece)
 	if (tempValidMovesTileIndices.size() != 0)
 	{
 		validMovesTileIndices = tempValidMovesTileIndices;
+		selectedPiece = _piece;
+		hoveredPiece = nullptr;
 		return true;
 	}
 	else
 	{
 		return false;
 	}
-}
-
-void Game::SelectPiece(Piece* _piece)
-{
-	selectedPiece = _piece;
-	hoveredPiece = nullptr;
 }

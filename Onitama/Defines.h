@@ -14,7 +14,7 @@
 
 enum class E_PLAYERCOLOR { none, red, blue };
 enum class E_PIECETYPE { none, master, student };
-enum class E_CARDTYPE { none, debug };
+enum class E_CARDTYPE { none, mantis, dragon, ox, horse, rabbit };
 enum class E_CARDPOSITIONS { none, topLeft, topRight, sideRight, lowRight, lowLeft, sideLeft };
 
 #define TILESIZE 100

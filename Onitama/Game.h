@@ -52,7 +52,6 @@ public:
 	void TryHoverPiece(Vector2 _mousePos);
 	bool TryMovePiece(Tile* _tile);
 	bool TrySelectPiece(Piece* _piece);
-	void SelectPiece(Piece* _piece);
 	bool IsValidMove(Vector2 _move);
 	void Update();
 };
