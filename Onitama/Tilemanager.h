@@ -22,6 +22,5 @@ public:
 	bool IsEnemyPlayerOnTile(Tile* _tile, Player* _activePlayer);
 	void ClearTile(Vector2 _index);
 	void CapturePiece(Vector2 _index);
-	inline std::array<std::array<Tile, BOARDSIZE>, BOARDSIZE> GetTiles() { return tiles; }
 };
 

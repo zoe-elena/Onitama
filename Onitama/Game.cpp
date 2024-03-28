@@ -163,7 +163,6 @@ void Game::TryHoverPiece(Vector2 _mousePos)
 	{
 		Piece* currentHoveredPiece = tile->OccupyingPiece;
 
-		// Check if Piece is from the active player and 
 		if (currentHoveredPiece->GetOwner() == activePlayer)
 		{
 			hoveredPiece = currentHoveredPiece;

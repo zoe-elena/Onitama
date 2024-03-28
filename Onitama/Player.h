@@ -1,5 +1,5 @@
 #pragma once
-#include <vector>
+#include <array>
 #include "Vector2.h"
 #include "Defines.h"
 
@@ -10,7 +10,7 @@ class Player
 {
 private:
 	E_PLAYERCOLOR color;
-	std::vector<Vector2> initStudentPositions;
+	std::array<Vector2, STUDENTS> initStudentPositions;
 	Vector2 initMasterPosition;
 	Vector2 templePosition;
 	Card* leftCard;
@@ -23,7 +23,7 @@ private:
 	void SetInitCardPositions(int _pixelHeight);
 
 public:
-	std::vector<Piece*> PlayerPieces;
+	std::array<Piece*, PIECECOUNT> PlayerPieces;
 	Player(E_PLAYERCOLOR _color);
 
 	void InitPieces();

@@ -6,6 +6,7 @@
 #include "CardManager.h"
 #include "SDL.h"
 #include <iostream>
+
 class Game
 {
 private:
@@ -35,7 +36,6 @@ public:
 	inline Player* GetPlayerRed() const { return playerRed; }
 	inline Player* GetPlayerBlue() const { return playerBlue; }
 	inline Tile* GetTile(const Vector2 _index) const { return tileManager->GetTile(_index); }
-	inline std::array<std::array<Tile, BOARDSIZE>, BOARDSIZE> GetTiles() const { return tileManager->GetTiles(); }
 	inline SDL_bool HasQuit() const { return hasQuit; }
 	inline Piece* GetHoveredPiece() const { return hoveredPiece; }
 	inline Piece* GetSelectedPiece() const { return selectedPiece; }

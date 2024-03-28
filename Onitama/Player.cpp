@@ -23,11 +23,11 @@ Player::Player(E_PLAYERCOLOR _color) : color(_color)
 
 void Player::SetInitPiecePositions(int _row)
 {
-	initStudentPositions.push_back(Vector2(0, _row));
-	initStudentPositions.push_back(Vector2(1, _row));
+	initStudentPositions[0] = Vector2(0, _row);
+	initStudentPositions[1] = Vector2(1, _row);
 	initMasterPosition = Vector2(2, _row);
-	initStudentPositions.push_back(Vector2(3, _row));
-	initStudentPositions.push_back(Vector2(4, _row));
+	initStudentPositions[2] = Vector2(3, _row);
+	initStudentPositions[3] = Vector2(4, _row);
 }
 
 void Player::SetInitTemplePositions(int _row)
@@ -85,8 +85,9 @@ bool Player::IsOnRightCard(Vector2 _mousePos)
 
 void Player::InitPieces()
 {
+
 	for (int u = 0; u < initStudentPositions.size(); u++) {
-		PlayerPieces.push_back(new Piece(this, E_PIECETYPE::student, initStudentPositions[u]));
+		PlayerPieces[u] = new Piece(this, E_PIECETYPE::student, initStudentPositions[u]);
 	}
-	PlayerPieces.push_back(new Piece(this, E_PIECETYPE::master, initMasterPosition));
+	PlayerPieces[PlayerPieces.size() - 1] = new Piece(this, E_PIECETYPE::master, initMasterPosition);
 }
