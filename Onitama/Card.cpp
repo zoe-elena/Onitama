@@ -1,6 +1,6 @@
 #include "Card.h"
 
-Card::Card(E_CARDTYPE _cardType, E_CARDPOSITIONS _cardPosition, const std::vector<Vector2> _moves)
+Card::Card(E_CARDTYPE _cardType, E_CARDPOSITIONTYPE _cardPosition, const std::vector<Vector2> _moves)
 {
 	Player = nullptr;
 	cardType = _cardType;

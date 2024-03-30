@@ -44,6 +44,9 @@ public:
 	inline bool IsActivePlayer(Player* _player) const { return activePlayer == _player; }
 	inline bool IsSelectedCard(Card* _card) const { return selectedCard == _card; }
 	inline bool IsPieceSelected() const { return selectedPiece; }
+	inline std::array<Card*, CARDS> GetAllCards() const { return cardManager->GetCards(); }
+	inline std::array<Vector2, CARDSLOTS> GetAllCardPositions() const { return cardManager->GetCardPositions(); }
+	inline std::map<E_CARDPOSITIONTYPE, Vector2> GetCardPositionMap() { return cardManager->GetCardPositionMap(); }
 
 	void UpdateAllTiles();
 	void DoTurn();

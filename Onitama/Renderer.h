@@ -1,5 +1,8 @@
 #pragma once
+#include <array>
+#include <map>
 #include "SDL.h" 
+#include "Vector2.h"
 #include "Color.h"
 #include "Defines.h"
 
@@ -16,6 +19,13 @@ private:
 	SDL_Texture* textureStudent;
 	SDL_Texture* textureMaster;
 	SDL_Texture* textureTemple;
+	SDL_Texture* textureCardDragon;
+	SDL_Texture* textureCardHorse;
+	SDL_Texture* textureCardMantis;
+	SDL_Texture* textureCardOx;
+	SDL_Texture* textureCardRabbit;
+
+	std::map<E_CARDTYPE, SDL_Texture*&> cardTypeMap;
 
 	const Color backgroundColor = Color(89, 53, 46);
 	const Color tileColor = Color(115, 86, 78);
@@ -31,6 +41,10 @@ private:
 	const Color bluePieceColorSelected = Color(255, 255, 255);
 	const Color blueTempleColor = Color(100, 90, 150);
 
+	const Color cardColor = Color(115, 86, 78);
+	const Color cardColorInteractable = Color(150, 120, 115);
+	const Color cardColorSelected = Color(170, 140, 135);
+
 	void LoadTextures();
 	void DrawBackground(Color _color) const;
 	void DrawTiles(Color _color) const;
@@ -38,7 +52,7 @@ private:
 	void DrawTemple(Player* _player)  const;
 	void DrawPieces(Player* _player);
 	void DrawSinglePiece(Piece* _piece);
-	void DrawCards(Player* _player);
+	void DrawCards();
 
 	Color GetPieceColor(Piece* _piece);
 	Color GetColorByPlayerColor(E_PLAYERCOLOR _playerColor, Color _redColor, Color _blueColor) const;
@@ -49,4 +63,4 @@ public:
 	void DrawGame();
 	void RenderGame();
 };
-	
+

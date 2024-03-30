@@ -76,6 +76,7 @@ void Game::ResolveLeftMouseDown(Vector2 _mousePos)
 {
 	Vector2 mouseIndex = tileManager->GetClosestTile(_mousePos);
 	Tile* tile = tileManager->GetTile(mouseIndex);
+	E_CARDPOSITIONTYPE cardPositionType = cardManager->CheckCardHover(activePlayer->GetColor(), _mousePos);
 
 	if (tile)
 	{
@@ -88,14 +89,9 @@ void Game::ResolveLeftMouseDown(Vector2 _mousePos)
 
 		TrySelectPiece(tempSelectedPiece);
 	}
-	else if (activePlayer->IsOnLeftCard(_mousePos))
+	else if (cardPositionType != E_CARDPOSITIONTYPE::none)
 	{
-		selectedCard = activePlayer->GetLeftCard();
-		TrySetMoveTiles(selectedPiece);
-	}
-	else if (activePlayer->IsOnRightCard(_mousePos))
-	{
-		selectedCard = activePlayer->GetRightCard();
+		selectedCard = cardManager->GetCard(cardPositionType);
 		TrySetMoveTiles(selectedPiece);
 	}
 	else

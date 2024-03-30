@@ -1,10 +1,17 @@
 #include "SDL.h"
 #include "Renderer.h"
 #include "Game.h"
+#include "array"
 
 Renderer::Renderer(SDL_Renderer* _SDLRenderer, Game* _game) : SDLRenderer(_SDLRenderer), game(_game)
 {
+	cardTypeMap.emplace(E_CARDTYPE::dragon, textureCardDragon);
+	cardTypeMap.emplace(E_CARDTYPE::horse, textureCardHorse);
+	cardTypeMap.emplace(E_CARDTYPE::mantis, textureCardMantis);
+	cardTypeMap.emplace(E_CARDTYPE::ox, textureCardOx);
+	cardTypeMap.emplace(E_CARDTYPE::rabbit, textureCardRabbit);
 	LoadTextures();
+
 }
 
 Renderer::~Renderer()
@@ -22,8 +29,7 @@ void Renderer::DrawGame()
 	DrawTemple(game->GetPlayerBlue());
 	DrawPieces(game->GetPlayerRed());
 	DrawPieces(game->GetPlayerBlue());
-	DrawCards(game->GetPlayerRed());
-	DrawCards(game->GetPlayerBlue());
+	DrawCards();
 }
 
 void Renderer::RenderGame()
@@ -33,17 +39,32 @@ void Renderer::RenderGame()
 
 void Renderer::LoadTextures()
 {
-	SDL_Surface* surfaceStudent = SDL_LoadBMP("Extern/Pieces/Student.bmp");
-	SDL_Surface* surfaceMaster = SDL_LoadBMP("Extern/Pieces/Master.bmp");
-	SDL_Surface* surfaceTemple = SDL_LoadBMP("Extern/Pieces/Temple.bmp");
+	SDL_Surface* surfaceStudent = SDL_LoadBMP("Extern/Images/Student.bmp");
+	SDL_Surface* surfaceMaster = SDL_LoadBMP("Extern/Images/Master.bmp");
+	SDL_Surface* surfaceTemple = SDL_LoadBMP("Extern/Images/Temple.bmp");
+	SDL_Surface* surfaceCardDragon = SDL_LoadBMP("Extern/Images/CardDragon.bmp");
+	SDL_Surface* surfaceCardHorse = SDL_LoadBMP("Extern/Images/CardHorse.bmp");
+	SDL_Surface* surfaceCardMantis = SDL_LoadBMP("Extern/Images/CardMantis.bmp");
+	SDL_Surface* surfaceCardOx = SDL_LoadBMP("Extern/Images/CardOx.bmp");
+	SDL_Surface* surfaceCardRabbit = SDL_LoadBMP("Extern/Images/CardRabbit.bmp");
 
 	textureStudent = SDL_CreateTextureFromSurface(SDLRenderer, surfaceStudent);
 	textureMaster = SDL_CreateTextureFromSurface(SDLRenderer, surfaceMaster);
 	textureTemple = SDL_CreateTextureFromSurface(SDLRenderer, surfaceTemple);
+	textureCardDragon = SDL_CreateTextureFromSurface(SDLRenderer, surfaceCardDragon);
+	textureCardHorse = SDL_CreateTextureFromSurface(SDLRenderer, surfaceCardHorse);
+	textureCardMantis = SDL_CreateTextureFromSurface(SDLRenderer, surfaceCardMantis);
+	textureCardOx = SDL_CreateTextureFromSurface(SDLRenderer, surfaceCardOx);
+	textureCardRabbit = SDL_CreateTextureFromSurface(SDLRenderer, surfaceCardRabbit);
 
 	SDL_FreeSurface(surfaceStudent);
 	SDL_FreeSurface(surfaceMaster);
 	SDL_FreeSurface(surfaceTemple);
+	SDL_FreeSurface(surfaceCardDragon);
+	SDL_FreeSurface(surfaceCardHorse);
+	SDL_FreeSurface(surfaceCardMantis);
+	SDL_FreeSurface(surfaceCardOx);
+	SDL_FreeSurface(surfaceCardRabbit);
 }
 
 void Renderer::DrawBackground(Color _color) const
@@ -143,44 +164,38 @@ void Renderer::DrawSinglePiece(Piece* _piece)
 	Color color = GetPieceColor(_piece);
 	SDL_SetTextureColorMod(texture, color.r, color.g, color.b);
 	SDL_RenderCopy(SDLRenderer, texture, nullptr, &Tile);
-	// Use for cards flip: SDL_RenderCopyEx(SDLRenderer, texture, nullptr, &Tile, 0, nullptr, SDL_FLIP_VERTICAL);
 }
 
-void Renderer::DrawCards(Player* _player)
+void Renderer::DrawCards()
 {
 	SDL_Rect Tile;
-	Color colorLeftCard = Color(0, 0, 0, 255);
-	Color colorRightCard = Color(0, 0, 0, 255);
-	Card* selectedCard = game->GetSelectedCard();
 
-	if (selectedCard != nullptr && game->IsActivePlayer(_player))
+	std::array<Card*, CARDS> cards = game->GetAllCards();
+	std::array<Vector2, CARDSLOTS> cardPositions = game->GetAllCardPositions();
+	Color color;
+
+	for (size_t i = 0; i < cards.size(); i++)
 	{
-		if (selectedCard->GetCardPosition() == E_CARDPOSITIONS::topLeft
-			|| selectedCard->GetCardPosition() == E_CARDPOSITIONS::lowLeft)
-		{
-			colorLeftCard = Color(100, 100, 100, 255);
-		}
+		int cardRotation = cards[i]->Player->GetColor() == E_PLAYERCOLOR::red ? 180 : 0;
 
-		if (selectedCard->GetCardPosition() == E_CARDPOSITIONS::topRight
-			|| selectedCard->GetCardPosition() == E_CARDPOSITIONS::lowRight)
+		if (cards[i] == game->GetSelectedCard())
 		{
-			colorRightCard = Color(100, 100, 100, 255);
+			color = cardColorSelected;
 		}
+		else
+		{
+			color = game->IsActivePlayer(cards[i]->Player) ? cardColorInteractable : cardColor;
+		}
+		Vector2 tempCardPosition = game->GetCardPositionMap().find(cards[i]->GetCardPositionType())->second;
+		Tile.x = tempCardPosition.x;
+		Tile.y = tempCardPosition.y;
+		Tile.w = CARDWIDTH;
+		Tile.h = CARDHEIGHT;
+
+		SDL_Texture* tempCardTexture = cardTypeMap.find(cards[i]->GetCardType())->second;
+		SDL_SetTextureColorMod(tempCardTexture, color.r, color.g, color.b);
+		SDL_RenderCopyEx(SDLRenderer, tempCardTexture, nullptr, &Tile, cardRotation, nullptr, SDL_FLIP_NONE);
 	}
-
-	Tile.x = _player->GetLeftCardSlotPosition().x;
-	Tile.y = _player->GetLeftCardSlotPosition().y;
-	Tile.w = CARDWIDTH;
-	Tile.h = CARDHEIGHT;
-	SDL_SetRenderDrawColor(SDLRenderer, colorLeftCard.r, colorLeftCard.g, colorLeftCard.b, colorLeftCard.a);
-	SDL_RenderFillRect(SDLRenderer, &Tile);
-
-	Tile.x = _player->GetRightCardSlotPosition().x;
-	Tile.y = _player->GetRightCardSlotPosition().y;
-	Tile.w = CARDWIDTH;
-	Tile.h = CARDHEIGHT;
-	SDL_SetRenderDrawColor(SDLRenderer, colorRightCard.r, colorRightCard.g, colorRightCard.b, colorRightCard.a);
-	SDL_RenderFillRect(SDLRenderer, &Tile);
 }
 
 Color Renderer::GetPieceColor(Piece* _piece)
