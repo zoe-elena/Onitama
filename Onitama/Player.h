@@ -34,8 +34,6 @@ public:
 	inline Vector2 GetTemplePosition() { return templePosition; }
 	inline Vector2 GetLeftCardSlotPosition() { return leftCardSlotPosition; }
 	inline Vector2 GetRightCardSlotPosition() { return rightCardSlotPosition; }
-	inline Card* GetLeftCard() { return leftCard; }
-	inline Card* GetRightCard() { return rightCard; }
 	bool IsOnLeftCard(Vector2 _mousePos);
 	bool IsOnRightCard(Vector2 _mousePos);
 };

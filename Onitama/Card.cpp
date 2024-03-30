@@ -1,10 +1,11 @@
 #include "Card.h"
+#include "Player.h"
 
-Card::Card(E_CARDTYPE _cardType, E_CARDPOSITIONTYPE _cardPosition, const std::vector<Vector2> _moves)
+Card::Card(Player* _player, E_CARDTYPE _cardType, E_CARDPOSITIONTYPE _cardPosition, const std::vector<Vector2> _moves)
 {
-	Player = nullptr;
+	player = _player;
 	cardType = _cardType;
-	cardPosition = _cardPosition;
+	cardPositionType = _cardPosition;
 
 	for (size_t x = 0; x < _moves.size(); x++)
 	{

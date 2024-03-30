@@ -176,7 +176,7 @@ void Renderer::DrawCards()
 
 	for (size_t i = 0; i < cards.size(); i++)
 	{
-		int cardRotation = cards[i]->Player->GetColor() == E_PLAYERCOLOR::red ? 180 : 0;
+		int cardRotation = cards[i]->player->GetColor() == E_PLAYERCOLOR::red ? 180 : 0;
 
 		if (cards[i] == game->GetSelectedCard())
 		{
@@ -184,9 +184,9 @@ void Renderer::DrawCards()
 		}
 		else
 		{
-			color = game->IsActivePlayer(cards[i]->Player) ? cardColorInteractable : cardColor;
+			color = game->IsActivePlayer(cards[i]->player) ? cardColorInteractable : cardColor;
 		}
-		Vector2 tempCardPosition = game->GetCardPositionMap().find(cards[i]->GetCardPositionType())->second;
+		Vector2 tempCardPosition = game->GetCardPositionMap().find(cards[i]->cardPositionType)->second;
 		Tile.x = tempCardPosition.x;
 		Tile.y = tempCardPosition.y;
 		Tile.w = CARDWIDTH;

@@ -50,6 +50,7 @@ public:
 
 	void UpdateAllTiles();
 	void DoTurn();
+	void NextTurn();
 	void UnselectAll();
 	void ResolveLeftMouseDown(Vector2 _mousePos);
 	void TryHoverPiece(Vector2 _mousePos);

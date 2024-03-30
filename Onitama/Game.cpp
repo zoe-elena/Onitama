@@ -66,6 +66,21 @@ void Game::DoTurn()
 	}
 }
 
+void Game::NextTurn()
+{
+	cardManager->MoveCardsAlong(activePlayer, selectedCard);
+
+	if (activePlayer == playerRed)
+	{
+		activePlayer = playerBlue;
+	}
+	else
+	{
+		activePlayer = playerRed;
+	}
+}
+
+
 void Game::UnselectAll()
 {
 	selectedCard = nullptr;
@@ -114,6 +129,7 @@ bool Game::TryMovePiece(Tile* _tile)
 	tileManager->ClearTile(selectedPiece->Index);
 	selectedPiece->Move(_tile);
 	validMovesTileIndices.clear();
+	NextTurn();
 	UnselectAll();
 	return true;
 }

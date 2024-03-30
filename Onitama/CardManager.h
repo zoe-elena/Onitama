@@ -14,6 +14,9 @@ private:
 	std::array<Vector2, CARDSLOTS> cardPositions;
 	std::map<E_CARDPOSITIONTYPE, Vector2> cardPositionMap;
 
+	Player* playerBlue;
+	Player* playerRed;
+
 	int leftCardsX = SIDEPANELWIDTH + TILEPADDING;
 	int rightCardsX = leftCardsX + CARDWIDTH + TILEPADDING * 2;
 	int sideCardY = (WINDOWLENGTHSIZE - CARDHEIGHT) / 2;
@@ -34,4 +37,5 @@ public:
 	Card* GetCard(E_CARDPOSITIONTYPE _cardPositionType);
 	E_CARDPOSITIONTYPE CheckCardHover(E_PLAYERCOLOR _activePlayerColor, Vector2 _mousePos);
 	bool IsMouseHoveringOverCard(int x, int y, int mouseX, int mouseY);
+	void MoveCardsAlong(Player* _activePlayer, Card* _selectedCard);
 };
