@@ -21,6 +21,7 @@ public:
 	inline int GetXIndex() const { return Index.x; }
 	inline int GetYIndex() const { return Index.y; }
 	inline E_PIECETYPE GetType() const { return type; }
+	inline bool IsMaster() const { return type == E_PIECETYPE::master; }
 
 	E_PLAYERCOLOR GetColor();
 	bool isOnBoard();

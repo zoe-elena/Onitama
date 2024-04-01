@@ -95,13 +95,16 @@ void Game::NextTurn()
 
 bool Game::IsWin()
 {
-	if (activePlayer == playerRed)
+	if (selectedPiece->IsMaster())
 	{
-		return selectedPiece->Index == playerBlue->GetTemplePosition();
-	}
-	else if (activePlayer == playerBlue)
-	{
-		return selectedPiece->Index == playerRed->GetTemplePosition();
+		if (activePlayer == playerRed)
+		{
+			return selectedPiece->Index == playerBlue->GetTemplePosition();
+		}
+		else if (activePlayer == playerBlue)
+		{
+			return selectedPiece->Index == playerRed->GetTemplePosition();
+		}
 	}
 }
 
@@ -156,6 +159,7 @@ bool Game::TryMovePiece(Tile* _tile)
 	validMovesTileIndices.clear();
 	cardManager->MoveCardsAlong(activePlayer, selectedCard);
 
+	// TODO: Win if Master gets captured
 	if (IsWin() == false)
 	{
 		NextTurn();
