@@ -4,6 +4,10 @@ InputManager::InputManager()
 {
 }
 
+InputManager::~InputManager()
+{
+}
+
 void InputManager::PollEvents()
 {
 	leftButtonDown = false;

@@ -25,16 +25,11 @@ private:
 public:
 	std::array<Piece*, PIECECOUNT> PlayerPieces;
 	Player(E_PLAYERCOLOR _color);
+	~Player();
 
-	void InitPieces();
-	void SetLeftCard(Card* _leftCard);
-	void SetRightCard(Card* _rightCard);
+	void InitPlayer();
 
 	inline E_PLAYERCOLOR GetColor() { return color; }
 	inline Vector2 GetTemplePosition() { return templePosition; }
-	inline Vector2 GetLeftCardSlotPosition() { return leftCardSlotPosition; }
-	inline Vector2 GetRightCardSlotPosition() { return rightCardSlotPosition; }
-	bool IsOnLeftCard(Vector2 _mousePos);
-	bool IsOnRightCard(Vector2 _mousePos);
 };
 

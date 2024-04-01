@@ -11,6 +11,7 @@ private:
 
 public:
 	InputManager();
+	~InputManager();
 
 	void PollEvents();
 	inline Vector2 GetMousePosition() const { return mousePosition; }

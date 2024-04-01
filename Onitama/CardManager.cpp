@@ -1,40 +1,74 @@
 #include <vector>
+#include <random>
 #include "CardManager.h"
 #include "Player.h"
 
-CardManager::CardManager()
+CardManager::CardManager(Player* _playerRed, Player* _playerBlue, Player* _activeplayer)
 {
-	// TODO: Put this here to supress warning for missing initialization
-	cards = {};
-	sideCard = nullptr;
+	playerRed = _playerRed;
+	playerBlue = _playerBlue;
+	MapCardPositions();
+	MapPlayerCards();
+	InitCards(_activeplayer);
 }
 
-void CardManager::InitCards(Player* _playerRed, Player* _playerBlue)
+CardManager::~CardManager()
 {
-	std::vector<Vector2> movesMantis{ Vector2(-1, -1), Vector2(1, -1), Vector2(0, 1) };
-	std::vector<Vector2> movesDragon{ Vector2(-2, -1), Vector2(-1, 1), Vector2(1, 1), Vector2(2, -1) };
-	std::vector<Vector2> movesOx{ Vector2(0, -1), Vector2(0, 1), Vector2(1, 0) };
-	std::vector<Vector2> movesHorse{ Vector2(-1, 0), Vector2(0, -1), Vector2(0, 1) };
-	std::vector<Vector2> movesRabbit{ Vector2(-1, 1), Vector2(1, -1), Vector2(2, 0) };
+	for (size_t i = 0; i < cards.size(); i++)
+	{
+		delete(cards[i]);
+	}
+}
 
-	cards[0] = new Card(_playerRed, E_CARDTYPE::ox, E_CARDPOSITIONTYPE::topLeft, movesOx);
-	cards[1] = new Card(_playerRed, E_CARDTYPE::horse, E_CARDPOSITIONTYPE::topRight, movesHorse);
-	cards[2] = new Card(_playerBlue, E_CARDTYPE::mantis, E_CARDPOSITIONTYPE::bottomRight, movesMantis);
-	cards[3] = new Card(_playerBlue, E_CARDTYPE::dragon, E_CARDPOSITIONTYPE::bottomLeft, movesDragon);
-	cards[4] = new Card(_playerRed, E_CARDTYPE::rabbit, E_CARDPOSITIONTYPE::sideLeft, movesRabbit);
-
-	sideCard = cards[4];
-	sideCard->player = _playerRed;
-
+void CardManager::MapCardPositions()
+{
 	cardPositionMap.emplace(E_CARDPOSITIONTYPE::topLeft, Vector2(leftCardsX, topCardsY));
 	cardPositionMap.emplace(E_CARDPOSITIONTYPE::topRight, Vector2(rightCardsX, topCardsY));
 	cardPositionMap.emplace(E_CARDPOSITIONTYPE::sideRight, Vector2(sideCardRightX, sideCardY));
 	cardPositionMap.emplace(E_CARDPOSITIONTYPE::bottomRight, Vector2(rightCardsX, bottomCardsY));
 	cardPositionMap.emplace(E_CARDPOSITIONTYPE::bottomLeft, Vector2(leftCardsX, bottomCardsY));
 	cardPositionMap.emplace(E_CARDPOSITIONTYPE::sideLeft, Vector2(sideCardLeftX, sideCardY));
+}
 
-	playerRed = _playerRed;
-	playerBlue = _playerBlue;
+void CardManager::MapPlayerCards()
+{
+	playerCardMap.emplace(E_CARDPOSITIONTYPE::topLeft, playerRed);
+	playerCardMap.emplace(E_CARDPOSITIONTYPE::topRight, playerRed);
+	playerCardMap.emplace(E_CARDPOSITIONTYPE::sideRight, playerBlue);
+	playerCardMap.emplace(E_CARDPOSITIONTYPE::bottomRight, playerBlue);
+	playerCardMap.emplace(E_CARDPOSITIONTYPE::bottomLeft, playerBlue);
+	playerCardMap.emplace(E_CARDPOSITIONTYPE::sideLeft, playerRed);
+}
+
+void CardManager::InitCards(Player* _activeplayer)
+{
+	// Shuffle the Cards
+	std::array<E_CARDPOSITIONTYPE, CARDS> randomCardPositions =
+	{ E_CARDPOSITIONTYPE::topLeft,
+	E_CARDPOSITIONTYPE::topRight,
+	E_CARDPOSITIONTYPE::bottomRight,
+	E_CARDPOSITIONTYPE::bottomLeft };
+	randomCardPositions[CARDS - 1] = _activeplayer == playerRed ? E_CARDPOSITIONTYPE::sideLeft : E_CARDPOSITIONTYPE::sideRight;
+	std::random_device rd;
+	std::mt19937 gen(rd());
+	std::shuffle(std::begin(randomCardPositions), std::end(randomCardPositions), gen);
+
+	cards[0] = new Card(playerCardMap.find(randomCardPositions[0])->second, E_CARDTYPE::ox, randomCardPositions[0], movesOx);
+	cards[1] = new Card(playerCardMap.find(randomCardPositions[1])->second, E_CARDTYPE::horse, randomCardPositions[1], movesHorse);
+	cards[2] = new Card(playerCardMap.find(randomCardPositions[2])->second, E_CARDTYPE::mantis, randomCardPositions[2], movesMantis);
+	cards[3] = new Card(playerCardMap.find(randomCardPositions[3])->second, E_CARDTYPE::dragon, randomCardPositions[3], movesDragon);
+	cards[4] = new Card(playerCardMap.find(randomCardPositions[4])->second, E_CARDTYPE::rabbit, randomCardPositions[4], movesRabbit);
+
+	for (size_t i = 0; i < cards.size(); i++)
+	{
+		if (cards[i]->cardPositionType == E_CARDPOSITIONTYPE::sideLeft ||
+			cards[i]->cardPositionType == E_CARDPOSITIONTYPE::sideRight)
+		{
+			sideCard = cards[i];
+		}
+	}
+
+	sideCard->player = playerCardMap.find(sideCard->cardPositionType)->second;
 }
 
 Card* CardManager::GetCard(E_CARDTYPE _cardType)

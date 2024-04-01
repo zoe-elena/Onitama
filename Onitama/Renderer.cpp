@@ -18,6 +18,12 @@ Renderer::~Renderer()
 {
 	SDL_DestroyTexture(textureStudent);
 	SDL_DestroyTexture(textureMaster);
+	SDL_DestroyTexture(textureTemple);
+	SDL_DestroyTexture(textureCardDragon);
+	SDL_DestroyTexture(textureCardHorse);
+	SDL_DestroyTexture(textureCardMantis);
+	SDL_DestroyTexture(textureCardOx);
+	SDL_DestroyTexture(textureCardRabbit);
 }
 
 void Renderer::DrawGame()

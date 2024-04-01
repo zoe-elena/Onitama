@@ -1,27 +1,42 @@
 #include "Game.h"
 #include <functional>
+#include <random>
 
 Game::Game(SDL_Renderer* _SDLRenderer)
 {
-	InitGame(_SDLRenderer);
+	SDLRenderer = _SDLRenderer;
+
+	InitGame();
 }
 
-void Game::InitGame(SDL_Renderer* _SDLRenderer)
+void Game::InitGame()
 {
-	playerRed = new Player(E_PLAYERCOLOR::red);
-	playerBlue = new Player(E_PLAYERCOLOR::blue);
 	tileManager = new TileManager();
 	inputManager = new InputManager();
-	playerRed->InitPieces();
-	playerBlue->InitPieces();
-	activePlayer = playerRed;
+	playerRed = new Player(E_PLAYERCOLOR::red);
+	playerBlue = new Player(E_PLAYERCOLOR::blue);
+
+	std::mt19937 rng(std::random_device{}());
+	std::uniform_int_distribution<int> dist(0, 99);
+	int random = dist(rng);
+	activePlayer = random < 50 ? playerRed : playerBlue;
+	//activePlayer = playerRed;
+
 	UpdateAllTiles();
+	cardManager = new CardManager(playerRed, playerBlue, activePlayer);
+	renderer = new Renderer(SDLRenderer, this);
+}
 
-	cardManager = new CardManager();
-	cardManager->InitCards(playerRed, playerBlue);
+void Game::RestartGame()
+{
+	delete(cardManager);
+	delete(tileManager);
+	delete(inputManager);
+	delete(renderer);
+	delete(playerRed);
+	delete(playerBlue);
 
-	SDLRenderer = _SDLRenderer;
-	renderer = new Renderer(_SDLRenderer, this);
+	InitGame();
 }
 
 void Game::Update()
@@ -68,8 +83,6 @@ void Game::DoTurn()
 
 void Game::NextTurn()
 {
-	cardManager->MoveCardsAlong(activePlayer, selectedCard);
-
 	if (activePlayer == playerRed)
 	{
 		activePlayer = playerBlue;
@@ -80,6 +93,17 @@ void Game::NextTurn()
 	}
 }
 
+bool Game::IsWin()
+{
+	if (activePlayer == playerRed)
+	{
+		return selectedPiece->Index == playerBlue->GetTemplePosition();
+	}
+	else if (activePlayer == playerBlue)
+	{
+		return selectedPiece->Index == playerRed->GetTemplePosition();
+	}
+}
 
 void Game::UnselectAll()
 {
@@ -126,10 +150,21 @@ bool Game::TryMovePiece(Tile* _tile)
 	{
 		tileManager->CapturePiece(_tile->GetIndex());
 	}
+
 	tileManager->ClearTile(selectedPiece->Index);
 	selectedPiece->Move(_tile);
 	validMovesTileIndices.clear();
-	NextTurn();
+	cardManager->MoveCardsAlong(activePlayer, selectedCard);
+
+	if (IsWin() == false)
+	{
+		NextTurn();
+	}
+	else
+	{
+		RestartGame();
+	}
+
 	UnselectAll();
 	return true;
 }

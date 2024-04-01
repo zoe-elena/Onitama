@@ -31,7 +31,6 @@ private:
 public:
 	Game(SDL_Renderer* _SDLRenderer);
 
-	void InitGame(SDL_Renderer* _SDLRenderer);
 
 	inline Player* GetPlayerRed() const { return playerRed; }
 	inline Player* GetPlayerBlue() const { return playerBlue; }
@@ -48,9 +47,12 @@ public:
 	inline std::array<Vector2, CARDSLOTS> GetAllCardPositions() const { return cardManager->GetCardPositions(); }
 	inline std::map<E_CARDPOSITIONTYPE, Vector2> GetCardPositionMap() { return cardManager->GetCardPositionMap(); }
 
+	void InitGame();
+	void RestartGame();
 	void UpdateAllTiles();
 	void DoTurn();
 	void NextTurn();
+	bool IsWin();
 	void UnselectAll();
 	void ResolveLeftMouseDown(Vector2 _mousePos);
 	void TryHoverPiece(Vector2 _mousePos);

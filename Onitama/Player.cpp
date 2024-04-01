@@ -15,8 +15,15 @@ Player::Player(E_PLAYERCOLOR _color) : color(_color)
 		SetInitTemplePositions(4);
 	}
 
-	leftCard = nullptr;
-	rightCard = nullptr;
+	InitPlayer();
+}
+
+Player::~Player()
+{
+	for (size_t i = 0; i < PlayerPieces.size(); i++)
+	{
+		delete(PlayerPieces[i]);
+	}
 }
 
 void Player::SetInitPiecePositions(int _row)
@@ -33,8 +40,10 @@ void Player::SetInitTemplePositions(int _row)
 	templePosition = Vector2(2, _row);
 }
 
-void Player::InitPieces()
+void Player::InitPlayer()
 {
+	leftCard = nullptr;
+	rightCard = nullptr;
 
 	for (int u = 0; u < initStudentPositions.size(); u++) {
 		PlayerPieces[u] = new Piece(this, E_PIECETYPE::student, initStudentPositions[u]);
