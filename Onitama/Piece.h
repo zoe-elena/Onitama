@@ -3,7 +3,6 @@
 #include "Defines.h"
 
 class Player;
-class Tile;
 
 class Piece
 {
@@ -25,6 +24,5 @@ public:
 
 	E_PLAYERCOLOR GetColor();
 	bool isOnBoard();
-	void Move(Tile* _tile);
 };
 

@@ -34,7 +34,7 @@ public:
 
 	inline Player* GetPlayerRed() const { return playerRed; }
 	inline Player* GetPlayerBlue() const { return playerBlue; }
-	inline Tile* GetTile(const Vector2 _index) const { return tileManager->GetTile(_index); }
+	inline Tile GetTile(const Vector2 _index) const { return tileManager->GetTile(_index); }
 	inline SDL_bool HasQuit() const { return hasQuit; }
 	inline Piece* GetHoveredPiece() const { return hoveredPiece; }
 	inline Piece* GetSelectedPiece() const { return selectedPiece; }
@@ -52,12 +52,14 @@ public:
 	void UpdateAllTiles();
 	void DoTurn();
 	void NextTurn();
-	bool IsWin();
+	bool IsWin(Piece* _capturedPiece);
 	void UnselectAll();
 	void ResolveLeftMouseDown(Vector2 _mousePos);
 	void TryHoverPiece(Vector2 _mousePos);
-	bool TryMovePiece(Tile* _tile);
+	bool TryMovePiece(Tile _tile);
+	void MovePiece(Tile _tile, Piece* _capturedPiece);
 	bool TrySelectPiece(Piece* _piece);
+	void SelectPiece(Piece* _piece);
 	bool IsValidMove(Vector2 _move);
 	void Update();
 };

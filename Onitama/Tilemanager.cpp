@@ -17,19 +17,37 @@ void TileManager::InitializeTiles()
 	}
 }
 
-Tile* TileManager::GetTile(const Vector2 _index)
+Tile TileManager::GetTile(const Vector2 _index) const
 {
 	if (IsInBounds(_index))
 	{
-		return &tiles[_index.x][_index.y];
+		return tiles[_index.x][_index.y];
 	}
 	else {
-		return nullptr;
+		return Tile(Vector2(-1, -1));
 	}
 }
 
 bool TileManager::IsInBounds(const Vector2 _index) const {
-	if ((_index.x < BOARDSIZE) && (_index.x >= 0) && (_index.y < BOARDSIZE) && (_index.y >= 0))
+	if ((_index.x < BOARDSIZE)
+		&& (_index.x >= 0)
+		&& (_index.y < BOARDSIZE)
+		&& (_index.y >= 0))
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+bool TileManager::IsInBounds(const Tile _tile) const
+{
+	if ((_tile.GetXIndex() < BOARDSIZE)
+		&& (_tile.GetXIndex() >= 0)
+		&& (_tile.GetYIndex() < BOARDSIZE)
+		&& (_tile.GetYIndex() >= 0))
 	{
 		return true;
 	}
@@ -67,12 +85,12 @@ std::vector<Vector2> TileManager::GetValidMoveTileIndices(std::vector<Vector2> _
 
 	for (size_t i = 0; i < _moves.size(); i++)
 	{
-		Tile* possibleTile = GetMoveTile(_pieceIndex, _moves[i], playerSideModifier);
-		if (possibleTile)
+		Tile possibleTile = GetMoveTile(_pieceIndex, _moves[i], playerSideModifier);
+		if (IsInBounds(Vector2(possibleTile.GetXIndex(), (possibleTile.GetYIndex()))))
 		{
-			if (possibleTile->IsOccupied() == false || IsEnemyPlayerOnTile(possibleTile, _activePlayer))
+			if (possibleTile.IsOccupied() == false || IsEnemyPlayerOnTile(possibleTile, _activePlayer))
 			{
-				validMoves.push_back(possibleTile->GetIndex());
+				validMoves.push_back(possibleTile.GetIndex());
 			}
 		}
 	}
@@ -80,20 +98,20 @@ std::vector<Vector2> TileManager::GetValidMoveTileIndices(std::vector<Vector2> _
 	return validMoves;
 }
 
-Tile* TileManager::GetMoveTile(Vector2 _pieceIndex, Vector2 _move, int _playerSideModifier)
+Tile TileManager::GetMoveTile(Vector2 _pieceIndex, Vector2 _move, int _playerSideModifier)
 {
 	Vector2 moveTileIndex = _pieceIndex + (_move * _playerSideModifier);
 	return GetTile(moveTileIndex);
 }
 
-bool TileManager::IsEnemyPlayerOnTile(Tile* _tile, Player* _activePlayer)
+bool TileManager::IsEnemyPlayerOnTile(Tile _tile, Player* _activePlayer)
 {
-	if (_tile->IsOccupied() == false)
+	if (_tile.IsOccupied() == false)
 	{
 		return false;
 	}
 
-	if (_tile->GetOccupyingPlayer() != _activePlayer)
+	if (_tile.GetOccupyingPlayer() != _activePlayer)
 	{
 		return true;
 	}
@@ -106,7 +124,15 @@ void TileManager::ClearTile(Vector2 _index)
 	tiles[_index.x][_index.y].OccupyingPiece = nullptr;
 }
 
-void TileManager::CapturePiece(Vector2 _index)
+Piece* TileManager::TryCapturePiece(Tile _tile)
 {
-	tiles[_index.x][_index.y].OccupyingPiece->isCaptured = true;
+	if (_tile.IsOccupied())
+	{
+		_tile.OccupyingPiece->isCaptured = true;
+		return _tile.OccupyingPiece;
+	}
+	else
+	{
+		return nullptr;
+	}
 }

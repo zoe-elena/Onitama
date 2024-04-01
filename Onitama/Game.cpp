@@ -93,8 +93,13 @@ void Game::NextTurn()
 	}
 }
 
-bool Game::IsWin()
+bool Game::IsWin(Piece* _capturedPiece)
 {
+	if (_capturedPiece && _capturedPiece->IsMaster())
+	{
+		return true;
+	}
+
 	if (selectedPiece->IsMaster())
 	{
 		if (activePlayer == playerRed)
@@ -117,12 +122,12 @@ void Game::UnselectAll()
 void Game::ResolveLeftMouseDown(Vector2 _mousePos)
 {
 	Vector2 mouseIndex = tileManager->GetClosestTile(_mousePos);
-	Tile* tile = tileManager->GetTile(mouseIndex);
+	Tile tile = tileManager->GetTile(mouseIndex);
 	E_CARDPOSITIONTYPE cardPositionType = cardManager->CheckCardHover(activePlayer->GetColor(), _mousePos);
 
-	if (tile)
+	if (tileManager->IsInBounds(tile))
 	{
-		Piece* tempSelectedPiece = tile->OccupyingPiece;
+		Piece* tempSelectedPiece = tile.OccupyingPiece;
 
 		if (selectedPiece && TryMovePiece(tile))
 		{
@@ -142,35 +147,43 @@ void Game::ResolveLeftMouseDown(Vector2 _mousePos)
 	}
 }
 
-bool Game::TryMovePiece(Tile* _tile)
+bool Game::TryMovePiece(Tile _tile)
 {
-	if (IsValidMove(_tile->GetIndex()) == false)
+	if (IsValidMove(_tile.GetIndex()) == false)
 	{
 		return false;
 	}
 
-	if (_tile->IsOccupied())
+	Piece* capturedPiece = nullptr;
+	if (_tile.IsOccupied())
 	{
-		tileManager->CapturePiece(_tile->GetIndex());
+		tileManager->TryCapturePiece(_tile);
+		capturedPiece = _tile.OccupyingPiece;
 	}
 
+	MovePiece(_tile, capturedPiece);
+	return true;
+}
+
+void Game::MovePiece(Tile _tile, Piece* _capturedPiece)
+{
 	tileManager->ClearTile(selectedPiece->Index);
-	selectedPiece->Move(_tile);
+	tileManager->SetTilePiece(_tile.GetIndex(), selectedPiece);
+	selectedPiece->Index = _tile.GetIndex();
 	validMovesTileIndices.clear();
 	cardManager->MoveCardsAlong(activePlayer, selectedCard);
 
 	// TODO: Win if Master gets captured
-	if (IsWin() == false)
-	{
-		NextTurn();
-	}
-	else
+	if (IsWin(_capturedPiece))
 	{
 		RestartGame();
 	}
+	else
+	{
+		NextTurn();
+	}
 
 	UnselectAll();
-	return true;
 }
 
 bool Game::TrySelectPiece(Piece* _piece)
@@ -185,6 +198,7 @@ bool Game::TrySelectPiece(Piece* _piece)
 	{
 		if (TrySetMoveTiles(_piece))
 		{
+			SelectPiece(_piece);
 			return true;
 		}
 	}
@@ -208,12 +222,12 @@ bool Game::IsValidMove(Vector2 _index)
 void Game::TryHoverPiece(Vector2 _mousePos)
 {
 	Vector2 mouseIndex = tileManager->GetClosestTile(_mousePos);
-	Tile* tile = tileManager->GetTile(mouseIndex);
+	Tile tile = tileManager->GetTile(mouseIndex);
 
 	// Check for Piece on mouse position
-	if (tile && tile->IsOccupied())
+	if (tileManager->IsInBounds(tile) && tile.IsOccupied())
 	{
-		Piece* currentHoveredPiece = tile->OccupyingPiece;
+		Piece* currentHoveredPiece = tile.OccupyingPiece;
 
 		if (currentHoveredPiece->GetOwner() == activePlayer)
 		{
@@ -239,12 +253,16 @@ bool Game::TrySetMoveTiles(Piece* _piece)
 	if (tempValidMovesTileIndices.size() != 0)
 	{
 		validMovesTileIndices = tempValidMovesTileIndices;
-		selectedPiece = _piece;
-		hoveredPiece = nullptr;
 		return true;
 	}
 	else
 	{
 		return false;
 	}
+}
+
+void Game::SelectPiece(Piece* _piece)
+{
+	selectedPiece = _piece;
+	hoveredPiece = nullptr;
 }
