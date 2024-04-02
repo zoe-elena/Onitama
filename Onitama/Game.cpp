@@ -163,8 +163,8 @@ void Game::MovePiece(Tile _tile, Piece* _capturedPiece)
 	CheckForWin(_capturedPiece);
 	if(isWin == false)
 	{
-		NextTurn();
 		cardManager->MoveCardsAlong(activePlayer, selectedCard);
+		NextTurn();
 	}
 
 	UnselectAll();
