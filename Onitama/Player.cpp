@@ -20,9 +20,9 @@ Player::Player(E_PLAYERCOLOR _color) : color(_color)
 
 Player::~Player()
 {
-	for (size_t i = 0; i < PlayerPieces.size(); i++)
+	for (size_t i = 0; i < playerPieces.size(); i++)
 	{
-		delete(PlayerPieces[i]);
+		delete(playerPieces[i]);
 	}
 }
 
@@ -46,7 +46,7 @@ void Player::InitPlayer()
 	rightCard = nullptr;
 
 	for (int u = 0; u < initStudentPositions.size(); u++) {
-		PlayerPieces[u] = new Piece(this, E_PIECETYPE::student, initStudentPositions[u]);
+		playerPieces[u] = new Piece(this, E_PIECETYPE::student, initStudentPositions[u]);
 	}
-	PlayerPieces[PlayerPieces.size() - 1] = new Piece(this, E_PIECETYPE::master, initMasterPosition);
+	playerPieces[playerPieces.size() - 1] = new Piece(this, E_PIECETYPE::master, initMasterPosition);
 }

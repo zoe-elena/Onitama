@@ -13,6 +13,13 @@ class Piece;
 
 class Renderer
 {
+public:
+	Renderer(SDL_Renderer* _SDLRenderer, Game* _game);
+	~Renderer();
+
+	void DrawGame();
+	void RenderGame();
+
 private:
 	Game* game;
 	SDL_Renderer* SDLRenderer;
@@ -55,14 +62,7 @@ private:
 	void DrawSinglePiece(Piece* _piece);
 	void DrawCards();
 	void DrawButtonLegend();
-
 	Color GetPieceColor(Piece* _piece);
 	Color GetColorByPlayerColor(E_PLAYERCOLOR _playerColor, Color _redColor, Color _blueColor) const;
-
-public:
-	Renderer(SDL_Renderer* _SDLRenderer, Game* _game);
-	~Renderer();
-	void DrawGame();
-	void RenderGame();
 };
 

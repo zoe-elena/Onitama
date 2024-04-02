@@ -20,6 +20,78 @@ CardManager::~CardManager()
 	}
 }
 
+Card* CardManager::GetCard(E_CARDTYPE _cardType)
+{
+	for (size_t i = 0; i < sizeof(cards); i++)
+	{
+		if (cards[i]->GetCardType() == _cardType)
+		{
+			return cards[i];
+		}
+	}
+
+	return nullptr;
+}
+
+Card* CardManager::GetCard(E_CARDPOSITIONTYPE _cardPositionType)
+{
+	for (size_t i = 0; i < sizeof(cards); i++)
+	{
+		if (cards[i]->GetPositionType() == _cardPositionType)
+		{
+			return cards[i];
+		}
+	}
+
+	return nullptr;
+}
+
+E_CARDPOSITIONTYPE CardManager::CheckCardHover(E_PLAYERCOLOR _activePlayerColor, Vector2 _mousePos)
+{
+	if (_activePlayerColor == E_PLAYERCOLOR::red)
+	{
+		if (IsMouseHoveringOverCard(leftCardsX, topCardsY, _mousePos.x, _mousePos.y))
+		{
+			return E_CARDPOSITIONTYPE::topLeft;
+		}
+		else if (IsMouseHoveringOverCard(rightCardsX, topCardsY, _mousePos.x, _mousePos.y))
+		{
+			return E_CARDPOSITIONTYPE::topRight;
+		}
+	}
+	else
+	{
+		if (IsMouseHoveringOverCard(leftCardsX, bottomCardsY, _mousePos.x, _mousePos.y))
+		{
+			return E_CARDPOSITIONTYPE::bottomLeft;
+		}
+		else if (IsMouseHoveringOverCard(rightCardsX, bottomCardsY, _mousePos.x, _mousePos.y))
+		{
+			return E_CARDPOSITIONTYPE::bottomRight;
+		}
+	}
+
+	return E_CARDPOSITIONTYPE::none;
+}
+
+void CardManager::MoveCardsAlong(Player* _activePlayer, Card* _selectedCard)
+{
+	sideCard->SetPositionType(_selectedCard->GetPositionType());
+
+	if (_activePlayer->GetColor() == E_PLAYERCOLOR::red)
+	{
+		_selectedCard->SetPositionType(E_CARDPOSITIONTYPE::sideRight);
+		_selectedCard->SetOwner(playerBlue);
+	}
+	else if (_activePlayer->GetColor() == E_PLAYERCOLOR::blue)
+	{
+		_selectedCard->SetPositionType(E_CARDPOSITIONTYPE::sideLeft);
+		_selectedCard->SetOwner(playerRed);
+	}
+
+	sideCard = _selectedCard;
+}
+
 void CardManager::MapCardPositions()
 {
 	cardPositionMap.emplace(E_CARDPOSITIONTYPE::topLeft, Vector2(leftCardsX, topCardsY));
@@ -61,90 +133,18 @@ void CardManager::InitCards(Player* _activeplayer)
 
 	for (size_t i = 0; i < cards.size(); i++)
 	{
-		if (cards[i]->cardPositionType == E_CARDPOSITIONTYPE::sideLeft ||
-			cards[i]->cardPositionType == E_CARDPOSITIONTYPE::sideRight)
+		if (cards[i]->GetPositionType() == E_CARDPOSITIONTYPE::sideLeft ||
+			cards[i]->GetPositionType() == E_CARDPOSITIONTYPE::sideRight)
 		{
 			sideCard = cards[i];
 		}
 	}
 
-	sideCard->player = playerCardMap.find(sideCard->cardPositionType)->second;
-}
-
-Card* CardManager::GetCard(E_CARDTYPE _cardType)
-{
-	for (size_t i = 0; i < sizeof(cards); i++)
-	{
-		if (cards[i]->GetCardType() == _cardType)
-		{
-			return cards[i];
-		}
-	}
-
-	return nullptr;
-}
-
-Card* CardManager::GetCard(E_CARDPOSITIONTYPE _cardPositionType)
-{
-	for (size_t i = 0; i < sizeof(cards); i++)
-	{
-		if (cards[i]->cardPositionType == _cardPositionType)
-		{
-			return cards[i];
-		}
-	}
-
-	return nullptr;
-}
-
-E_CARDPOSITIONTYPE CardManager::CheckCardHover(E_PLAYERCOLOR _activePlayerColor, Vector2 _mousePos)
-{
-	if (_activePlayerColor == E_PLAYERCOLOR::red)
-	{
-		if (IsMouseHoveringOverCard(leftCardsX, topCardsY, _mousePos.x, _mousePos.y))
-		{
-			return E_CARDPOSITIONTYPE::topLeft;
-		}
-		else if (IsMouseHoveringOverCard(rightCardsX, topCardsY, _mousePos.x, _mousePos.y))
-		{
-			return E_CARDPOSITIONTYPE::topRight;
-		}
-	}
-	else
-	{
-		if (IsMouseHoveringOverCard(leftCardsX, bottomCardsY, _mousePos.x, _mousePos.y))
-		{
-			return E_CARDPOSITIONTYPE::bottomLeft;
-		}
-		else if (IsMouseHoveringOverCard(rightCardsX, bottomCardsY, _mousePos.x, _mousePos.y))
-		{
-			return E_CARDPOSITIONTYPE::bottomRight;
-		}
-	}
-
-	return E_CARDPOSITIONTYPE::none;
+	sideCard->SetOwner(playerCardMap.find(sideCard->GetPositionType())->second);
 }
 
 bool CardManager::IsMouseHoveringOverCard(int x, int y, int mouseX, int mouseY)
 {
 	return mouseX > x && mouseX < x + CARDWIDTH &&
 		mouseY > y && mouseY < y + CARDHEIGHT;
-}
-
-void CardManager::MoveCardsAlong(Player* _activePlayer, Card* _selectedCard)
-{
-	sideCard->cardPositionType = _selectedCard->cardPositionType;
-
-	if (_activePlayer->GetColor() == E_PLAYERCOLOR::red)
-	{
-		_selectedCard->cardPositionType = E_CARDPOSITIONTYPE::sideRight;
-		_selectedCard->player = playerBlue;
-	}
-	else if (_activePlayer->GetColor() == E_PLAYERCOLOR::blue)
-	{
-		_selectedCard->cardPositionType = E_CARDPOSITIONTYPE::sideLeft;
-		_selectedCard->player = playerRed;
-	}
-
-	sideCard = _selectedCard;
 }

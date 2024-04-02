@@ -9,29 +9,11 @@
 
 class Game
 {
-private:
-	bool isWin = false;
-	Player* playerRed;
-	Player* playerBlue;
-	Player* activePlayer;
-	SDL_Renderer* SDLRenderer;
-	Renderer* renderer;
-	TileManager* tileManager;
-	InputManager* inputManager;
-	CardManager* cardManager;
-
-	Piece* hoveredPiece;
-	Piece* selectedPiece;
-	Card* selectedCard;
-	std::vector<Vector2> validMovesTileIndices;
-
-	SDL_bool hasQuit = SDL_FALSE;
-
-	bool TrySetMoveTiles(Piece* _piece);
-
 public:
 	Game(SDL_Renderer* _SDLRenderer);
 
+	void InitGame();
+	void Update();
 
 	inline Player* GetPlayerRed() const { return playerRed; }
 	inline Player* GetPlayerBlue() const { return playerBlue; }
@@ -48,7 +30,25 @@ public:
 	inline std::array<Vector2, CARDSLOTS> GetAllCardPositions() const { return cardManager->GetCardPositions(); }
 	inline std::map<E_CARDPOSITIONTYPE, Vector2> GetCardPositionMap() { return cardManager->GetCardPositionMap(); }
 
-	void InitGame();
+private:
+	bool isWin = false;
+	SDL_bool hasQuit = SDL_FALSE;
+
+	Player* playerRed;
+	Player* playerBlue;
+	Player* activePlayer;
+	SDL_Renderer* SDLRenderer;
+	Renderer* renderer;
+	TileManager* tileManager;
+	InputManager* inputManager;
+	CardManager* cardManager;
+
+	Piece* hoveredPiece;
+	Piece* selectedPiece;
+	Card* selectedCard;
+	std::vector<Vector2> validMovesTileIndices;
+
+	bool TrySetMoveTiles(Piece* _piece);
 	void RestartGame();
 	void UpdateAllTiles();
 	void DoTurn();
@@ -62,5 +62,4 @@ public:
 	bool TrySelectPiece(Piece* _piece);
 	void SelectPiece(Piece* _piece);
 	bool IsValidMove(Vector2 _move);
-	void Update();
 };

@@ -6,23 +6,27 @@ class Player;
 
 class Piece
 {
-private:
-	Player* player;
-	E_PIECETYPE type;
-
 public:
-	Vector2 Index;
-	bool isCaptured = false;
 	Piece();
 	Piece(Player* _player, E_PIECETYPE _type, Vector2 _index);
 
+	E_PLAYERCOLOR GetColor();
+	bool isOnBoard();
+
+	inline Vector2 GetIndex() const { return index; }
+	inline void SetIndex(Vector2 _index) { index = _index; }
+	inline bool IsCaptured() const { return isCaptured; }
+	inline void SetCaptured(bool _isCaptured) { isCaptured = _isCaptured; }
 	inline Player* GetOwner() const { return player; }
-	inline int GetXIndex() const { return Index.x; }
-	inline int GetYIndex() const { return Index.y; }
+	inline int GetXIndex() const { return index.x; }
+	inline int GetYIndex() const { return index.y; }
 	inline E_PIECETYPE GetType() const { return type; }
 	inline bool IsMaster() const { return type == E_PIECETYPE::master; }
 
-	E_PLAYERCOLOR GetColor();
-	bool isOnBoard();
+private:
+	Vector2 index;
+	bool isCaptured = false;
+	Player* player;
+	E_PIECETYPE type;
 };
 

@@ -80,13 +80,14 @@ void Renderer::LoadTextures()
 
 void Renderer::DrawButtonLegend()
 {
-	SDL_SetRenderDrawColor(SDLRenderer, 255, 255, 255, 255);
+	Color color = Color::White();
+	SDL_SetRenderDrawColor(SDLRenderer, color.r, color.g, color.b, color.a);
 
 	SDL_Rect Tile;
 	Tile.x = TILEPADDING;
-	Tile.y = TILEPADDING;
-	Tile.w = 131;
-	Tile.h = 130;
+	Tile.y = TILEPADDING * 4 + CARDHEIGHT + BOARDSIZE * TILESIZE + BOARDSIZE * TILEPADDING;
+	Tile.w = CARDHEIGHT;
+	Tile.h = CARDHEIGHT;
 	SDL_RenderCopy(SDLRenderer, textureButtonLegend, nullptr, &Tile);
 }
 
@@ -156,11 +157,11 @@ void Renderer::DrawTemple(Player* _player) const
 
 void Renderer::DrawPieces(Player* _player)
 {
-	for (int u = 0; u < _player->PlayerPieces.size(); u++)
+	for (int u = 0; u < PIECECOUNT; u++)
 	{
-		if (_player->PlayerPieces[u]->isCaptured == false)
+		if (_player->GetPlayerPiece(u)->IsCaptured() == false)
 		{
-			DrawSinglePiece(_player->PlayerPieces[u]);
+			DrawSinglePiece(_player->GetPlayerPiece(u));
 		}
 	}
 }
@@ -199,7 +200,7 @@ void Renderer::DrawCards()
 
 	for (size_t i = 0; i < cards.size(); i++)
 	{
-		int cardRotation = cards[i]->player->GetColor() == E_PLAYERCOLOR::red ? 180 : 0;
+		int cardRotation = cards[i]->GetOwnerColor() == E_PLAYERCOLOR::red ? 180 : 0;
 
 		if (cards[i] == game->GetSelectedCard())
 		{
@@ -207,9 +208,9 @@ void Renderer::DrawCards()
 		}
 		else
 		{
-			color = game->IsActivePlayer(cards[i]->player) ? cardColorInteractable : cardColor;
+			color = game->IsActivePlayer(cards[i]->GetOwner()) ? cardColorInteractable : cardColor;
 		}
-		Vector2 tempCardPosition = game->GetCardPositionMap().find(cards[i]->cardPositionType)->second;
+		Vector2 tempCardPosition = game->GetCardPositionMap().find(cards[i]->GetPositionType())->second;
 		Tile.x = tempCardPosition.x;
 		Tile.y = tempCardPosition.y;
 		Tile.w = CARDWIDTH;

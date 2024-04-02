@@ -3,7 +3,7 @@
 
 Card::Card(Player* _player, E_CARDTYPE _cardType, E_CARDPOSITIONTYPE _cardPosition, const std::vector<Vector2> _moves)
 {
-	player = _player;
+	owner = _player;
 	cardType = _cardType;
 	cardPositionType = _cardPosition;
 
@@ -11,4 +11,9 @@ Card::Card(Player* _player, E_CARDTYPE _cardType, E_CARDPOSITIONTYPE _cardPositi
 	{
 		moves.push_back(_moves[x]);
 	}
+}
+
+E_PLAYERCOLOR Card::GetOwnerColor() const
+{
+	return owner->GetColor();
 }

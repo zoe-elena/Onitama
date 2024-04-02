@@ -8,7 +8,19 @@ class Card;
 
 class Player
 {
+public:
+	Player(E_PLAYERCOLOR _color);
+	~Player();
+
+	void InitPlayer();
+
+	inline std::array<Piece*, PIECECOUNT> GetPlayerPieces() { return playerPieces; }
+	inline Piece* GetPlayerPiece(int _index) { return playerPieces[_index]; }
+	inline E_PLAYERCOLOR GetColor() { return color; }
+	inline Vector2 GetTemplePosition() { return templePosition; }
+
 private:
+	std::array<Piece*, PIECECOUNT> playerPieces;
 	E_PLAYERCOLOR color;
 	std::array<Vector2, STUDENTS> initStudentPositions;
 	Vector2 initMasterPosition;
@@ -21,15 +33,5 @@ private:
 	void SetInitPiecePositions(int _row);
 	void SetInitTemplePositions(int _row);
 	void SetInitCardPositions(int _pixelHeight);
-
-public:
-	std::array<Piece*, PIECECOUNT> PlayerPieces;
-	Player(E_PLAYERCOLOR _color);
-	~Player();
-
-	void InitPlayer();
-
-	inline E_PLAYERCOLOR GetColor() { return color; }
-	inline Vector2 GetTemplePosition() { return templePosition; }
 };
 
