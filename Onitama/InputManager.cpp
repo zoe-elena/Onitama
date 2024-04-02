@@ -11,6 +11,7 @@ InputManager::~InputManager()
 void InputManager::PollEvents()
 {
 	leftButtonDown = false;
+	rButtonDown = false;
 
 	while (SDL_PollEvent(&event))
 	{
@@ -25,10 +26,10 @@ void InputManager::PollEvents()
 				leftButtonDown = true;
 			}
 			break;
-		case SDL_MOUSEBUTTONUP:
-			if (event.button.button == SDL_BUTTON_LEFT)
+		case SDL_KEYDOWN:
+			if (event.button.button == SDL_SCANCODE_R)
 			{
-				leftButtonDown = false;
+				rButtonDown = true;
 			}
 			break;
 		}

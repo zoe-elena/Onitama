@@ -20,7 +20,6 @@ void Game::InitGame()
 	std::uniform_int_distribution<int> dist(0, 99);
 	int random = dist(rng);
 	activePlayer = random < 50 ? playerRed : playerBlue;
-	//activePlayer = playerRed;
 
 	UpdateAllTiles();
 	cardManager = new CardManager(playerRed, playerBlue, activePlayer);
@@ -43,7 +42,16 @@ void Game::Update()
 {
 	inputManager->PollEvents();
 
-	DoTurn();
+	if (isWin == false)
+	{
+		DoTurn();
+	}
+
+	if (inputManager->GetRButtonDown())
+	{
+		isWin = false;
+		RestartGame();
+	}
 
 	renderer->DrawGame();
 	renderer->RenderGame();
@@ -90,26 +98,6 @@ void Game::NextTurn()
 	else
 	{
 		activePlayer = playerRed;
-	}
-}
-
-bool Game::IsWin(Piece* _capturedPiece)
-{
-	if (_capturedPiece && _capturedPiece->IsMaster())
-	{
-		return true;
-	}
-
-	if (selectedPiece->IsMaster())
-	{
-		if (activePlayer == playerRed)
-		{
-			return selectedPiece->Index == playerBlue->GetTemplePosition();
-		}
-		else if (activePlayer == playerBlue)
-		{
-			return selectedPiece->Index == playerRed->GetTemplePosition();
-		}
 	}
 }
 
@@ -171,19 +159,40 @@ void Game::MovePiece(Tile _tile, Piece* _capturedPiece)
 	tileManager->SetTilePiece(_tile.GetIndex(), selectedPiece);
 	selectedPiece->Index = _tile.GetIndex();
 	validMovesTileIndices.clear();
-	cardManager->MoveCardsAlong(activePlayer, selectedCard);
 
-	// TODO: Win if Master gets captured
-	if (IsWin(_capturedPiece))
-	{
-		RestartGame();
-	}
-	else
+	CheckForWin(_capturedPiece);
+	if(isWin == false)
 	{
 		NextTurn();
+		cardManager->MoveCardsAlong(activePlayer, selectedCard);
 	}
 
 	UnselectAll();
+}
+
+void Game::CheckForWin(Piece* _capturedPiece)
+{
+	if (_capturedPiece && _capturedPiece->IsMaster())
+	{
+		isWin = true;
+	}
+
+	if (selectedPiece->IsMaster())
+	{
+		if (activePlayer == playerRed)
+		{
+			isWin = selectedPiece->Index == playerBlue->GetTemplePosition();
+		}
+		else if (activePlayer == playerBlue)
+		{
+			isWin = selectedPiece->Index == playerRed->GetTemplePosition();
+		}
+	}
+
+	if (isWin)
+	{
+		activePlayer = nullptr;
+	}
 }
 
 bool Game::TrySelectPiece(Piece* _piece)

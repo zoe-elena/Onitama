@@ -10,6 +10,7 @@
 class Game
 {
 private:
+	bool isWin = false;
 	Player* playerRed;
 	Player* playerBlue;
 	Player* activePlayer;
@@ -52,7 +53,7 @@ public:
 	void UpdateAllTiles();
 	void DoTurn();
 	void NextTurn();
-	bool IsWin(Piece* _capturedPiece);
+	void CheckForWin(Piece* _capturedPiece);
 	void UnselectAll();
 	void ResolveLeftMouseDown(Vector2 _mousePos);
 	void TryHoverPiece(Vector2 _mousePos);

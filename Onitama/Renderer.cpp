@@ -10,12 +10,13 @@ Renderer::Renderer(SDL_Renderer* _SDLRenderer, Game* _game) : SDLRenderer(_SDLRe
 	cardTypeMap.emplace(E_CARDTYPE::mantis, textureCardMantis);
 	cardTypeMap.emplace(E_CARDTYPE::ox, textureCardOx);
 	cardTypeMap.emplace(E_CARDTYPE::rabbit, textureCardRabbit);
-	LoadTextures();
 
+	LoadTextures();
 }
 
 Renderer::~Renderer()
 {
+	SDL_DestroyTexture(textureButtonLegend);
 	SDL_DestroyTexture(textureStudent);
 	SDL_DestroyTexture(textureMaster);
 	SDL_DestroyTexture(textureTemple);
@@ -29,6 +30,7 @@ Renderer::~Renderer()
 void Renderer::DrawGame()
 {
 	DrawBackground(backgroundColor);
+	DrawButtonLegend();
 	DrawTiles(tileColor);
 	DrawMoveTiles(moveTileColor);
 	DrawTemple(game->GetPlayerRed());
@@ -45,6 +47,7 @@ void Renderer::RenderGame()
 
 void Renderer::LoadTextures()
 {
+	SDL_Surface* surfaceButtonLegend = SDL_LoadBMP("Extern/Images/ButtonLegend.bmp");
 	SDL_Surface* surfaceStudent = SDL_LoadBMP("Extern/Images/Student.bmp");
 	SDL_Surface* surfaceMaster = SDL_LoadBMP("Extern/Images/Master.bmp");
 	SDL_Surface* surfaceTemple = SDL_LoadBMP("Extern/Images/Temple.bmp");
@@ -54,6 +57,7 @@ void Renderer::LoadTextures()
 	SDL_Surface* surfaceCardOx = SDL_LoadBMP("Extern/Images/CardOx.bmp");
 	SDL_Surface* surfaceCardRabbit = SDL_LoadBMP("Extern/Images/CardRabbit.bmp");
 
+	textureButtonLegend = SDL_CreateTextureFromSurface(SDLRenderer, surfaceButtonLegend);
 	textureStudent = SDL_CreateTextureFromSurface(SDLRenderer, surfaceStudent);
 	textureMaster = SDL_CreateTextureFromSurface(SDLRenderer, surfaceMaster);
 	textureTemple = SDL_CreateTextureFromSurface(SDLRenderer, surfaceTemple);
@@ -63,6 +67,7 @@ void Renderer::LoadTextures()
 	textureCardOx = SDL_CreateTextureFromSurface(SDLRenderer, surfaceCardOx);
 	textureCardRabbit = SDL_CreateTextureFromSurface(SDLRenderer, surfaceCardRabbit);
 
+	SDL_FreeSurface(surfaceButtonLegend);
 	SDL_FreeSurface(surfaceStudent);
 	SDL_FreeSurface(surfaceMaster);
 	SDL_FreeSurface(surfaceTemple);
@@ -71,6 +76,18 @@ void Renderer::LoadTextures()
 	SDL_FreeSurface(surfaceCardMantis);
 	SDL_FreeSurface(surfaceCardOx);
 	SDL_FreeSurface(surfaceCardRabbit);
+}
+
+void Renderer::DrawButtonLegend()
+{
+	SDL_SetRenderDrawColor(SDLRenderer, 255, 255, 255, 255);
+
+	SDL_Rect Tile;
+	Tile.x = TILEPADDING;
+	Tile.y = TILEPADDING;
+	Tile.w = 131;
+	Tile.h = 130;
+	SDL_RenderCopy(SDLRenderer, textureButtonLegend, nullptr, &Tile);
 }
 
 void Renderer::DrawBackground(Color _color) const

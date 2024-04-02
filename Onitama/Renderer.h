@@ -16,6 +16,7 @@ class Renderer
 private:
 	Game* game;
 	SDL_Renderer* SDLRenderer;
+	SDL_Texture* textureButtonLegend;
 	SDL_Texture* textureStudent;
 	SDL_Texture* textureMaster;
 	SDL_Texture* textureTemple;
@@ -53,6 +54,7 @@ private:
 	void DrawPieces(Player* _player);
 	void DrawSinglePiece(Piece* _piece);
 	void DrawCards();
+	void DrawButtonLegend();
 
 	Color GetPieceColor(Piece* _piece);
 	Color GetColorByPlayerColor(E_PLAYERCOLOR _playerColor, Color _redColor, Color _blueColor) const;
