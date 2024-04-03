@@ -12,6 +12,7 @@ void InputManager::PollEvents()
 {
 	leftButtonDown = false;
 	rButtonDown = false;
+	arrowLeftButtonDown = false;
 
 	while (SDL_PollEvent(&event))
 	{
@@ -30,6 +31,10 @@ void InputManager::PollEvents()
 			if (event.button.button == SDL_SCANCODE_R)
 			{
 				rButtonDown = true;
+			}
+			else if (event.button.button == SDL_SCANCODE_LEFT)
+			{
+				arrowLeftButtonDown = true;
 			}
 			break;
 		}

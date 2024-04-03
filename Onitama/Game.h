@@ -1,11 +1,12 @@
 #pragma once
+#include <iostream>
+#include "SDL.h"
+#include "ActionStack.h"
 #include "Player.h"
 #include "Renderer.h"
 #include "TileManager.h"
 #include "InputManager.h"
 #include "CardManager.h"
-#include "SDL.h"
-#include <iostream>
 
 class Game
 {
@@ -14,6 +15,9 @@ public:
 
 	void InitGame();
 	void Update();
+	void SelectCard(Card* _card);
+	void SelectPiece(Piece* _piece);
+	bool TrySetMoveTiles(Card* _card, Piece* _piece, Player* _activePlayer);
 
 	inline Player* GetPlayerRed() const { return playerRed; }
 	inline Player* GetPlayerBlue() const { return playerBlue; }
@@ -33,6 +37,7 @@ public:
 private:
 	bool isWin = false;
 	SDL_bool hasQuit = SDL_FALSE;
+	ActionStack actionStack;
 
 	Player* playerRed;
 	Player* playerBlue;
@@ -48,7 +53,6 @@ private:
 	Card* selectedCard;
 	std::vector<Vector2> validMovesTileIndices;
 
-	bool TrySetMoveTiles(Piece* _piece);
 	void RestartGame();
 	void UpdateAllTiles();
 	void DoTurn();
@@ -59,7 +63,6 @@ private:
 	void TryHoverPiece(Vector2 _mousePos);
 	bool TryMovePiece(Tile _tile);
 	void MovePiece(Tile _tile, Piece* _capturedPiece);
-	bool TrySelectPiece(Piece* _piece);
-	void SelectPiece(Piece* _piece);
 	bool IsValidMove(Vector2 _move);
+	bool TrySelectPiece(Piece* _piece);
 };
