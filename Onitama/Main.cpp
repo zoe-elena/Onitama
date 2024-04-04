@@ -18,17 +18,33 @@ int main(int argc, char* argv[])
 		return 1;
 	}
 
+	int b = SDL_GetTicks();
+	int a = 0;
+	int c = 0;
+	int fpsCounter = 0;
 
 	bool restart = false;
 	do
 	{
+
 		Game game(SDLRenderer);
 		while (game.HasQuit() == false && game.DoRestart() == false)
 		{
+			c = SDL_GetTicks();
 			game.Update();
+			a = SDL_GetTicks();
 
+			//std::cout << "delta time:" << a - c << std::endl;
+
+			fpsCounter++;
+			if (SDL_GetTicks() - b >= 1000)
+			{
+				b = SDL_GetTicks();
+				std::cout << "fps:" << fpsCounter << std::endl;
+				fpsCounter = 0;
+			}
 			// Significantly reduces CPU load
-			std::this_thread::sleep_for(std::chrono::milliseconds(10));
+			std::this_thread::sleep_for(std::chrono::milliseconds(50));
 		}
 		restart = game.DoRestart();
 	} while (restart);

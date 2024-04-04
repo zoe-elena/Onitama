@@ -97,15 +97,15 @@ void CardManager::MoveCardsBack(Player* _activePlayer, Card* _prevSideCard)
 
 	if (_activePlayer->GetColor() == E_PLAYERCOLOR::red)
 	{
-		_prevSideCard->SetPositionType(E_CARDPOSITIONTYPE::sideRight);
-		_prevSideCard->SetOwner(playerBlue);
-		sideCard->SetOwner(playerBlue);
-	}
-	else if (_activePlayer->GetColor() == E_PLAYERCOLOR::blue)
-	{
 		_prevSideCard->SetPositionType(E_CARDPOSITIONTYPE::sideLeft);
 		_prevSideCard->SetOwner(playerRed);
 		sideCard->SetOwner(playerRed);
+	}
+	else if (_activePlayer->GetColor() == E_PLAYERCOLOR::blue)
+	{
+		_prevSideCard->SetPositionType(E_CARDPOSITIONTYPE::sideRight);
+		_prevSideCard->SetOwner(playerBlue);
+		sideCard->SetOwner(playerBlue);
 	}
 
 	sideCard = _prevSideCard;
