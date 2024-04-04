@@ -2,11 +2,11 @@
 #include "Action.h"
 #include "SelectActionState.h"
 
-class SelectAction : public Action
+class SelectCardAction : public Action
 {
 public:
-	SelectAction(SelectActionState* _state, Player* _activePlayer);
-	~SelectAction();
+	SelectCardAction(SelectActionState* _state, Player* _activePlayer);
+	~SelectCardAction();
 	void execute(Game& _game) override;
 	void undo(Game& _game) override;
 

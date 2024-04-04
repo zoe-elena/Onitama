@@ -9,21 +9,24 @@ class Player;
 class CardManager
 {
 public:
-	CardManager(Player* _playerRed, Player* _playerBlue, Player* _activeplayer);
+	CardManager(Player* _playerRed, Player* _playerBlue);
 	~CardManager();
 
+	void InitCards(Player* _activePlayer);
 	Card* GetCard(E_CARDTYPE _cardType);
 	Card* GetCard(E_CARDPOSITIONTYPE _cardPositionType);
 	E_CARDPOSITIONTYPE CheckCardHover(E_PLAYERCOLOR _activePlayerColor, Vector2 _mousePos);
 	void MoveCardsAlong(Player* _activePlayer, Card* _selectedCard);
+	void MoveCardsBack(Player* _activePlayer, Card* _prevSideCard);
 
-	inline std::array<Card*, CARDS> GetCards() { return cards; }
-	inline std::array<Vector2, CARDSLOTS> GetCardPositions() { return cardPositions; }
-	inline std::map<E_CARDPOSITIONTYPE, Vector2> GetCardPositionMap() { return cardPositionMap; }
+	Card* GetSideCard() { return sideCard; }
+	const std::array<Card*, CARDS>& GetCards() const { return cards; }
+	const std::array<Vector2, CARDSLOTS>& GetCardPositions() const { return cardPositions; }
+	const std::map<E_CARDPOSITIONTYPE, Vector2>& GetCardPositionMap() const { return cardPositionMap; }
 
 private:
-	std::array<Card*, CARDS> cards;
-	Card* sideCard;
+	std::array<Card*, CARDS> cards = { nullptr };
+	Card* sideCard = nullptr;
 	std::array<Vector2, CARDSLOTS> cardPositions;
 	std::map<E_CARDPOSITIONTYPE, Vector2> cardPositionMap;
 	std::map<E_CARDPOSITIONTYPE, Player*> playerCardMap;
@@ -45,7 +48,6 @@ private:
 	int bottomCardsY = TILEPADDING * 4 + CARDHEIGHT + BOARDSIZE * TILESIZE + BOARDSIZE * TILEPADDING;
 	int sideCardLeftX = TILEPADDING;
 
-	void InitCards(Player* _activeplayer);
 	bool IsMouseHoveringOverCard(int x, int y, int mouseX, int mouseY);
 	void MapCardPositions();
 	void MapPlayerCards();

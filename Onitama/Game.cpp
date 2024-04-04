@@ -2,89 +2,77 @@
 #include <random>
 #include "Game.h"
 #include "Action.h"
-#include "SelectAction.h"
+#include "MoveAction.h"
+#include "SelectCardAction.h"
+#include "SelectPieceAction.h"
 #include "SelectActionState.h"
 
-Game::Game(SDL_Renderer* _SDLRenderer)
+Game::Game(SDL_Renderer* _sdlRenderer) : playerRed(E_PLAYERCOLOR::red), playerBlue(E_PLAYERCOLOR::blue), cardManager(&playerRed, &playerBlue), renderer(_sdlRenderer, this)
 {
-	SDLRenderer = _SDLRenderer;
-
 	InitGame();
 }
 
 void Game::InitGame()
 {
-	tileManager = new TileManager();
-	inputManager = new InputManager();
-	playerRed = new Player(E_PLAYERCOLOR::red);
-	playerBlue = new Player(E_PLAYERCOLOR::blue);
-
 	std::mt19937 rng(std::random_device{}());
 	std::uniform_int_distribution<int> dist(0, 99);
 	int random = dist(rng);
-	activePlayer = random < 50 ? playerRed : playerBlue;
+	activePlayer = random < 50 ? &playerRed : &playerBlue;
 
 	UpdateAllTiles();
-	cardManager = new CardManager(playerRed, playerBlue, activePlayer);
-	renderer = new Renderer(SDLRenderer, this);
+	cardManager.InitCards(activePlayer);
 }
 
 void Game::RestartGame()
 {
-	delete(cardManager);
-	delete(tileManager);
-	delete(inputManager);
-	delete(renderer);
-	delete(playerRed);
-	delete(playerBlue);
-
 	InitGame();
 }
 
 void Game::Update()
 {
-	inputManager->PollEvents();
+	inputManager.PollEvents();
+
+	if (inputManager.IsRButtonDown())
+	{
+		hasRestart = true;
+		return;
+	}
 
 	if (isWin == false)
 	{
 		DoTurn();
 	}
 
-	if (inputManager->IsRButtonDown())
+	if (inputManager.IsArrowLeftButtonDown())
 	{
-		isWin = false;
-		RestartGame();
-	}
-	else if (inputManager->IsArrowLeftButtonDown())
-	{
-		actionStack.UndoLastAction();
+		actionStack.UndoLastAction(*this);
 	}
 
-	renderer->DrawGame();
-	renderer->RenderGame();
+	renderer.DrawGame();
+	renderer.RenderGame();
 }
 
 void Game::UpdateAllTiles()
 {
 	for (size_t i = 0; i < PIECECOUNT; i++)
 	{
-		Piece* currentPiece = playerRed->GetPlayerPiece(i);
+		Piece* currentPiece = playerRed.GetPlayerPiece(static_cast<int>(i));
 		Vector2 currentPieceIndex = currentPiece->GetIndex();
-		tileManager->SetTilePiece(currentPieceIndex, currentPiece);
+		tileManager.SetTilePiece(currentPieceIndex, currentPiece);
 	}
 
 	for (size_t i = 0; i < PIECECOUNT; i++)
 	{
-		Piece* currentPiece = playerBlue->GetPlayerPiece(i);
+		Piece* currentPiece = playerBlue.GetPlayerPiece(static_cast<int>(i));
 		Vector2 currentPieceIndex = currentPiece->GetIndex();
-		tileManager->SetTilePiece(currentPieceIndex, currentPiece);
+		tileManager.SetTilePiece(currentPieceIndex, currentPiece);
 	}
 }
 
 void Game::DoTurn()
 {
-	Vector2 currentMousePos = inputManager->GetMousePosition();
-	bool leftMouseButtonDown = inputManager->IsMouseButtonDown();
+	Vector2 currentMousePos = inputManager.GetMousePosition();
+	bool leftMouseButtonDown = inputManager.IsMouseButtonDown();
 
 	if (leftMouseButtonDown)
 	{
@@ -96,15 +84,15 @@ void Game::DoTurn()
 	}
 }
 
-void Game::NextTurn()
+void Game::NextPlayer(Player* _activePlayer)
 {
-	if (activePlayer == playerRed)
+	if (_activePlayer == &playerRed)
 	{
-		activePlayer = playerBlue;
+		activePlayer = &playerBlue;
 	}
 	else
 	{
-		activePlayer = playerRed;
+		activePlayer = &playerRed;
 	}
 }
 
@@ -116,71 +104,94 @@ void Game::UnselectAll()
 
 void Game::ResolveLeftMouseDown(Vector2 _mousePos)
 {
-	Vector2 mouseIndex = tileManager->GetClosestTile(_mousePos);
-	Tile tile = tileManager->GetTile(mouseIndex);
-	E_CARDPOSITIONTYPE cardPositionType = cardManager->CheckCardHover(activePlayer->GetColor(), _mousePos);
+	Vector2 mouseIndex = tileManager.GetClosestTile(_mousePos);
+	Tile selectedTile = tileManager.GetTile(mouseIndex);
+	E_CARDPOSITIONTYPE cardPositionType = cardManager.CheckCardHover(activePlayer->GetColor(), _mousePos);
 
-	if (tileManager->IsInBounds(tile))
+	if (tileManager.IsInBounds(selectedTile))
 	{
-		Piece* nextSelectedPiece = tile.GetOccupyingPiece();
+		Piece* nextSelectedPiece = selectedTile.GetOccupyingPiece();
 
-		if (selectedPiece && TryMovePiece(tile))
+		if (selectedPiece != nullptr)
 		{
-			return;
+			if (TryMovePiece(selectedTile))
+			{
+				Action* moveAction = new MoveAction(selectedTile, selectedPiece, selectedCard, selectedTile.GetOccupyingPiece(), activePlayer);
+				actionStack.ExecuteAction(moveAction, *this);
+			}
 		}
-
-		if (TrySelectPiece(nextSelectedPiece))
+		else if (nextSelectedPiece != nullptr && TrySelectPiece(nextSelectedPiece))
 		{
 			SelectActionState* selectActionState = new SelectActionState(selectedPiece, nextSelectedPiece, selectedCard, nullptr);
-			Action* selectPieceAction = new SelectAction(this, selectActionState, activePlayer);
-			actionStack.ExecuteAction(selectPieceAction);
+			Action* selectPieceAction = new SelectPieceAction(selectActionState, activePlayer);
+			actionStack.ExecuteAction(selectPieceAction, *this);
 		}
 	}
-	else if (cardPositionType != E_CARDPOSITIONTYPE::none)
+	else if (selectedCard == nullptr && cardPositionType != E_CARDPOSITIONTYPE::none)
 	{
-		SelectActionState* selectActionState = new SelectActionState(selectedPiece, nullptr, selectedCard, cardManager->GetCard(cardPositionType));
-		Action* selectCardAction = new SelectAction(this, selectActionState, activePlayer);
-		actionStack.ExecuteAction(selectCardAction);
-	}
-	else
-	{
-		UnselectAll();
+		SelectActionState* selectActionState = new SelectActionState(selectedPiece, nullptr, selectedCard, cardManager.GetCard(cardPositionType));
+		Action* selectCardAction = new SelectCardAction(selectActionState, activePlayer);
+		actionStack.ExecuteAction(selectCardAction, *this);
 	}
 }
 
-bool Game::TryMovePiece(Tile _tile)
+bool Game::TryMovePiece(Tile _selectedTile)
 {
-	if (IsValidMove(_tile.GetIndex()) == false)
+	if (IsValidMove(_selectedTile.GetIndex()) == false)
 	{
 		return false;
 	}
-
-	Piece* capturedPiece = nullptr;
-	if (_tile.IsOccupied())
+	else
 	{
-		tileManager->TryCapturePiece(_tile);
-		capturedPiece = _tile.GetOccupyingPiece();
+		return true;
 	}
-
-	MovePiece(_tile, capturedPiece);
-	return true;
 }
 
-void Game::MovePiece(Tile _tile, Piece* _capturedPiece)
+void Game::MovePiece(Tile _selectedTile, Piece* _selectedPiece, Card* _selectedCard, Piece* _capturedPiece, Player* _activePlayer)
 {
-	tileManager->ClearTile(selectedPiece->GetIndex());
-	tileManager->SetTilePiece(_tile.GetIndex(), selectedPiece);
-	selectedPiece->SetIndex(_tile.GetIndex());
+	tileManager.TryCapturePiece(_selectedTile);
+	tileManager.ClearTile(_selectedPiece->GetIndex());
+	tileManager.SetTilePiece(_selectedTile.GetIndex(), _selectedPiece);
+	_selectedPiece->SetIndex(_selectedTile.GetIndex());
 	validMovesTileIndices.clear();
 
 	CheckForWin(_capturedPiece);
 	if (isWin == false)
 	{
-		cardManager->MoveCardsAlong(activePlayer, selectedCard);
-		NextTurn();
+		cardManager.MoveCardsAlong(_activePlayer, _selectedCard);
+		NextPlayer(_activePlayer);
 	}
 
 	UnselectAll();
+}
+
+void Game::MovePieceBack(Tile _prevTile, Piece* _piece, Card* _selectedCard, Card* _prevSideCard, Piece* _capturedPiece, Player* _lastActivePlayer)
+{
+	// Respawn piece
+	if(_capturedPiece != nullptr)
+	{
+		tileManager.SetTilePiece(_capturedPiece->GetIndex(), _capturedPiece);
+		_capturedPiece->SetCaptured(false);
+	}
+	else
+	{
+		tileManager.ClearTile(_piece->GetIndex());
+	}
+
+	// Move piece back
+	selectedPiece = _piece;
+	tileManager.SetTilePiece(_prevTile.GetIndex(), _piece);
+	_piece->SetIndex(_prevTile.GetIndex());
+
+	selectedCard = _selectedCard;
+	if (isWin == false)
+	{
+		cardManager.MoveCardsBack(_lastActivePlayer, _prevSideCard);
+	}
+	isWin = false;
+
+	activePlayer = _lastActivePlayer;
+	TrySetMoveTiles(selectedCard, selectedPiece, activePlayer);
 }
 
 void Game::CheckForWin(Piece* _capturedPiece)
@@ -192,13 +203,13 @@ void Game::CheckForWin(Piece* _capturedPiece)
 
 	if (selectedPiece->IsMaster())
 	{
-		if (activePlayer == playerRed)
+		if (activePlayer == &playerRed)
 		{
-			isWin = selectedPiece->GetIndex() == playerBlue->GetTemplePosition();
+			isWin = selectedPiece->GetIndex() == playerBlue.GetTemplePosition();
 		}
-		else if (activePlayer == playerBlue)
+		else if (activePlayer == &playerBlue)
 		{
-			isWin = selectedPiece->GetIndex() == playerRed->GetTemplePosition();
+			isWin = selectedPiece->GetIndex() == playerRed.GetTemplePosition();
 		}
 	}
 
@@ -210,12 +221,6 @@ void Game::CheckForWin(Piece* _capturedPiece)
 
 bool Game::TrySelectPiece(Piece* _piece)
 {
-	if (_piece == nullptr || selectedPiece == _piece)
-	{
-		selectedPiece = nullptr;
-		return false;
-	}
-
 	if (_piece->GetOwner() == activePlayer)
 	{
 		if (TrySetMoveTiles(selectedCard, _piece, activePlayer))
@@ -247,11 +252,11 @@ void Game::SelectCard(Card* _card)
 
 void Game::TryHoverPiece(Vector2 _mousePos)
 {
-	Vector2 mouseIndex = tileManager->GetClosestTile(_mousePos);
-	Tile tile = tileManager->GetTile(mouseIndex);
+	Vector2 mouseIndex = tileManager.GetClosestTile(_mousePos);
+	Tile tile = tileManager.GetTile(mouseIndex);
 
 	// Check for Piece on mouse position
-	if (tileManager->IsInBounds(tile) && tile.IsOccupied())
+	if (tileManager.IsInBounds(tile) && tile.IsOccupied())
 	{
 		Piece* currentHoveredPiece = tile.GetOccupyingPiece();
 
@@ -268,13 +273,13 @@ void Game::TryHoverPiece(Vector2 _mousePos)
 
 bool Game::TrySetMoveTiles(Card* _card, Piece* _piece, Player* _activePlayer)
 {
-	if (selectedCard == nullptr || _piece == nullptr)
+	if (_card == nullptr || _piece == nullptr)
 	{
 		return false;
 	}
 
-	std::vector<Vector2> selectedCardMoves = selectedCard->GetMoves();
-	std::vector<Vector2> tempValidMovesTileIndices = tileManager->GetValidMoveTileIndices(selectedCardMoves, _piece->GetIndex(), _activePlayer);
+	std::vector<Vector2> selectedCardMoves = _card->GetMoves();
+	std::vector<Vector2> tempValidMovesTileIndices = tileManager.GetValidMoveTileIndices(selectedCardMoves, _piece->GetIndex(), _activePlayer);
 
 	if (tempValidMovesTileIndices.size() != 0)
 	{

@@ -14,10 +14,10 @@ public:
 
 	void InitPlayer();
 
-	inline std::array<Piece*, PIECECOUNT> GetPlayerPieces() { return playerPieces; }
-	inline Piece* GetPlayerPiece(int _index) { return playerPieces[_index]; }
-	inline E_PLAYERCOLOR GetColor() { return color; }
-	inline Vector2 GetTemplePosition() { return templePosition; }
+	std::array<Piece*, PIECECOUNT> GetPlayerPieces() { return playerPieces; }
+	Piece* GetPlayerPiece(int _index) const { return playerPieces[_index]; }
+	E_PLAYERCOLOR GetColor() const { return color; }
+	Vector2 GetTemplePosition() const { return templePosition; }
 
 private:
 	std::array<Piece*, PIECECOUNT> playerPieces;

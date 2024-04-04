@@ -10,6 +10,6 @@ public:
 	Card* prevCard;
 	Card* nextCard;
 
-	inline SelectActionState(Piece* _prevPiece, Piece* _nextPiece, Card* _prevCard, Card* _nextCard) :
+	SelectActionState(Piece* _prevPiece, Piece* _nextPiece, Card* _prevCard, Card* _nextCard) :
 		prevPiece(_prevPiece), nextPiece(_nextPiece), prevCard(_prevCard), nextCard(_nextCard) {}
 };

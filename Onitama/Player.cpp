@@ -45,7 +45,7 @@ void Player::InitPlayer()
 	leftCard = nullptr;
 	rightCard = nullptr;
 
-	for (int u = 0; u < initStudentPositions.size(); u++) {
+	for (size_t u = 0; u < initStudentPositions.size(); u++) {
 		playerPieces[u] = new Piece(this, E_PIECETYPE::student, initStudentPositions[u]);
 	}
 	playerPieces[playerPieces.size() - 1] = new Piece(this, E_PIECETYPE::master, initMasterPosition);

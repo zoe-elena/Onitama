@@ -11,13 +11,13 @@ public:
 	Tile();
 	Tile(Vector2 _index);
 
-	inline Piece* GetOccupyingPiece() const { return occupyingPiece; }
-	inline void SetOccupyingPiece(Piece* _occupyingPiece) { occupyingPiece = _occupyingPiece; }
-	inline bool IsOccupied() const { return occupyingPiece; }
-	inline Player* GetOccupyingPlayer() const { return occupyingPiece->GetOwner(); }
-	inline int GetXIndex() const { return index.x; }
-	inline int GetYIndex() const { return index.y; }
-	inline Vector2 GetIndex() const { return index; }
+	Piece* GetOccupyingPiece() const { return occupyingPiece; }
+	void SetOccupyingPiece(Piece* _occupyingPiece) { occupyingPiece = _occupyingPiece; }
+	bool IsOccupied() const { return occupyingPiece != nullptr; }
+	const Player* GetOccupyingPlayer() const { return occupyingPiece->GetOwner(); }
+	int GetXIndex() const { return index.x; }
+	int GetYIndex() const { return index.y; }
+	Vector2 GetIndex() const { return index; }
 
 
 private:

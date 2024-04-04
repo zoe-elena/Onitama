@@ -149,6 +149,7 @@
     <ClCompile Include="Card.cpp" />
     <ClCompile Include="CardManager.cpp" />
     <ClCompile Include="InputManager.cpp" />
+    <ClCompile Include="MoveAction.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="Color.cpp" />
     <ClCompile Include="Game.cpp" />
@@ -156,6 +157,8 @@
     <ClCompile Include="Piece.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="SelectAction.cpp" />
+    <ClCompile Include="SelectCardAction.cpp" />
+    <ClCompile Include="SelectPieceAction.cpp" />
     <ClCompile Include="Tile.cpp" />
     <ClCompile Include="TileManager.cpp" />
     <ClCompile Include="Vector2.cpp" />
@@ -163,6 +166,7 @@
   <ItemGroup>
     <ClInclude Include="Action.h" />
     <ClInclude Include="ActionStack.h" />
+    <ClInclude Include="MoveAction.h" />
     <ClInclude Include="SelectActionState.h" />
     <ClInclude Include="Card.h" />
     <ClInclude Include="CardManager.h" />
@@ -174,9 +178,14 @@
     <ClInclude Include="Piece.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="SelectAction.h" />
+    <ClInclude Include="SelectCardAction.h" />
+    <ClInclude Include="SelectPieceAction.h" />
     <ClInclude Include="Tile.h" />
     <ClInclude Include="TileManager.h" />
     <ClInclude Include="Vector2.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram.cd" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

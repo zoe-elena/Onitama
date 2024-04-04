@@ -137,7 +137,7 @@ void Renderer::DrawMoveTiles(Color _color) const
 	}
 }
 
-void Renderer::DrawTemple(Player* _player) const
+void Renderer::DrawTemple(const Player* _player) const
 {
 	Vector2 templePosition = _player->GetTemplePosition();
 
@@ -155,7 +155,7 @@ void Renderer::DrawTemple(Player* _player) const
 	SDL_RenderCopy(SDLRenderer, textureTemple, nullptr, &Tile);
 }
 
-void Renderer::DrawPieces(Player* _player)
+void Renderer::DrawPieces(const Player* _player)
 {
 	for (int u = 0; u < PIECECOUNT; u++)
 	{
@@ -168,7 +168,6 @@ void Renderer::DrawPieces(Player* _player)
 
 void Renderer::DrawSinglePiece(Piece* _piece)
 {
-	SDL_SetRenderDrawColor(SDLRenderer, 255, 0, 0, SDL_ALPHA_OPAQUE);
 	SDL_Rect Tile;
 	Tile.x = SIDEPANELWIDTH + TILEPADDING + _piece->GetXIndex() * TILESIZE + _piece->GetXIndex() * TILEPADDING;
 	Tile.y = CARDPANELHEIGHT + TILEPADDING + _piece->GetYIndex() * TILESIZE + _piece->GetYIndex() * TILEPADDING;
@@ -225,8 +224,8 @@ void Renderer::DrawCards()
 Color Renderer::GetPieceColor(Piece* _piece)
 {
 	E_PLAYERCOLOR playerColor = _piece->GetOwner()->GetColor();
-	bool isHovered = game->GetHoveredPiece() == _piece;
-	bool isSelected = game->GetSelectedPiece() == _piece;
+	bool isHovered = game->IsHoveredPiece(_piece) && game->IsPieceSelected() == false;
+	bool isSelected = game->IsSelectedPiece(_piece);
 
 	if (isSelected)
 	{

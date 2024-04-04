@@ -62,8 +62,8 @@ Vector2 TileManager::GetClosestTile(const Vector2 _position) const
 	float xTilePosition = (_position.x - SIDEPANELWIDTH - TILEPADDING / 2.0f) / (float)(TILESIZE + TILEPADDING);
 	float yTilePosition = (_position.y - CARDPANELHEIGHT - TILEPADDING / 2.0f) / (float)(TILESIZE + TILEPADDING);
 
-	int xIndex = xTilePosition < 0 ? xTilePosition - 1 : xTilePosition;
-	int yIndex = yTilePosition < 0 ? yTilePosition - 1 : yTilePosition;
+	int xIndex = xTilePosition < 0 ? static_cast<int>(xTilePosition - 1) : static_cast<int>(xTilePosition);
+	int yIndex = yTilePosition < 0 ? static_cast<int>(yTilePosition - 1) : static_cast<int>(yTilePosition);
 
 	if (!IsInBounds(Vector2(xIndex, yIndex)))
 	{

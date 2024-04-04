@@ -57,8 +57,8 @@ private:
 	void DrawBackground(Color _color) const;
 	void DrawTiles(Color _color) const;
 	void DrawMoveTiles(Color _color) const;
-	void DrawTemple(Player* _player)  const;
-	void DrawPieces(Player* _player);
+	void DrawTemple(const Player* _player)  const;
+	void DrawPieces(const Player* _player);
 	void DrawSinglePiece(Piece* _piece);
 	void DrawCards();
 	void DrawButtonLegend();

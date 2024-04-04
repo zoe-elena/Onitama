@@ -1,8 +1,8 @@
 #include "SelectAction.h"
 #include "Game.h"
 
-SelectAction::SelectAction(Game* _game, SelectActionState* _state, Player* _activePlayer) :
-	game(_game), state(_state), activePlayer(_activePlayer)
+SelectAction::SelectAction(SelectActionState* _state, Player* _activePlayer) :
+	state(_state), activePlayer(_activePlayer)
 {
 }
 
@@ -11,23 +11,23 @@ SelectAction::~SelectAction()
 	delete(state);
 }
 
-void SelectAction::execute()
+void SelectAction::execute(Game& _game)
 {
 	Piece* nextPiece = state->nextPiece;
 	Card* nextCard = state->nextCard;
 	if (nextPiece)
 	{
-		game->SelectPiece(nextPiece);
+		_game.SelectPiece(nextPiece);
 	}
 	else if (nextCard)
 	{
-		game->SelectCard(nextCard);
+		_game.SelectCard(nextCard);
 	}
 
-	game->TrySetMoveTiles(nextCard, nextPiece, activePlayer);
+	_game.TrySetMoveTiles(nextCard, nextPiece, activePlayer);
 }
 
-void SelectAction::undo()
+void SelectAction::undo(Game& _game)
 {
 
 }

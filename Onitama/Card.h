@@ -13,12 +13,12 @@ public:
 
 	E_PLAYERCOLOR GetOwnerColor() const;
 
-	inline Player* GetOwner() const { return owner; }
-	inline void SetOwner(Player* _player) { owner = _player; }
-	inline E_CARDPOSITIONTYPE GetPositionType() const { return cardPositionType; }
-	inline void SetPositionType(E_CARDPOSITIONTYPE _cardPositionType) { cardPositionType = _cardPositionType; }
-	inline std::vector<Vector2> GetMoves() const { return moves; }
-	inline E_CARDTYPE GetCardType() const { return cardType; }
+	Player* GetOwner() const { return owner; }
+	void SetOwner(Player* _player) { owner = _player; }
+	E_CARDPOSITIONTYPE GetPositionType() const { return cardPositionType; }
+	void SetPositionType(E_CARDPOSITIONTYPE _cardPositionType) { cardPositionType = _cardPositionType; }
+	std::vector<Vector2> GetMoves() const { return moves; }
+	E_CARDTYPE GetCardType() const { return cardType; }
 
 private:
 	Player* owner;

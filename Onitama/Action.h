@@ -7,10 +7,10 @@ class Game;
 class Action
 {
 public:
-    virtual void execute() = 0;
-    virtual void undo() = 0;
+    virtual void execute(Game& game) = 0;
+    virtual void undo(Game& game) = 0;
 
 private:
-    Player* activePlayer;
+    Player* activePlayer = nullptr;
 };
 

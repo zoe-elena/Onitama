@@ -1,14 +1,17 @@
 #pragma once
+#include "SDL.h"
+
 class Color
 {
 public:
-	char r, g, b, a;
+	Uint8 r = 0;
+	Uint8 g = 0;
+	Uint8 b = 0;
+	Uint8 a = 0;
+
 	static const Color White() { return Color(255, 255, 255); };
 	static const Color Black() { return Color(0, 0, 0); };
-	static const Color Red() { return Color(255, 0, 0); };
-	static const Color Green() { return Color(0, 255, 0); };
-	static const Color Blue() { return Color(0, 0, 255); };
 
 	Color();
-	Color(int _r, int _g, int _b);
+	Color(Uint8 _r, Uint8 _g, Uint8 _b);
 };

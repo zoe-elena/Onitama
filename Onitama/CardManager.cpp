@@ -3,13 +3,12 @@
 #include "CardManager.h"
 #include "Player.h"
 
-CardManager::CardManager(Player* _playerRed, Player* _playerBlue, Player* _activeplayer)
+CardManager::CardManager(Player* _playerRed, Player* _playerBlue)
 {
 	playerRed = _playerRed;
 	playerBlue = _playerBlue;
 	MapCardPositions();
 	MapPlayerCards();
-	InitCards(_activeplayer);
 }
 
 CardManager::~CardManager()
@@ -90,6 +89,26 @@ void CardManager::MoveCardsAlong(Player* _activePlayer, Card* _selectedCard)
 	}
 
 	sideCard = _selectedCard;
+}
+
+void CardManager::MoveCardsBack(Player* _activePlayer, Card* _prevSideCard)
+{
+	sideCard->SetPositionType(_prevSideCard->GetPositionType());
+
+	if (_activePlayer->GetColor() == E_PLAYERCOLOR::red)
+	{
+		_prevSideCard->SetPositionType(E_CARDPOSITIONTYPE::sideRight);
+		_prevSideCard->SetOwner(playerBlue);
+		sideCard->SetOwner(playerBlue);
+	}
+	else if (_activePlayer->GetColor() == E_PLAYERCOLOR::blue)
+	{
+		_prevSideCard->SetPositionType(E_CARDPOSITIONTYPE::sideLeft);
+		_prevSideCard->SetOwner(playerRed);
+		sideCard->SetOwner(playerRed);
+	}
+
+	sideCard = _prevSideCard;
 }
 
 void CardManager::MapCardPositions()
