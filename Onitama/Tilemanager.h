@@ -1,8 +1,8 @@
 #pragma once
-#include "Tile.h"
-#include "Defines.h"
 #include <vector>
 #include <array>
+#include "Defines.h"
+#include "Tile.h"
 
 class TileManager
 {

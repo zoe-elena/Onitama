@@ -104,8 +104,8 @@ void Game::UnselectAll()
 
 void Game::ResolveLeftMouseDown(Vector2 _mousePos)
 {
-	Vector2 mouseIndex = tileManager.GetClosestTile(_mousePos);
-	Tile selectedTile = tileManager.GetTile(mouseIndex);
+	Vector2 tileIndex = tileManager.GetClosestTile(_mousePos);
+	Tile selectedTile = tileManager.GetTile(tileIndex);
 	E_CARDPOSITIONTYPE cardPositionType = cardManager.CheckCardHover(activePlayer->GetColor(), _mousePos);
 
 	if (tileManager.IsInBounds(selectedTile))
@@ -168,7 +168,7 @@ void Game::MovePiece(Tile _selectedTile, Piece* _selectedPiece, Card* _selectedC
 void Game::MovePieceBack(Tile _prevTile, Piece* _piece, Card* _selectedCard, Card* _prevSideCard, Piece* _capturedPiece, Player* _lastActivePlayer)
 {
 	// Respawn piece
-	if(_capturedPiece != nullptr)
+	if (_capturedPiece != nullptr)
 	{
 		tileManager.SetTilePiece(_capturedPiece->GetIndex(), _capturedPiece);
 		_capturedPiece->SetCaptured(false);
@@ -221,22 +221,14 @@ void Game::CheckForWin(Piece* _capturedPiece)
 
 bool Game::TrySelectPiece(Piece* _piece)
 {
-	if (_piece->GetOwner() == activePlayer)
-	{
-		if (TrySetMoveTiles(selectedCard, _piece, activePlayer))
-		{
-			return true;
-		}
-	}
-
-	return false;
+	return _piece->GetOwner() == activePlayer && TrySetMoveTiles(selectedCard, _piece, activePlayer);
 }
 
 bool Game::IsValidMove(Vector2 _index)
 {
-	for (size_t i = 0; i < validMovesTileIndices.size(); i++)
+	for (auto& tileIndex : validMovesTileIndices)
 	{
-		if (validMovesTileIndices[i] == _index)
+		if (tileIndex == _index)
 		{
 			return true;
 		}
@@ -281,15 +273,13 @@ bool Game::TrySetMoveTiles(Card* _card, Piece* _piece, Player* _activePlayer)
 	std::vector<Vector2> selectedCardMoves = _card->GetMoves();
 	std::vector<Vector2> tempValidMovesTileIndices = tileManager.GetValidMoveTileIndices(selectedCardMoves, _piece->GetIndex(), _activePlayer);
 
-	if (tempValidMovesTileIndices.size() != 0)
+	if (tempValidMovesTileIndices.empty() == false)
 	{
 		validMovesTileIndices = tempValidMovesTileIndices;
 		return true;
 	}
-	else
-	{
-		return false;
-	}
+
+	return false;
 }
 
 void Game::SelectPiece(Piece* _piece)

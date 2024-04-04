@@ -20,9 +20,9 @@ Player::Player(E_PLAYERCOLOR _color) : color(_color)
 
 Player::~Player()
 {
-	for (size_t i = 0; i < playerPieces.size(); i++)
+	for (auto& playerPiece : playerPieces)
 	{
-		delete(playerPieces[i]);
+		delete(playerPiece);
 	}
 }
 
@@ -42,8 +42,9 @@ void Player::SetInitTemplePositions(int _row)
 
 void Player::InitPlayer()
 {
-	for (size_t u = 0; u < initStudentPositions.size(); u++) {
-		playerPieces[u] = new Piece(this, E_PIECETYPE::student, initStudentPositions[u]);
+	for (size_t i = 0; i < STUDENTS; i++)
+	{
+		playerPieces[i] = new Piece(this, E_PIECETYPE::student, initStudentPositions[i]);
 	}
-	playerPieces[playerPieces.size() - 1] = new Piece(this, E_PIECETYPE::master, initMasterPosition);
+	playerPieces.back() = new Piece(this, E_PIECETYPE::master, initMasterPosition);
 }

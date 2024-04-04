@@ -119,18 +119,18 @@ void Renderer::DrawMoveTiles(Color _color) const
 {
 	std::vector<Vector2> moveTiles = game->GetValidMoves();
 
-	if (moveTiles.size() == 0 || game->IsPieceSelected() == false)
+	if (moveTiles.empty() || game->IsPieceSelected() == false)
 	{
 		return;
 	}
 
-	for (size_t i = 0; i < moveTiles.size(); i++)
+	for (auto& moveTile : moveTiles)
 	{
 		SDL_SetRenderDrawColor(SDLRenderer, _color.r, _color.g, _color.b, _color.a);
 
 		SDL_Rect Tile;
-		Tile.x = SIDEPANELWIDTH + TILEPADDING + moveTiles[i].x * TILESIZE + moveTiles[i].x * TILEPADDING;
-		Tile.y = CARDPANELHEIGHT + TILEPADDING + moveTiles[i].y * TILESIZE + moveTiles[i].y * TILEPADDING;
+		Tile.x = SIDEPANELWIDTH + TILEPADDING + moveTile.x * TILESIZE + moveTile.x * TILEPADDING;
+		Tile.y = CARDPANELHEIGHT + TILEPADDING + moveTile.y * TILESIZE + moveTile.y * TILEPADDING;
 		Tile.w = TILESIZE;
 		Tile.h = TILESIZE;
 		SDL_RenderFillRect(SDLRenderer, &Tile);
@@ -197,25 +197,25 @@ void Renderer::DrawCards()
 	std::array<Vector2, CARDSLOTS> cardPositions = game->GetAllCardPositions();
 	Color color;
 
-	for (size_t i = 0; i < cards.size(); i++)
+	for (auto& card : cards)
 	{
-		int cardRotation = cards[i]->GetOwnerColor() == E_PLAYERCOLOR::red ? 180 : 0;
+		int cardRotation = card->GetOwnerColor() == E_PLAYERCOLOR::red ? 180 : 0;
 
-		if (cards[i] == game->GetSelectedCard())
+		if (card == game->GetSelectedCard())
 		{
 			color = cardColorSelected;
 		}
 		else
 		{
-			color = game->IsActivePlayer(cards[i]->GetOwner()) ? cardColorInteractable : cardColor;
+			color = game->IsActivePlayer(card->GetOwner()) ? cardColorInteractable : cardColor;
 		}
-		Vector2 tempCardPosition = game->GetCardPositionMap().find(cards[i]->GetPositionType())->second;
+		Vector2 tempCardPosition = game->GetCardPositionMap().find(card->GetPositionType())->second;
 		Tile.x = tempCardPosition.x;
 		Tile.y = tempCardPosition.y;
 		Tile.w = CARDWIDTH;
 		Tile.h = CARDHEIGHT;
 
-		SDL_Texture* tempCardTexture = cardTypeMap.find(cards[i]->GetCardType())->second;
+		SDL_Texture* tempCardTexture = cardTypeMap.find(card->GetCardType())->second;
 		SDL_SetTextureColorMod(tempCardTexture, color.r, color.g, color.b);
 		SDL_RenderCopyEx(SDLRenderer, tempCardTexture, nullptr, &Tile, cardRotation, nullptr, SDL_FLIP_NONE);
 	}

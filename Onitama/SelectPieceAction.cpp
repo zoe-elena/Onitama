@@ -14,7 +14,6 @@ SelectPieceAction::~SelectPieceAction()
 void SelectPieceAction::execute(Game& _game)
 {
 	_game.SelectPiece(state->nextPiece);
-	_game.TrySetMoveTiles(state->prevCard, state->nextPiece, activePlayer);
 }
 
 void SelectPieceAction::undo(Game& _game)

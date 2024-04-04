@@ -13,32 +13,19 @@ CardManager::CardManager(Player* _playerRed, Player* _playerBlue)
 
 CardManager::~CardManager()
 {
-	for (size_t i = 0; i < cards.size(); i++)
+	for (auto& card : cards)
 	{
-		delete(cards[i]);
+		delete(card);
 	}
-}
-
-Card* CardManager::GetCard(E_CARDTYPE _cardType)
-{
-	for (size_t i = 0; i < sizeof(cards); i++)
-	{
-		if (cards[i]->GetCardType() == _cardType)
-		{
-			return cards[i];
-		}
-	}
-
-	return nullptr;
 }
 
 Card* CardManager::GetCard(E_CARDPOSITIONTYPE _cardPositionType)
 {
-	for (size_t i = 0; i < sizeof(cards); i++)
+	for (auto& card : cards)
 	{
-		if (cards[i]->GetPositionType() == _cardPositionType)
+		if (card->GetPositionType() == _cardPositionType)
 		{
-			return cards[i];
+			return card;
 		}
 	}
 
@@ -150,12 +137,12 @@ void CardManager::InitCards(Player* _activeplayer)
 	cards[3] = new Card(playerCardMap.find(randomCardPositions[3])->second, E_CARDTYPE::dragon, randomCardPositions[3], movesDragon);
 	cards[4] = new Card(playerCardMap.find(randomCardPositions[4])->second, E_CARDTYPE::rabbit, randomCardPositions[4], movesRabbit);
 
-	for (size_t i = 0; i < cards.size(); i++)
+	for (auto& card : cards)
 	{
-		if (cards[i]->GetPositionType() == E_CARDPOSITIONTYPE::sideLeft ||
-			cards[i]->GetPositionType() == E_CARDPOSITIONTYPE::sideRight)
+		if (card->GetPositionType() == E_CARDPOSITIONTYPE::sideLeft ||
+			card->GetPositionType() == E_CARDPOSITIONTYPE::sideRight)
 		{
-			sideCard = cards[i];
+			sideCard = card;
 		}
 	}
 

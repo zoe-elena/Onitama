@@ -44,17 +44,10 @@ bool TileManager::IsInBounds(const Vector2 _index) const {
 
 bool TileManager::IsInBounds(const Tile _tile) const
 {
-	if ((_tile.GetXIndex() < BOARDSIZE)
+	return (_tile.GetXIndex() < BOARDSIZE)
 		&& (_tile.GetXIndex() >= 0)
 		&& (_tile.GetYIndex() < BOARDSIZE)
-		&& (_tile.GetYIndex() >= 0))
-	{
-		return true;
-	}
-	else
-	{
-		return false;
-	}
+		&& (_tile.GetYIndex() >= 0);
 }
 
 Vector2 TileManager::GetClosestTile(const Vector2 _position) const
@@ -65,7 +58,7 @@ Vector2 TileManager::GetClosestTile(const Vector2 _position) const
 	int xIndex = xTilePosition < 0 ? static_cast<int>(xTilePosition - 1) : static_cast<int>(xTilePosition);
 	int yIndex = yTilePosition < 0 ? static_cast<int>(yTilePosition - 1) : static_cast<int>(yTilePosition);
 
-	if (!IsInBounds(Vector2(xIndex, yIndex)))
+	if (IsInBounds(Vector2(xIndex, yIndex)) == false)
 	{
 		xIndex = yIndex = -1;
 	}
@@ -83,9 +76,9 @@ std::vector<Vector2> TileManager::GetValidMoveTileIndices(std::vector<Vector2> _
 	std::vector<Vector2> validMoves;
 	int playerSideModifier = _activePlayer->GetColor() == E_PLAYERCOLOR::blue ? 1 : -1;
 
-	for (size_t i = 0; i < _moves.size(); i++)
+	for (auto& move : _moves)
 	{
-		Tile possibleTile = GetMoveTile(_pieceIndex, _moves[i], playerSideModifier);
+		Tile possibleTile = GetMoveTile(_pieceIndex, move, playerSideModifier);
 		if (IsInBounds(Vector2(possibleTile.GetXIndex(), (possibleTile.GetYIndex()))))
 		{
 			if (possibleTile.IsOccupied() == false || IsEnemyPlayerOnTile(possibleTile, _activePlayer))
@@ -131,8 +124,6 @@ Piece* TileManager::TryCapturePiece(Tile _tile)
 		_tile.GetOccupyingPiece()->SetCaptured(true);
 		return _tile.GetOccupyingPiece();
 	}
-	else
-	{
-		return nullptr;
-	}
+
+	return nullptr;
 }

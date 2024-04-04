@@ -13,7 +13,6 @@ public:
 	~CardManager();
 
 	void InitCards(Player* _activePlayer);
-	Card* GetCard(E_CARDTYPE _cardType);
 	Card* GetCard(E_CARDPOSITIONTYPE _cardPositionType);
 	E_CARDPOSITIONTYPE CheckCardHover(E_PLAYERCOLOR _activePlayerColor, Vector2 _mousePos);
 	void MoveCardsAlong(Player* _activePlayer, Card* _selectedCard);
