@@ -23,11 +23,6 @@ void Game::InitGame()
 	cardManager.InitCards(activePlayer);
 }
 
-void Game::RestartGame()
-{
-	InitGame();
-}
-
 void Game::Update()
 {
 	inputManager.PollEvents();

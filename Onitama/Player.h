@@ -32,6 +32,5 @@ private:
 
 	void SetInitPiecePositions(int _row);
 	void SetInitTemplePositions(int _row);
-	void SetInitCardPositions(int _pixelHeight);
 };
 

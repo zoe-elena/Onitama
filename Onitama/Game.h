@@ -61,7 +61,6 @@ private:
 	Card* selectedCard = nullptr;
 	std::vector<Vector2> validMovesTileIndices;
 
-	void RestartGame();
 	void UpdateAllTiles();
 	void DoTurn();
 	void CheckForWin(Piece* _capturedPiece);
