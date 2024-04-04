@@ -13,6 +13,7 @@ void InputManager::PollEvents()
 	leftButtonDown = false;
 	rButtonDown = false;
 	arrowLeftButtonDown = false;
+	escButtonDown = false;
 
 	while (SDL_PollEvent(&event))
 	{
@@ -28,6 +29,10 @@ void InputManager::PollEvents()
 			}
 			break;
 		case SDL_KEYDOWN:
+			if (event.button.button == SDL_SCANCODE_ESCAPE)
+			{
+				escButtonDown = true;
+			}
 			if (event.button.button == SDL_SCANCODE_R)
 			{
 				rButtonDown = true;

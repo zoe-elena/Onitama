@@ -156,7 +156,6 @@
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Piece.cpp" />
     <ClCompile Include="Player.cpp" />
-    <ClCompile Include="SelectAction.cpp" />
     <ClCompile Include="SelectCardAction.cpp" />
     <ClCompile Include="SelectPieceAction.cpp" />
     <ClCompile Include="Tile.cpp" />
@@ -177,7 +176,6 @@
     <ClInclude Include="Game.h" />
     <ClInclude Include="Piece.h" />
     <ClInclude Include="Player.h" />
-    <ClInclude Include="SelectAction.h" />
     <ClInclude Include="SelectCardAction.h" />
     <ClInclude Include="SelectPieceAction.h" />
     <ClInclude Include="Tile.h" />

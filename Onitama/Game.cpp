@@ -32,7 +32,12 @@ void Game::Update()
 {
 	inputManager.PollEvents();
 
-	if (inputManager.IsRButtonDown())
+	if (inputManager.IsEscButtonDown())
+	{
+		hasQuit = true;
+		return;
+	}
+	else if (inputManager.IsRButtonDown())
 	{
 		hasRestart = true;
 		return;

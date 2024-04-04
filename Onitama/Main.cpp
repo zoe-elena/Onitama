@@ -3,6 +3,8 @@
 #include "SDL.h"
 #include "Game.h"
 
+void PrintFPS(int& _startTime, int& _fpsCounter);
+
 int main(int argc, char* argv[])
 {
 	if (SDL_Init(SDL_INIT_VIDEO) < 0)
@@ -12,38 +14,21 @@ int main(int argc, char* argv[])
 
 	SDL_Window* SDLWindow = nullptr;
 	SDL_Renderer* SDLRenderer = nullptr;
-
 	if (SDL_CreateWindowAndRenderer(WINDOWWIDTHSIZE, WINDOWLENGTHSIZE, 0, &SDLWindow, &SDLRenderer) == -1)
 	{
 		return 1;
 	}
 
-	int b = SDL_GetTicks();
-	int a = 0;
-	int c = 0;
-	int fpsCounter = 0;
-
 	bool restart = false;
-	do
-	{
-
+	int frameStartTime = SDL_GetTicks();
+	int fpsCounter = 0;
+	do	{
 		Game game(SDLRenderer);
 		while (game.HasQuit() == false && game.DoRestart() == false)
 		{
-			c = SDL_GetTicks();
 			game.Update();
-			a = SDL_GetTicks();
 
-			//std::cout << "delta time:" << a - c << std::endl;
-
-			fpsCounter++;
-			if (SDL_GetTicks() - b >= 1000)
-			{
-				b = SDL_GetTicks();
-				std::cout << "fps:" << fpsCounter << std::endl;
-				fpsCounter = 0;
-			}
-			// Significantly reduces CPU load
+			PrintFPS(frameStartTime, fpsCounter);
 			std::this_thread::sleep_for(std::chrono::milliseconds(50));
 		}
 		restart = game.DoRestart();
@@ -59,4 +44,17 @@ int main(int argc, char* argv[])
 	}
 
 	return 0;
+}
+
+// Prints FPS every Second
+void PrintFPS(int& _startTime, int& _fpsCounter)
+{
+	_fpsCounter++;
+
+	if (SDL_GetTicks() - _startTime >= 1000)
+	{
+		_startTime = SDL_GetTicks();
+		std::cout << "fps:" << _fpsCounter << std::endl;
+		_fpsCounter = 0;
+	}
 }
