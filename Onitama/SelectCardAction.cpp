@@ -1,20 +1,14 @@
 #include "SelectCardAction.h"
 #include "Game.h"
 
-SelectCardAction::SelectCardAction(SelectActionState* _state, Player* _activePlayer) :
-	state(_state), activePlayer(_activePlayer)
+SelectCardAction::SelectCardAction(Card* _card, Piece* _piece, Player* _activePlayer) :
+	card(_card), piece(_piece), activePlayer(_activePlayer)
 {
-}
-
-SelectCardAction::~SelectCardAction()
-{
-	delete(state);
 }
 
 void SelectCardAction::execute(Game& _game)
 {
-	_game.SelectCard(state->nextCard);
-	_game.TrySetMoveTiles(state->nextCard, state->prevPiece, activePlayer);
+	_game.SelectCard(card);
 }
 
 void SelectCardAction::undo(Game& _game)

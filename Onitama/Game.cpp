@@ -5,7 +5,6 @@
 #include "MoveAction.h"
 #include "SelectCardAction.h"
 #include "SelectPieceAction.h"
-#include "SelectActionState.h"
 
 Game::Game(SDL_Renderer* _sdlRenderer) : playerRed(E_PLAYERCOLOR::red), playerBlue(E_PLAYERCOLOR::blue), cardManager(&playerRed, &playerBlue), renderer(_sdlRenderer, this)
 {
@@ -19,7 +18,7 @@ void Game::InitGame()
 	int random = dist(rng);
 	activePlayer = random < 50 ? &playerRed : &playerBlue;
 
-	UpdateAllTiles();
+	UpdateTilePointer();
 	cardManager.InitCards(activePlayer);
 }
 
@@ -49,23 +48,14 @@ void Game::Update()
 	}
 
 	renderer.DrawGame();
-	renderer.RenderGame();
 }
 
-void Game::UpdateAllTiles()
+void Game::UpdateTilePointer()
 {
 	for (size_t i = 0; i < PIECECOUNT; i++)
 	{
-		Piece* currentPiece = playerRed.GetPlayerPiece(static_cast<int>(i));
-		Vector2 currentPieceIndex = currentPiece->GetIndex();
-		tileManager.SetTilePiece(currentPieceIndex, currentPiece);
-	}
-
-	for (size_t i = 0; i < PIECECOUNT; i++)
-	{
-		Piece* currentPiece = playerBlue.GetPlayerPiece(static_cast<int>(i));
-		Vector2 currentPieceIndex = currentPiece->GetIndex();
-		tileManager.SetTilePiece(currentPieceIndex, currentPiece);
+		tileManager.SetTilePiece(playerRed.GetPlayerPiece(static_cast<int>(i)));
+		tileManager.SetTilePiece(playerBlue.GetPlayerPiece(static_cast<int>(i)));
 	}
 }
 
@@ -116,43 +106,34 @@ void Game::ResolveLeftMouseDown(Vector2 _mousePos)
 		{
 			if (TryMovePiece(selectedTile))
 			{
-				Action* moveAction = new MoveAction(selectedTile, selectedPiece, selectedCard, selectedTile.GetOccupyingPiece(), activePlayer);
-				actionStack.ExecuteAction(moveAction, *this);
+				auto* action = new MoveAction(selectedTile, selectedPiece, selectedCard, selectedTile.GetOccupyingPiece(), activePlayer);
+				actionStack.ExecuteAction(action, *this);
 			}
 		}
 		else if (nextSelectedPiece != nullptr && TrySelectPiece(nextSelectedPiece))
 		{
-			SelectActionState* selectActionState = new SelectActionState(selectedPiece, nextSelectedPiece, selectedCard, nullptr);
-			Action* selectPieceAction = new SelectPieceAction(selectActionState, activePlayer);
-			actionStack.ExecuteAction(selectPieceAction, *this);
+			auto* action = new SelectPieceAction(nextSelectedPiece, activePlayer);
+			actionStack.ExecuteAction(action, *this);
 		}
 	}
 	else if (selectedCard == nullptr && cardPositionType != E_CARDPOSITIONTYPE::none)
 	{
-		SelectActionState* selectActionState = new SelectActionState(selectedPiece, nullptr, selectedCard, cardManager.GetCard(cardPositionType));
-		Action* selectCardAction = new SelectCardAction(selectActionState, activePlayer);
-		actionStack.ExecuteAction(selectCardAction, *this);
+		auto* action = new SelectCardAction(cardManager.GetCard(cardPositionType), selectedPiece, activePlayer);
+		actionStack.ExecuteAction(action, *this);
 	}
 }
 
 bool Game::TryMovePiece(Tile _selectedTile)
 {
-	if (IsValidMove(_selectedTile.GetIndex()) == false)
-	{
-		return false;
-	}
-	else
-	{
-		return true;
-	}
+	return IsValidMove(_selectedTile.GetIndex());
 }
 
 void Game::MovePiece(Tile _selectedTile, Piece* _selectedPiece, Card* _selectedCard, Piece* _capturedPiece, Player* _activePlayer)
 {
 	tileManager.TryCapturePiece(_selectedTile);
 	tileManager.ClearTile(_selectedPiece->GetIndex());
-	tileManager.SetTilePiece(_selectedTile.GetIndex(), _selectedPiece);
 	_selectedPiece->SetIndex(_selectedTile.GetIndex());
+	tileManager.SetTilePiece(_selectedPiece);
 	validMovesTileIndices.clear();
 
 	CheckForWin(_capturedPiece);
@@ -170,7 +151,7 @@ void Game::MovePieceBack(Tile _prevTile, Piece* _piece, Card* _selectedCard, Car
 	// Respawn piece
 	if (_capturedPiece != nullptr)
 	{
-		tileManager.SetTilePiece(_capturedPiece->GetIndex(), _capturedPiece);
+		tileManager.SetTilePiece(_capturedPiece);
 		_capturedPiece->SetCaptured(false);
 	}
 	else
@@ -180,8 +161,8 @@ void Game::MovePieceBack(Tile _prevTile, Piece* _piece, Card* _selectedCard, Car
 
 	// Move piece back
 	selectedPiece = _piece;
-	tileManager.SetTilePiece(_prevTile.GetIndex(), _piece);
 	_piece->SetIndex(_prevTile.GetIndex());
+	tileManager.SetTilePiece(_piece);
 
 	selectedCard = _selectedCard;
 	if (isWin == false)

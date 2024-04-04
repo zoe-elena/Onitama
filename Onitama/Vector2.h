@@ -1,8 +1,10 @@
 #pragma once
-class Vector2 {
+class Vector2
+{
 public:
-	int x, y;
-	Vector2();
+	int x = 0;
+	int y = 0;
+	Vector2() = default;
 	Vector2(int _x, int _y);
 
 	Vector2 operator+(const Vector2& B) const { return Vector2(x + B.x, y + B.y); }

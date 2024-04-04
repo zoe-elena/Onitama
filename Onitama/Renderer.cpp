@@ -38,10 +38,7 @@ void Renderer::DrawGame()
 	DrawPieces(game->GetPlayerRed());
 	DrawPieces(game->GetPlayerBlue());
 	DrawCards();
-}
 
-void Renderer::RenderGame()
-{
 	SDL_RenderPresent(SDLRenderer);
 }
 
@@ -249,8 +246,6 @@ Color Renderer::GetColorByPlayerColor(E_PLAYERCOLOR _playerColor, Color _redColo
 	{
 		return _blueColor;
 	}
-	else
-	{
-		return Color::White();
-	}
+
+	return Color::White();
 }

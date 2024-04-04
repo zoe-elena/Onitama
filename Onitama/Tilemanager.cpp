@@ -66,9 +66,9 @@ Vector2 TileManager::GetClosestTile(const Vector2 _position) const
 	return Vector2(xIndex, yIndex);
 }
 
-void TileManager::SetTilePiece(const Vector2 _index, Piece* _piece)
+void TileManager::SetTilePiece(Piece* _piece)
 {
-	tiles[_index.x][_index.y].SetOccupyingPiece(_piece);
+	tiles[_piece->GetXIndex()][_piece->GetYIndex()].SetOccupyingPiece(_piece);
 }
 
 std::vector<Vector2> TileManager::GetValidMoveTileIndices(std::vector<Vector2> _moves, Vector2 _pieceIndex, Player* _activePlayer)

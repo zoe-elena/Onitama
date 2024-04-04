@@ -166,7 +166,6 @@
     <ClInclude Include="Action.h" />
     <ClInclude Include="ActionStack.h" />
     <ClInclude Include="MoveAction.h" />
-    <ClInclude Include="SelectActionState.h" />
     <ClInclude Include="Card.h" />
     <ClInclude Include="CardManager.h" />
     <ClInclude Include="InputManager.h" />
@@ -184,6 +183,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />
+    <None Include="ClassDiagram1.cd" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

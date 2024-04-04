@@ -61,14 +61,14 @@ private:
 	Card* selectedCard = nullptr;
 	std::vector<Vector2> validMovesTileIndices;
 
-	void UpdateAllTiles();
+	void UpdateTilePointer();
 	void DoTurn();
 	void CheckForWin(Piece* _capturedPiece);
 	void UnselectAll();
 	void ResolveLeftMouseDown(Vector2 _mousePos);
 	void TryHoverPiece(Vector2 _mousePos);
 	bool TryMovePiece(Tile _tile);
-	bool IsValidMove(Vector2 _move);
 	bool TrySelectPiece(Piece* _piece);
+	bool IsValidMove(Vector2 _move);
 	void NextPlayer(Player* _activePlayer);
 };

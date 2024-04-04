@@ -1,16 +1,14 @@
 #pragma once
 #include "Action.h"
-#include "SelectActionState.h"
 
 class SelectPieceAction : public Action
 {
 public:
-	SelectPieceAction(SelectActionState* _state, Player* _activePlayer);
-	~SelectPieceAction();
+	SelectPieceAction(Piece* _piece, Player* _activePlayer);
 	void execute(Game& _game) override;
 	void undo(Game& _game) override;
 
 private:
-	SelectActionState* state;
+	Piece* piece;
 	Player* activePlayer;
 };

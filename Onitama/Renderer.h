@@ -18,7 +18,6 @@ public:
 	~Renderer();
 
 	void DrawGame();
-	void RenderGame();
 
 private:
 	Game* game;

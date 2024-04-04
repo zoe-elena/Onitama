@@ -107,9 +107,6 @@
     <ClInclude Include="ActionStack.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="SelectActionState.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="SelectCardAction.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -122,5 +119,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />
+    <None Include="ClassDiagram1.cd" />
   </ItemGroup>
 </Project>
