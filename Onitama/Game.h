@@ -3,7 +3,6 @@
 #include "SDL.h"
 #include "ActionStack.h"
 #include "Player.h"
-#include "Renderer.h"
 #include "TileManager.h"
 #include "InputManager.h"
 #include "CardManager.h"
@@ -51,7 +50,6 @@ private:
 	Player playerRed;
 	Player playerBlue;
 	Player* activePlayer = nullptr;
-	Renderer renderer;
 	TileManager tileManager;
 	InputManager inputManager;
 	CardManager cardManager;

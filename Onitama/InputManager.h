@@ -5,9 +5,6 @@
 class InputManager
 {
 public:
-	InputManager();
-	~InputManager();
-
 	void PollEvents();
 
 	Vector2 GetMousePosition() const { return mousePosition; }

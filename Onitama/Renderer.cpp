@@ -1,9 +1,8 @@
 #include "SDL.h"
 #include "Renderer.h"
 #include "Game.h"
-#include "array"
 
-Renderer::Renderer(SDL_Renderer* _SDLRenderer, Game* _game) : SDLRenderer(_SDLRenderer), game(_game)
+Renderer::Renderer(SDL_Renderer* _SDLRenderer) : SDLRenderer(_SDLRenderer)
 {
 	cardTypeMap.emplace(E_CARDTYPE::dragon, textureCardDragon);
 	cardTypeMap.emplace(E_CARDTYPE::horse, textureCardHorse);
@@ -27,17 +26,17 @@ Renderer::~Renderer()
 	SDL_DestroyTexture(textureCardRabbit);
 }
 
-void Renderer::DrawGame()
+void Renderer::DrawGame(Game& _game)
 {
 	DrawBackground(backgroundColor);
 	DrawButtonLegend();
 	DrawTiles(tileColor);
-	DrawMoveTiles(moveTileColor);
-	DrawTemple(game->GetPlayerRed());
-	DrawTemple(game->GetPlayerBlue());
-	DrawPieces(game->GetPlayerRed());
-	DrawPieces(game->GetPlayerBlue());
-	DrawCards();
+	DrawMoveTiles(_game, moveTileColor);
+	DrawTemple(_game.GetPlayerRed());
+	DrawTemple(_game.GetPlayerBlue());
+	DrawPieces(_game, _game.GetPlayerRed());
+	DrawPieces(_game, _game.GetPlayerBlue());
+	DrawCards(_game);
 
 	SDL_RenderPresent(SDLRenderer);
 }
@@ -112,11 +111,11 @@ void Renderer::DrawTiles(Color _color) const
 	}
 }
 
-void Renderer::DrawMoveTiles(Color _color) const
+void Renderer::DrawMoveTiles(Game& _game, Color _color) const
 {
-	std::vector<Vector2> moveTiles = game->GetValidMoves();
+	std::vector<Vector2> moveTiles = _game.GetValidMoves();
 
-	if (moveTiles.empty() || game->IsPieceSelected() == false)
+	if (moveTiles.empty() || _game.IsPieceSelected() == false)
 	{
 		return;
 	}
@@ -152,18 +151,18 @@ void Renderer::DrawTemple(const Player* _player) const
 	SDL_RenderCopy(SDLRenderer, textureTemple, nullptr, &Tile);
 }
 
-void Renderer::DrawPieces(const Player* _player)
+void Renderer::DrawPieces(Game& _game, const Player* _player)
 {
 	for (int u = 0; u < PIECECOUNT; u++)
 	{
 		if (_player->GetPlayerPiece(u)->IsCaptured() == false)
 		{
-			DrawSinglePiece(_player->GetPlayerPiece(u));
+			DrawSinglePiece(_game, _player->GetPlayerPiece(u));
 		}
 	}
 }
 
-void Renderer::DrawSinglePiece(Piece* _piece)
+void Renderer::DrawSinglePiece(Game& _game, Piece* _piece)
 {
 	SDL_Rect Tile;
 	Tile.x = SIDEPANELWIDTH + TILEPADDING + _piece->GetXIndex() * TILESIZE + _piece->GetXIndex() * TILEPADDING;
@@ -181,32 +180,32 @@ void Renderer::DrawSinglePiece(Piece* _piece)
 		texture = textureStudent;
 	}
 
-	Color color = GetPieceColor(_piece);
+	Color color = GetPieceColor(_game, _piece);
 	SDL_SetTextureColorMod(texture, color.r, color.g, color.b);
 	SDL_RenderCopy(SDLRenderer, texture, nullptr, &Tile);
 }
 
-void Renderer::DrawCards()
+void Renderer::DrawCards(Game& _game)
 {
 	SDL_Rect Tile;
 
-	std::array<Card*, CARDS> cards = game->GetAllCards();
-	std::array<Vector2, CARDSLOTS> cardPositions = game->GetAllCardPositions();
+	std::array<Card*, CARDS> cards = _game.GetAllCards();
+	std::array<Vector2, CARDSLOTS> cardPositions = _game.GetAllCardPositions();
 	Color color;
 
 	for (auto& card : cards)
 	{
 		int cardRotation = card->GetOwnerColor() == E_PLAYERCOLOR::red ? 180 : 0;
 
-		if (card == game->GetSelectedCard())
+		if (card == _game.GetSelectedCard())
 		{
 			color = cardColorSelected;
 		}
 		else
 		{
-			color = game->IsActivePlayer(card->GetOwner()) ? cardColorInteractable : cardColor;
+			color = _game.IsActivePlayer(card->GetOwner()) ? cardColorInteractable : cardColor;
 		}
-		Vector2 tempCardPosition = game->GetCardPositionMap().find(card->GetPositionType())->second;
+		Vector2 tempCardPosition = _game.GetCardPositionMap().find(card->GetPositionType())->second;
 		Tile.x = tempCardPosition.x;
 		Tile.y = tempCardPosition.y;
 		Tile.w = CARDWIDTH;
@@ -218,11 +217,11 @@ void Renderer::DrawCards()
 	}
 }
 
-Color Renderer::GetPieceColor(Piece* _piece)
+Color Renderer::GetPieceColor(Game& _game, Piece* _piece)
 {
 	E_PLAYERCOLOR playerColor = _piece->GetOwner()->GetColor();
-	bool isHovered = game->IsHoveredPiece(_piece) && game->IsPieceSelected() == false;
-	bool isSelected = game->IsSelectedPiece(_piece);
+	bool isHovered = _game.IsHoveredPiece(_piece) && _game.IsPieceSelected() == false;
+	bool isSelected = _game.IsSelectedPiece(_piece);
 
 	if (isSelected)
 	{

@@ -12,7 +12,6 @@ public:
 
 	E_PLAYERCOLOR GetColor();
 	bool isOnBoard();
-
 	Vector2 GetIndex() const { return index; }
 	void SetIndex(Vector2 _index) { index = _index; }
 	bool IsCaptured() const { return isCaptured; }

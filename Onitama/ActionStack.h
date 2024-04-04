@@ -2,8 +2,6 @@
 #include <stack>
 #include "Action.h"
 
-class Game;
-
 class ActionStack
 {
 public:

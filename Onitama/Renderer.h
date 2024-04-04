@@ -14,13 +14,12 @@ class Piece;
 class Renderer
 {
 public:
-	Renderer(SDL_Renderer* _SDLRenderer, Game* _game);
+	Renderer(SDL_Renderer* _sdlRenderer);
 	~Renderer();
 
-	void DrawGame();
+	void DrawGame(Game& _game);
 
 private:
-	Game* game;
 	SDL_Renderer* SDLRenderer;
 	SDL_Texture* textureButtonLegend;
 	SDL_Texture* textureStudent;
@@ -55,13 +54,13 @@ private:
 	void LoadTextures();
 	void DrawBackground(Color _color) const;
 	void DrawTiles(Color _color) const;
-	void DrawMoveTiles(Color _color) const;
+	void DrawMoveTiles(Game& _game, Color _color) const;
 	void DrawTemple(const Player* _player)  const;
-	void DrawPieces(const Player* _player);
-	void DrawSinglePiece(Piece* _piece);
-	void DrawCards();
+	void DrawPieces(Game& _game, const Player* _player);
+	void DrawSinglePiece(Game& _game, Piece* _piece);
+	void DrawCards(Game& _game);
 	void DrawButtonLegend();
-	Color GetPieceColor(Piece* _piece);
+	Color GetPieceColor(Game& _game, Piece* _piece);
 	Color GetColorByPlayerColor(E_PLAYERCOLOR _playerColor, Color _redColor, Color _blueColor) const;
 };
 

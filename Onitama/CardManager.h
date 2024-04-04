@@ -3,8 +3,7 @@
 #include <map>
 #include "Defines.h"
 #include "Card.h"
-
-class Player;
+#include "Player.h"
 
 class CardManager
 {

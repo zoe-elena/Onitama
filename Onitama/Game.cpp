@@ -6,7 +6,7 @@
 #include "SelectCardAction.h"
 #include "SelectPieceAction.h"
 
-Game::Game(SDL_Renderer* _sdlRenderer) : playerRed(E_PLAYERCOLOR::red), playerBlue(E_PLAYERCOLOR::blue), cardManager(&playerRed, &playerBlue), renderer(_sdlRenderer, this)
+Game::Game(SDL_Renderer* _sdlRenderer) : playerRed(E_PLAYERCOLOR::red), playerBlue(E_PLAYERCOLOR::blue), cardManager(&playerRed, &playerBlue)
 {
 	InitGame();
 }
@@ -46,8 +46,6 @@ void Game::Update()
 	{
 		actionStack.UndoLastAction(*this);
 	}
-
-	renderer.DrawGame();
 }
 
 void Game::UpdateTilePointer()

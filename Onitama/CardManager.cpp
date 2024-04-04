@@ -1,7 +1,6 @@
 #include <vector>
 #include <random>
 #include "CardManager.h"
-#include "Player.h"
 
 CardManager::CardManager(Player* _playerRed, Player* _playerBlue)
 {

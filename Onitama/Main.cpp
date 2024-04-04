@@ -2,6 +2,7 @@
 #include <thread>
 #include "SDL.h"
 #include "Game.h"
+#include "Renderer.h"
 
 void PrintFPS(int& _startTime, int& _fpsCounter);
 
@@ -13,8 +14,8 @@ int main(int argc, char* argv[])
 	}
 
 	SDL_Window* SDLWindow = nullptr;
-	SDL_Renderer* SDLRenderer = nullptr;
-	if (SDL_CreateWindowAndRenderer(WINDOWWIDTHSIZE, WINDOWLENGTHSIZE, 0, &SDLWindow, &SDLRenderer) == -1)
+	SDL_Renderer* sdlRenderer = nullptr;
+	if (SDL_CreateWindowAndRenderer(WINDOWWIDTHSIZE, WINDOWLENGTHSIZE, 0, &SDLWindow, &sdlRenderer) == -1)
 	{
 		return 1;
 	}
@@ -23,10 +24,12 @@ int main(int argc, char* argv[])
 	int frameStartTime = SDL_GetTicks();
 	int fpsCounter = 0;
 	do	{
-		Game game(SDLRenderer);
+		Game game(sdlRenderer);
+		Renderer renderer(sdlRenderer);
 		while (game.HasQuit() == false && game.DoRestart() == false)
 		{
 			game.Update();
+			renderer.DrawGame(game);
 
 			PrintFPS(frameStartTime, fpsCounter);
 			std::this_thread::sleep_for(std::chrono::milliseconds(50));
@@ -34,9 +37,9 @@ int main(int argc, char* argv[])
 		restart = game.DoRestart();
 	} while (restart);
 
-	if (SDLRenderer)
+	if (sdlRenderer)
 	{
-		SDL_DestroyRenderer(SDLRenderer);
+		SDL_DestroyRenderer(sdlRenderer);
 	}
 	if (SDLWindow)
 	{
