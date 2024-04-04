@@ -25,8 +25,6 @@ private:
 	std::array<Vector2, STUDENTS> initStudentPositions;
 	Vector2 initMasterPosition;
 	Vector2 templePosition;
-	Card* leftCard;
-	Card* rightCard;
 	Vector2 leftCardSlotPosition;
 	Vector2 rightCardSlotPosition;
 

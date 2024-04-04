@@ -1,6 +1,6 @@
 #pragma once
-class Card;
-class Piece;
+#include "Card.h"
+#include "Piece.h"
 
 struct SelectActionState
 {

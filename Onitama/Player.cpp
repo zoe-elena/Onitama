@@ -42,9 +42,6 @@ void Player::SetInitTemplePositions(int _row)
 
 void Player::InitPlayer()
 {
-	leftCard = nullptr;
-	rightCard = nullptr;
-
 	for (size_t u = 0; u < initStudentPositions.size(); u++) {
 		playerPieces[u] = new Piece(this, E_PIECETYPE::student, initStudentPositions[u]);
 	}

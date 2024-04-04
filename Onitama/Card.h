@@ -3,8 +3,7 @@
 #include "SDL.h"
 #include "Vector2.h"
 #include "Defines.h"
-
-class Player;
+#include "Player.h"
 
 class Card
 {

@@ -3,8 +3,6 @@
 #include "Defines.h"
 #include "Piece.h"
 
-class Player;
-
 class Tile
 {
 public:
@@ -18,7 +16,6 @@ public:
 	int GetXIndex() const { return index.x; }
 	int GetYIndex() const { return index.y; }
 	Vector2 GetIndex() const { return index; }
-
 
 private:
 	Vector2 index;

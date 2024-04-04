@@ -1,7 +1,7 @@
 #pragma once
 #include<stack>
+#include "Player.h"
 
-class Player;
 class Game;
 
 class Action
