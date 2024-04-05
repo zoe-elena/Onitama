@@ -1,8 +1,8 @@
 #include "SelectCardAction.h"
 #include "Game.h"
 
-SelectCardAction::SelectCardAction(Card* _card, Piece* _piece, Player* _activePlayer) :
-	card(_card), piece(_piece), activePlayer(_activePlayer)
+SelectCardAction::SelectCardAction(Card* _card, Player* _activePlayer) :
+	card(_card), activePlayer(_activePlayer)
 {
 }
 

@@ -27,14 +27,14 @@ void Game::Update()
 {
 	inputManager.PollEvents();
 
-	if (CheckForGameEnd() || isWin)
-	{
-		return;
-	}
-
 	if (inputManager.IsLeftArrowButtonPressed())
 	{
 		actionStack.UndoLastAction(*this);
+		return;
+	}
+
+	if (CheckForGameEnd() || isWin)
+	{
 		return;
 	}
 
@@ -107,7 +107,7 @@ void Game::ResolveLeftMouseButtonPressed(Vector2 _mousePos)
 	}
 	else if (selectedCard == nullptr && cardPositionType != E_CARDPOSITIONTYPE::none)
 	{
-		auto* action = new SelectCardAction(cardManager.GetCard(cardPositionType), selectedPiece, activePlayer);
+		auto* action = new SelectCardAction(cardManager.GetCard(cardPositionType), activePlayer);
 		actionStack.ExecuteAction(action, *this);
 	}
 }
