@@ -26,6 +26,15 @@ Player::~Player()
 	}
 }
 
+void Player::InitPlayer()
+{
+	for (size_t i = 0; i < STUDENTS; i++)
+	{
+		playerPieces[i] = new Piece(this, E_PIECETYPE::student, initStudentPositions[i]);
+	}
+	playerPieces.back() = new Piece(this, E_PIECETYPE::master, initMasterPosition);
+}
+
 void Player::SetInitPiecePositions(int _row)
 {
 	initStudentPositions[0] = Vector2(0, _row);
@@ -38,13 +47,4 @@ void Player::SetInitPiecePositions(int _row)
 void Player::SetInitTemplePositions(int _row)
 {
 	templePosition = Vector2(2, _row);
-}
-
-void Player::InitPlayer()
-{
-	for (size_t i = 0; i < STUDENTS; i++)
-	{
-		playerPieces[i] = new Piece(this, E_PIECETYPE::student, initStudentPositions[i]);
-	}
-	playerPieces.back() = new Piece(this, E_PIECETYPE::master, initMasterPosition);
 }

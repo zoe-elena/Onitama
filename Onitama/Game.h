@@ -30,8 +30,8 @@ public:
 	const std::vector<Vector2> GetValidMoves() const { return validMovesTileIndices; }
 	const Card* GetSelectedCard() const { return selectedCard; }
 	const bool IsActivePlayer(const Player* _player) const { return activePlayer == _player; }
-	const bool IsSelectedPiece(Piece* _piece) const { return selectedPiece == _piece; }
-	const bool IsHoveredPiece(Piece* _piece) const { return hoveredPiece == _piece; }
+	const bool IsSelectedPiece(const Piece* _piece) const { return selectedPiece == _piece; }
+	const bool IsHoveredPiece(const Piece* _piece) const { return hoveredPiece == _piece; }
 	const bool IsPieceSelected() const { return selectedPiece != nullptr; }
 	const bool IsWin() const { return isWin; }
 	const std::array<Card*, CARDS> GetAllCards() const { return cardManager.GetCards(); }

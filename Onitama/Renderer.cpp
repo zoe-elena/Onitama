@@ -1,15 +1,9 @@
 #include "SDL.h"
 #include "Renderer.h"
-#include "Game.h"
 
 Renderer::Renderer(SDL_Renderer* _SDLRenderer) : SDLRenderer(_SDLRenderer)
 {
-	cardTypeMap.emplace(E_CARDTYPE::dragon, textureCardDragon);
-	cardTypeMap.emplace(E_CARDTYPE::horse, textureCardHorse);
-	cardTypeMap.emplace(E_CARDTYPE::mantis, textureCardMantis);
-	cardTypeMap.emplace(E_CARDTYPE::ox, textureCardOx);
-	cardTypeMap.emplace(E_CARDTYPE::rabbit, textureCardRabbit);
-
+	MapCardTextures();
 	LoadTextures();
 }
 
@@ -48,6 +42,15 @@ void Renderer::DrawGame(Game& _game)
 	}
 
 	SDL_RenderPresent(SDLRenderer);
+}
+
+void Renderer::MapCardTextures()
+{
+	cardTypeMap.emplace(E_CARDTYPE::dragon, textureCardDragon);
+	cardTypeMap.emplace(E_CARDTYPE::horse, textureCardHorse);
+	cardTypeMap.emplace(E_CARDTYPE::mantis, textureCardMantis);
+	cardTypeMap.emplace(E_CARDTYPE::ox, textureCardOx);
+	cardTypeMap.emplace(E_CARDTYPE::rabbit, textureCardRabbit);
 }
 
 void Renderer::LoadTextures()
@@ -102,13 +105,13 @@ void Renderer::DrawButtonLegend()
 	SDL_RenderCopy(SDLRenderer, textureButtonLegend, nullptr, &Tile);
 }
 
-void Renderer::DrawBackground(Color _color) const
+void Renderer::DrawBackground(const Color _color) const
 {
 	SDL_SetRenderDrawColor(SDLRenderer, _color.r, _color.g, _color.b, SDL_ALPHA_OPAQUE);
 	SDL_RenderClear(SDLRenderer);
 }
 
-void Renderer::DrawWinScreen(E_PLAYERCOLOR _playerColor)
+void Renderer::DrawWinScreen(const E_PLAYERCOLOR _playerColor)
 {
 	SDL_Rect Tile;
 	Tile.x = TILEPADDING;
@@ -122,7 +125,7 @@ void Renderer::DrawWinScreen(E_PLAYERCOLOR _playerColor)
 	SDL_RenderCopy(SDLRenderer, texture, nullptr, &Tile);
 }
 
-void Renderer::DrawTiles(Color _color) const
+void Renderer::DrawTiles(const Color _color) const
 {
 	for (size_t i = 0; i < BOARDSIZE; i++)
 	{
@@ -140,7 +143,7 @@ void Renderer::DrawTiles(Color _color) const
 	}
 }
 
-void Renderer::DrawMoveTiles(Game& _game, Color _color) const
+void Renderer::DrawMoveTiles(const Game& _game, const Color _color) const
 {
 	std::vector<Vector2> moveTiles = _game.GetValidMoves();
 
@@ -179,7 +182,7 @@ void Renderer::DrawTemple(const Player* _player) const
 	SDL_RenderCopy(SDLRenderer, textureTemple, nullptr, &Tile);
 }
 
-void Renderer::DrawPieces(Game& _game, const Player* _player)
+void Renderer::DrawPieces(const Game& _game, const Player* _player)
 {
 	for (int u = 0; u < PIECECOUNT; u++)
 	{
@@ -190,7 +193,7 @@ void Renderer::DrawPieces(Game& _game, const Player* _player)
 	}
 }
 
-void Renderer::DrawSinglePiece(Game& _game, Piece* _piece)
+void Renderer::DrawSinglePiece(const Game& _game, const Piece* _piece)
 {
 	SDL_Rect Tile;
 	Tile.x = SIDEPANELWIDTH + TILEPADDING + _piece->GetXIndex() * TILESIZE + _piece->GetXIndex() * TILEPADDING;
@@ -213,7 +216,7 @@ void Renderer::DrawSinglePiece(Game& _game, Piece* _piece)
 	SDL_RenderCopy(SDLRenderer, texture, nullptr, &Tile);
 }
 
-void Renderer::DrawCards(Game& _game)
+void Renderer::DrawCards(const Game& _game)
 {
 	SDL_Rect Tile;
 
@@ -244,7 +247,7 @@ void Renderer::DrawCards(Game& _game)
 	}
 }
 
-Color Renderer::GetPieceColor(Game& _game, Piece* _piece)
+const Color Renderer::GetPieceColor(const Game& _game, const Piece* _piece)
 {
 	E_PLAYERCOLOR playerColor = _piece->GetOwner()->GetColor();
 	bool isHovered = _game.IsHoveredPiece(_piece) && _game.IsPieceSelected() == false;
@@ -262,7 +265,7 @@ Color Renderer::GetPieceColor(Game& _game, Piece* _piece)
 	return GetColorByPlayerColor(playerColor, redPieceColor, bluePieceColor);
 }
 
-Color Renderer::GetColorByPlayerColor(E_PLAYERCOLOR _playerColor, Color _redColor, Color _blueColor) const
+const Color Renderer::GetColorByPlayerColor(E_PLAYERCOLOR _playerColor, Color _redColor, Color _blueColor) const
 {
 	if (_playerColor == E_PLAYERCOLOR::red)
 	{

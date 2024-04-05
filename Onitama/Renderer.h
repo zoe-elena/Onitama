@@ -5,11 +5,7 @@
 #include "Vector2.h"
 #include "Color.h"
 #include "Defines.h"
-
-// Forward Declaration to avoid circular include and assure the classes stil exist
-class Game;
-class Player;
-class Piece;
+#include "Game.h"
 
 class Renderer
 {
@@ -20,18 +16,18 @@ public:
 	void DrawGame(Game& _game);
 
 private:
-	SDL_Renderer* SDLRenderer;
-	SDL_Texture* textureButtonLegend;
-	SDL_Texture* textureRedWin;
-	SDL_Texture* textureBlueWin;
-	SDL_Texture* textureStudent;
-	SDL_Texture* textureMaster;
-	SDL_Texture* textureTemple;
-	SDL_Texture* textureCardDragon;
-	SDL_Texture* textureCardHorse;
-	SDL_Texture* textureCardMantis;
-	SDL_Texture* textureCardOx;
-	SDL_Texture* textureCardRabbit;
+	SDL_Renderer* SDLRenderer = nullptr;
+	SDL_Texture* textureButtonLegend = nullptr;
+	SDL_Texture* textureRedWin = nullptr;
+	SDL_Texture* textureBlueWin = nullptr;
+	SDL_Texture* textureStudent = nullptr;
+	SDL_Texture* textureMaster = nullptr;
+	SDL_Texture* textureTemple = nullptr;
+	SDL_Texture* textureCardDragon = nullptr;
+	SDL_Texture* textureCardHorse = nullptr;
+	SDL_Texture* textureCardMantis = nullptr;
+	SDL_Texture* textureCardOx = nullptr;
+	SDL_Texture* textureCardRabbit = nullptr;
 
 	std::map<E_CARDTYPE, SDL_Texture*&> cardTypeMap;
 
@@ -53,17 +49,18 @@ private:
 	const Color cardColorInteractable = Color(150, 120, 115);
 	const Color cardColorSelected = Color(170, 140, 135);
 
+	void MapCardTextures();
 	void LoadTextures();
-	void DrawBackground(Color _color) const;
-	void DrawWinScreen(E_PLAYERCOLOR _playerColor);
-	void DrawTiles(Color _color) const;
-	void DrawMoveTiles(Game& _game, Color _color) const;
-	void DrawTemple(const Player* _player)  const;
-	void DrawPieces(Game& _game, const Player* _player);
-	void DrawSinglePiece(Game& _game, Piece* _piece);
-	void DrawCards(Game& _game);
+	void DrawBackground(const Color _color) const;
 	void DrawButtonLegend();
-	Color GetPieceColor(Game& _game, Piece* _piece);
-	Color GetColorByPlayerColor(E_PLAYERCOLOR _playerColor, Color _redColor, Color _blueColor) const;
+	void DrawWinScreen(const E_PLAYERCOLOR _playerColor);
+	void DrawTiles(const Color _color) const;
+	void DrawMoveTiles(const Game& _game, const Color _color) const;
+	void DrawTemple(const Player* _player)  const;
+	void DrawPieces(const Game& _game, const Player* _player);
+	void DrawSinglePiece(const Game& _game, const Piece* _piece);
+	void DrawCards(const Game& _game);
+	const Color GetPieceColor(const Game& _game, const Piece* _piece);
+	const Color GetColorByPlayerColor(const E_PLAYERCOLOR _playerColor, const Color _redColor, const Color _blueColor) const;
 };
 

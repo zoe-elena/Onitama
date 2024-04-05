@@ -7,16 +7,20 @@ Piece::Piece()
 	type = E_PIECETYPE::none;
 }
 
-Piece::Piece(Player* _player, E_PIECETYPE _type, Vector2 _index) : player(_player), type(_type), index(_index) { }
-
-E_PLAYERCOLOR Piece::GetColor()
+Piece::Piece(Player* _player, E_PIECETYPE _type, Vector2 _index) :
+	player(_player), type(_type), index(_index)
 {
-	return player->GetColor();
 }
 
-bool Piece::isOnBoard() {
+const bool Piece::isOnBoard() const
+{
 	if (index.x == -1 && index.y == -1)
 		return false;
 	else
 		return true;
+}
+
+const E_PLAYERCOLOR Piece::GetColor() const
+{
+	return player->GetColor();
 }
