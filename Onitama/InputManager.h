@@ -6,16 +6,15 @@ class InputManager
 {
 public:
 	void PollEvents();
-
-	Vector2 GetMousePosition() const { return mousePosition; }
-	bool IsLeftMouseButtonPressed() const { return leftButtonDown; }
-	bool IsRestartButtonPressed() const { return rButtonDown; }
-	bool IsLeftArrowButtonPressed() const { return arrowLeftButtonDown; }
-	bool IsQuitButtonPressed() const { return escButtonDown; }
+	const Vector2 GetMousePosition() const { return mousePosition; }
+	const bool IsLeftMouseButtonPressed() const { return leftButtonDown; }
+	const bool IsRestartButtonPressed() const { return rButtonDown; }
+	const bool IsLeftArrowButtonPressed() const { return arrowLeftButtonDown; }
+	const bool IsQuitButtonPressed() const { return escButtonDown; }
 
 private:
-	Vector2 mousePosition;
 	SDL_Event event;
+	Vector2 mousePosition;
 	bool leftButtonDown = false;
 	bool rButtonDown = false;
 	bool arrowLeftButtonDown = false;

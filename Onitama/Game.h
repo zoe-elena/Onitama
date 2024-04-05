@@ -28,7 +28,7 @@ public:
 	const Player* GetPlayerBlue() const { return &playerBlue; }
 	const std::vector<Vector2> GetValidMoves() const { return validMovesTileIndices; }
 	const Card* GetSelectedCard() const { return selectedCard; }
-	const bool IsActivePlayer(Player* _player) const { return activePlayer == _player; }
+	const bool IsActivePlayer(const Player* _player) const { return activePlayer == _player; }
 	const bool IsSelectedPiece(Piece* _piece) const { return selectedPiece == _piece; }
 	const bool IsHoveredPiece(Piece* _piece) const { return hoveredPiece == _piece; }
 	const bool IsPieceSelected() const { return selectedPiece != nullptr; }

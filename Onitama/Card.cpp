@@ -6,7 +6,7 @@ Card::Card(Player* _player, E_CARDTYPE _cardType, E_CARDPOSITIONTYPE _cardPositi
 {
 }
 
-E_PLAYERCOLOR Card::GetOwnerColor() const
+const E_PLAYERCOLOR Card::GetOwnerColor() const
 {
 	return owner->GetColor();
 }
