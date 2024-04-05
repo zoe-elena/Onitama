@@ -22,7 +22,7 @@ Renderer::~Renderer()
 	SDL_DestroyTexture(textureCardRabbit);
 }
 
-void Renderer::DrawGame(Game& _game)
+void Renderer::DrawGame(const Game& _game)
 {
 	DrawBackground(backgroundColor);
 	DrawButtonLegend();

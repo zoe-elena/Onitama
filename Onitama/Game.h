@@ -64,7 +64,6 @@ private:
 	void TryHoverPiece(Vector2 _mousePos);
 	bool TrySelectPiece(Piece* _piece);
 	const bool IsValidMove(const Vector2 _move) const;
-	const bool TryMovePiece(const Tile _selectedTile) const;
 	const bool CheckForWin(const Piece* _capturedPiece) const;
 	void DoWin();
 	void NextPlayer(const Player* _activePlayer);

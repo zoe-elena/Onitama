@@ -91,9 +91,9 @@ void Game::ResolveLeftMouseButtonPressed(Vector2 _mousePos)
 	{
 		Piece* nextSelectedPiece = selectedTile.GetOccupyingPiece();
 
-		if (selectedPiece != nullptr)
+		if (selectedCard != nullptr && selectedPiece != nullptr)
 		{
-			if (TryMovePiece(selectedTile))
+			if (IsValidMove(selectedTile.GetIndex()))
 			{
 				auto* action = new MoveAction(selectedTile, selectedPiece, selectedCard, selectedTile.GetOccupyingPiece(), activePlayer);
 				actionStack.ExecuteAction(action, *this);
@@ -178,11 +178,6 @@ const bool Game::IsValidMove(const Vector2 _index) const
 	}
 
 	return false;
-}
-
-const bool Game::TryMovePiece(const Tile _selectedTile) const
-{
-	return IsValidMove(_selectedTile.GetIndex());
 }
 
 void Game::MovePiece(Tile _selectedTile, Piece* _selectedPiece, Card* _selectedCard, Piece* _capturedPiece, Player* _activePlayer)

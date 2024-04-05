@@ -13,7 +13,7 @@ public:
 	Renderer(SDL_Renderer* _sdlRenderer);
 	~Renderer();
 
-	void DrawGame(Game& _game);
+	void DrawGame(const Game& _game);
 
 private:
 	SDL_Renderer* sdlRenderer = nullptr;
