@@ -66,7 +66,7 @@ const bool TileManager::IsEnemyPlayerOnTile(const Tile _tile, const Player* _act
 		return false;
 	}
 
-	if (_tile.GetOccupyingPlayer() != _activePlayer)
+	if (_tile.GetOwnerColor() != _activePlayer->GetColor())
 	{
 		return true;
 	}

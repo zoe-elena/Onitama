@@ -3,6 +3,7 @@
 #include <array>
 #include "Defines.h"
 #include "Tile.h"
+#include "Player.h"
 
 class TileManager
 {

@@ -1,14 +1,13 @@
-#include "Player.h"
 #include "Piece.h"
 
 Piece::Piece()
 {
-	player = nullptr;
+	playerColor = E_PLAYERCOLOR::none;
 	type = E_PIECETYPE::none;
 }
 
-Piece::Piece(Player* _player, E_PIECETYPE _type, Vector2 _index) :
-	player(_player), type(_type), index(_index)
+Piece::Piece(E_PLAYERCOLOR _playerColor, E_PIECETYPE _type, Vector2 _index) :
+	playerColor(_playerColor), type(_type), index(_index)
 {
 }
 
@@ -18,9 +17,4 @@ const bool Piece::isOnBoard() const
 		return false;
 	else
 		return true;
-}
-
-const E_PLAYERCOLOR Piece::GetColor() const
-{
-	return player->GetColor();
 }

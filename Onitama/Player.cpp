@@ -30,9 +30,9 @@ void Player::InitPlayer()
 {
 	for (size_t i = 0; i < STUDENTS; i++)
 	{
-		playerPieces[i] = new Piece(this, E_PIECETYPE::student, initStudentPositions[i]);
+		playerPieces[i] = new Piece(color, E_PIECETYPE::student, initStudentPositions[i]);
 	}
-	playerPieces.back() = new Piece(this, E_PIECETYPE::master, initMasterPosition);
+	playerPieces.back() = new Piece(color, E_PIECETYPE::master, initMasterPosition);
 }
 
 void Player::SetInitPiecePositions(const int _row)

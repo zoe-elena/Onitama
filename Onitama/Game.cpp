@@ -122,7 +122,7 @@ void Game::TryHoverPiece(Vector2 _mousePos)
 	{
 		Piece* currentHoveredPiece = tile.GetOccupyingPiece();
 
-		if (currentHoveredPiece->GetOwner() == activePlayer)
+		if (currentHoveredPiece->GetOwnerColor() == activePlayer->GetColor())
 		{
 			hoveredPiece = currentHoveredPiece;
 			return;
@@ -140,7 +140,7 @@ void Game::SelectCard(Card* _card)
 
 bool Game::TrySelectPiece(Piece* _piece)
 {
-	return _piece->GetOwner() == activePlayer && TrySetMoveTiles(selectedCard, _piece, activePlayer);
+	return _piece->GetOwnerColor() == activePlayer->GetColor() && TrySetMoveTiles(selectedCard, _piece, activePlayer);
 }
 
 bool Game::TrySetMoveTiles(Card* _card, Piece* _piece, Player* _activePlayer)

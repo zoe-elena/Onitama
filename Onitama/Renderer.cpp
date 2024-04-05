@@ -249,7 +249,7 @@ void Renderer::DrawCards(const Game& _game)
 
 const Color Renderer::GetPieceColor(const Game& _game, const Piece* _piece)
 {
-	E_PLAYERCOLOR playerColor = _piece->GetOwner()->GetColor();
+	E_PLAYERCOLOR playerColor = _piece->GetOwnerColor();
 	bool isHovered = _game.IsHoveredPiece(_piece) && _game.IsPieceSelected() == false;
 	bool isSelected = _game.IsSelectedPiece(_piece);
 
