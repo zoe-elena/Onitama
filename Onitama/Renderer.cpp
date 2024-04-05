@@ -92,6 +92,12 @@ void Renderer::LoadTextures()
 	SDL_FreeSurface(surfaceCardRabbit);
 }
 
+void Renderer::DrawBackground(const Color _color) const
+{
+	SDL_SetRenderDrawColor(sdlRenderer, _color.r, _color.g, _color.b, SDL_ALPHA_OPAQUE);
+	SDL_RenderClear(sdlRenderer);
+}
+
 void Renderer::DrawButtonLegend()
 {
 	Color color = Color::White();
@@ -100,15 +106,9 @@ void Renderer::DrawButtonLegend()
 	SDL_Rect Tile;
 	Tile.x = TILEPADDING;
 	Tile.y = TILEPADDING * 4 + CARDHEIGHT + BOARDSIZE * TILESIZE + BOARDSIZE * TILEPADDING;
-	Tile.w = CARDHEIGHT;
+	Tile.w = CARDWIDTH;
 	Tile.h = CARDHEIGHT;
 	SDL_RenderCopy(sdlRenderer, textureButtonLegend, nullptr, &Tile);
-}
-
-void Renderer::DrawBackground(const Color _color) const
-{
-	SDL_SetRenderDrawColor(sdlRenderer, _color.r, _color.g, _color.b, SDL_ALPHA_OPAQUE);
-	SDL_RenderClear(sdlRenderer);
 }
 
 void Renderer::DrawWinScreen(const E_PLAYERCOLOR _playerColor)
