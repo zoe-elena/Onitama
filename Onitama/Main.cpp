@@ -16,7 +16,7 @@ int main(int argc, char* argv[])
 
 	SDL_Window* SDLWindow = nullptr;
 	SDL_Renderer* sdlRenderer = nullptr;
-	if (SDL_CreateWindowAndRenderer(WINDOWWIDTHSIZE, WINDOWLENGTHSIZE, 0, &SDLWindow, &sdlRenderer) == -1)
+	if (SDL_CreateWindowAndRenderer(WINDOWWIDTH, WINDOWLENGTH, 0, &SDLWindow, &sdlRenderer) == -1)
 	{
 		return 1;
 	}

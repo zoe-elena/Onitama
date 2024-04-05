@@ -17,11 +17,11 @@ public:
 	std::array<Piece*, PIECECOUNT> GetPlayerPieces() { return playerPieces; }
 	Piece* GetPlayerPiece(int _index) const { return playerPieces[_index]; }
 	const E_PLAYERCOLOR GetColor() const { return color; }
-	Vector2 GetTemplePosition() const { return templePosition; }
+	const Vector2 GetTemplePosition() const { return templePosition; }
 
 private:
 	std::array<Piece*, PIECECOUNT> playerPieces;
-	E_PLAYERCOLOR color;
+	const E_PLAYERCOLOR color;
 	std::array<Vector2, STUDENTS> initStudentPositions;
 	Vector2 initMasterPosition;
 	Vector2 templePosition;

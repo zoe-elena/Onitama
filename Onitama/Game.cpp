@@ -259,6 +259,7 @@ const bool Game::CheckForWin(const Piece* _capturedPiece) const
 
 void Game::DoWin()
 {
+	winningPlayer = activePlayer;
 	activePlayer = nullptr;
 	isWin = true;
 }

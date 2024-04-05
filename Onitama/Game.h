@@ -26,6 +26,7 @@ public:
 
 	const Player* GetPlayerRed() const { return &playerRed; }
 	const Player* GetPlayerBlue() const { return &playerBlue; }
+	const Player* GetWinningPlayer() const { return winningPlayer; }
 	const std::vector<Vector2> GetValidMoves() const { return validMovesTileIndices; }
 	const Card* GetSelectedCard() const { return selectedCard; }
 	const bool IsActivePlayer(const Player* _player) const { return activePlayer == _player; }
@@ -49,6 +50,7 @@ private:
 	Player playerBlue;
 
 	Player* activePlayer = nullptr;
+	Player* winningPlayer = nullptr;
 	Piece* hoveredPiece = nullptr;
 	Piece* selectedPiece = nullptr;
 	Card* selectedCard = nullptr;

@@ -16,6 +16,8 @@ Renderer::Renderer(SDL_Renderer* _SDLRenderer) : SDLRenderer(_SDLRenderer)
 Renderer::~Renderer()
 {
 	SDL_DestroyTexture(textureButtonLegend);
+	SDL_DestroyTexture(textureRedWin);
+	SDL_DestroyTexture(textureBlueWin);
 	SDL_DestroyTexture(textureStudent);
 	SDL_DestroyTexture(textureMaster);
 	SDL_DestroyTexture(textureTemple);
@@ -40,6 +42,10 @@ void Renderer::DrawGame(Game& _game)
 	{
 		DrawCards(_game);
 	}
+	else
+	{
+		DrawWinScreen(_game.GetWinningPlayer()->GetColor());
+	}
 
 	SDL_RenderPresent(SDLRenderer);
 }
@@ -47,6 +53,8 @@ void Renderer::DrawGame(Game& _game)
 void Renderer::LoadTextures()
 {
 	SDL_Surface* surfaceButtonLegend = SDL_LoadBMP("Extern/Images/ButtonLegend.bmp");
+	SDL_Surface* surfaceRedWin = SDL_LoadBMP("Extern/Images/RedWin.bmp");
+	SDL_Surface* surfaceBlueWin = SDL_LoadBMP("Extern/Images/BlueWin.bmp");
 	SDL_Surface* surfaceStudent = SDL_LoadBMP("Extern/Images/Student.bmp");
 	SDL_Surface* surfaceMaster = SDL_LoadBMP("Extern/Images/Master.bmp");
 	SDL_Surface* surfaceTemple = SDL_LoadBMP("Extern/Images/Temple.bmp");
@@ -57,6 +65,8 @@ void Renderer::LoadTextures()
 	SDL_Surface* surfaceCardRabbit = SDL_LoadBMP("Extern/Images/CardRabbit.bmp");
 
 	textureButtonLegend = SDL_CreateTextureFromSurface(SDLRenderer, surfaceButtonLegend);
+	textureRedWin = SDL_CreateTextureFromSurface(SDLRenderer, surfaceRedWin);
+	textureBlueWin = SDL_CreateTextureFromSurface(SDLRenderer, surfaceBlueWin);
 	textureStudent = SDL_CreateTextureFromSurface(SDLRenderer, surfaceStudent);
 	textureMaster = SDL_CreateTextureFromSurface(SDLRenderer, surfaceMaster);
 	textureTemple = SDL_CreateTextureFromSurface(SDLRenderer, surfaceTemple);
@@ -67,6 +77,8 @@ void Renderer::LoadTextures()
 	textureCardRabbit = SDL_CreateTextureFromSurface(SDLRenderer, surfaceCardRabbit);
 
 	SDL_FreeSurface(surfaceButtonLegend);
+	SDL_FreeSurface(surfaceRedWin);
+	SDL_FreeSurface(surfaceBlueWin);
 	SDL_FreeSurface(surfaceStudent);
 	SDL_FreeSurface(surfaceMaster);
 	SDL_FreeSurface(surfaceTemple);
@@ -94,6 +106,20 @@ void Renderer::DrawBackground(Color _color) const
 {
 	SDL_SetRenderDrawColor(SDLRenderer, _color.r, _color.g, _color.b, SDL_ALPHA_OPAQUE);
 	SDL_RenderClear(SDLRenderer);
+}
+
+void Renderer::DrawWinScreen(E_PLAYERCOLOR _playerColor)
+{
+	SDL_Rect Tile;
+	Tile.x = TILEPADDING;
+	Tile.y = 0;
+	Tile.w = WINDOWWIDTH;
+	Tile.h = CARDHEIGHT;
+
+	Color color = Color::White();
+	SDL_Texture* texture = _playerColor == E_PLAYERCOLOR::red ? textureRedWin : textureBlueWin;
+	SDL_SetTextureColorMod(texture, color.r, color.g, color.b);
+	SDL_RenderCopy(SDLRenderer, texture, nullptr, &Tile);
 }
 
 void Renderer::DrawTiles(Color _color) const
@@ -140,7 +166,6 @@ void Renderer::DrawTemple(const Player* _player) const
 {
 	Vector2 templePosition = _player->GetTemplePosition();
 
-	SDL_SetRenderDrawColor(SDLRenderer, 255, 0, 0, SDL_ALPHA_OPAQUE);
 	SDL_Rect Tile;
 	Tile.x = SIDEPANELWIDTH + TILEPADDING + templePosition.x * TILESIZE + templePosition.x * TILEPADDING;
 	Tile.y = CARDPANELHEIGHT + TILEPADDING + templePosition.y * TILESIZE + templePosition.y * TILEPADDING;

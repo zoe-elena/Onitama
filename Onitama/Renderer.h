@@ -22,6 +22,8 @@ public:
 private:
 	SDL_Renderer* SDLRenderer;
 	SDL_Texture* textureButtonLegend;
+	SDL_Texture* textureRedWin;
+	SDL_Texture* textureBlueWin;
 	SDL_Texture* textureStudent;
 	SDL_Texture* textureMaster;
 	SDL_Texture* textureTemple;
@@ -53,6 +55,7 @@ private:
 
 	void LoadTextures();
 	void DrawBackground(Color _color) const;
+	void DrawWinScreen(E_PLAYERCOLOR _playerColor);
 	void DrawTiles(Color _color) const;
 	void DrawMoveTiles(Game& _game, Color _color) const;
 	void DrawTemple(const Player* _player)  const;
