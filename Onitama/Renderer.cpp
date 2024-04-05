@@ -193,7 +193,6 @@ void Renderer::DrawCards(Game& _game)
 	SDL_Rect Tile;
 
 	std::array<Card*, CARDS> cards = _game.GetAllCards();
-	std::array<Vector2, CARDSLOTS> cardPositions = _game.GetAllCardPositions();
 	Color color;
 
 	for (auto& card : cards)

@@ -16,7 +16,7 @@ public:
 
 	std::array<Piece*, PIECECOUNT> GetPlayerPieces() { return playerPieces; }
 	Piece* GetPlayerPiece(int _index) const { return playerPieces[_index]; }
-	E_PLAYERCOLOR GetColor() const { return color; }
+	const E_PLAYERCOLOR GetColor() const { return color; }
 	Vector2 GetTemplePosition() const { return templePosition; }
 
 private:

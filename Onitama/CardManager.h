@@ -11,42 +11,31 @@ public:
 	CardManager(Player* _playerRed, Player* _playerBlue);
 	~CardManager();
 
-	void InitCards(Player* _activePlayer);
-	Card* GetCard(E_CARDPOSITIONTYPE _cardPositionType);
-	E_CARDPOSITIONTYPE CheckCardHover(E_PLAYERCOLOR _activePlayerColor, Vector2 _mousePos);
-	void MoveCardsAlong(Player* _activePlayer, Card* _selectedCard);
-	void MoveCardsBack(Player* _activePlayer, Card* _prevSideCard);
+	void InitCards(const Player* _activePlayer);
+	const E_CARDPOSITIONTYPE CheckCardHover(const E_PLAYERCOLOR _activePlayerColor, const Vector2 _mousePos) const;
+	void MoveCardsAlong(const Player* _activePlayer, Card* _selectedCard);
+	void MoveCardsBack(const Player* _activePlayer, Card* _prevSideCard);
 
+	Card* GetCard(const E_CARDPOSITIONTYPE _cardPositionType) const;
 	Card* GetSideCard() { return sideCard; }
 	const std::array<Card*, CARDS>& GetCards() const { return cards; }
-	const std::array<Vector2, CARDSLOTS>& GetCardPositions() const { return cardPositions; }
 	const std::map<E_CARDPOSITIONTYPE, Vector2>& GetCardPositionMap() const { return cardPositionMap; }
 
 private:
 	std::array<Card*, CARDS> cards = { nullptr };
 	Card* sideCard = nullptr;
-	std::array<Vector2, CARDSLOTS> cardPositions;
 	std::map<E_CARDPOSITIONTYPE, Vector2> cardPositionMap;
 	std::map<E_CARDPOSITIONTYPE, Player*> playerCardMap;
-
-	std::vector<Vector2> movesMantis{ Vector2(-1, -1), Vector2(1, -1), Vector2(0, 1) };
-	std::vector<Vector2> movesDragon{ Vector2(-2, -1), Vector2(-1, 1), Vector2(1, 1), Vector2(2, -1) };
-	std::vector<Vector2> movesOx{ Vector2(0, -1), Vector2(0, 1), Vector2(1, 0) };
-	std::vector<Vector2> movesHorse{ Vector2(-1, 0), Vector2(0, -1), Vector2(0, 1) };
-	std::vector<Vector2> movesRabbit{ Vector2(-1, 1), Vector2(1, -1), Vector2(2, 0) };
-
 	Player* playerBlue;
 	Player* playerRed;
 
-	int leftCardsX = SIDEPANELWIDTH + TILEPADDING;
-	int rightCardsX = leftCardsX + CARDWIDTH + TILEPADDING * 2;
-	int sideCardY = (WINDOWLENGTHSIZE - CARDHEIGHT) / 2;
-	int sideCardRightX = rightCardsX + CARDWIDTH + TILEPADDING;
-	int topCardsY = TILEPADDING;
-	int bottomCardsY = TILEPADDING * 4 + CARDHEIGHT + BOARDSIZE * TILESIZE + BOARDSIZE * TILEPADDING;
-	int sideCardLeftX = TILEPADDING;
+	const std::vector<Vector2> movesMantis{ Vector2(-1, -1), Vector2(1, -1), Vector2(0, 1) };
+	const std::vector<Vector2> movesDragon{ Vector2(-2, -1), Vector2(-1, 1), Vector2(1, 1), Vector2(2, -1) };
+	const std::vector<Vector2> movesOx{ Vector2(0, -1), Vector2(0, 1), Vector2(1, 0) };
+	const std::vector<Vector2> movesHorse{ Vector2(-1, 0), Vector2(0, -1), Vector2(0, 1) };
+	const std::vector<Vector2> movesRabbit{ Vector2(-1, 1), Vector2(1, -1), Vector2(2, 0) };
 
-	bool IsMouseHoveringOverCard(int x, int y, int mouseX, int mouseY);
+	const bool IsMouseHoveringOverCard(const int x, const int y, const int mouseX, const int mouseY) const;
 	void MapCardPositions();
 	void MapPlayerCards();
 };

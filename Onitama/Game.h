@@ -34,7 +34,6 @@ public:
 	const bool IsPieceSelected() const { return selectedPiece != nullptr; }
 	const bool IsWin() const { return isWin; }
 	const std::array<Card*, CARDS> GetAllCards() const { return cardManager.GetCards(); }
-	const std::array<Vector2, CARDSLOTS> GetAllCardPositions() const { return cardManager.GetCardPositions(); }
 	const std::map<E_CARDPOSITIONTYPE, Vector2> GetCardPositionMap() const { return cardManager.GetCardPositionMap(); }
 
 private:
