@@ -1,7 +1,7 @@
 #include "SDL.h"
 #include "Renderer.h"
 
-Renderer::Renderer(SDL_Renderer* _SDLRenderer) : SDLRenderer(_SDLRenderer)
+Renderer::Renderer(SDL_Renderer* _sdlRenderer) : sdlRenderer(_sdlRenderer)
 {
 	MapCardTextures();
 	LoadTextures();
@@ -41,7 +41,7 @@ void Renderer::DrawGame(Game& _game)
 		DrawWinScreen(_game.GetWinningPlayer()->GetColor());
 	}
 
-	SDL_RenderPresent(SDLRenderer);
+	SDL_RenderPresent(sdlRenderer);
 }
 
 void Renderer::MapCardTextures()
@@ -67,17 +67,17 @@ void Renderer::LoadTextures()
 	SDL_Surface* surfaceCardOx = SDL_LoadBMP("Extern/Images/CardOx.bmp");
 	SDL_Surface* surfaceCardRabbit = SDL_LoadBMP("Extern/Images/CardRabbit.bmp");
 
-	textureButtonLegend = SDL_CreateTextureFromSurface(SDLRenderer, surfaceButtonLegend);
-	textureRedWin = SDL_CreateTextureFromSurface(SDLRenderer, surfaceRedWin);
-	textureBlueWin = SDL_CreateTextureFromSurface(SDLRenderer, surfaceBlueWin);
-	textureStudent = SDL_CreateTextureFromSurface(SDLRenderer, surfaceStudent);
-	textureMaster = SDL_CreateTextureFromSurface(SDLRenderer, surfaceMaster);
-	textureTemple = SDL_CreateTextureFromSurface(SDLRenderer, surfaceTemple);
-	textureCardDragon = SDL_CreateTextureFromSurface(SDLRenderer, surfaceCardDragon);
-	textureCardHorse = SDL_CreateTextureFromSurface(SDLRenderer, surfaceCardHorse);
-	textureCardMantis = SDL_CreateTextureFromSurface(SDLRenderer, surfaceCardMantis);
-	textureCardOx = SDL_CreateTextureFromSurface(SDLRenderer, surfaceCardOx);
-	textureCardRabbit = SDL_CreateTextureFromSurface(SDLRenderer, surfaceCardRabbit);
+	textureButtonLegend = SDL_CreateTextureFromSurface(sdlRenderer, surfaceButtonLegend);
+	textureRedWin = SDL_CreateTextureFromSurface(sdlRenderer, surfaceRedWin);
+	textureBlueWin = SDL_CreateTextureFromSurface(sdlRenderer, surfaceBlueWin);
+	textureStudent = SDL_CreateTextureFromSurface(sdlRenderer, surfaceStudent);
+	textureMaster = SDL_CreateTextureFromSurface(sdlRenderer, surfaceMaster);
+	textureTemple = SDL_CreateTextureFromSurface(sdlRenderer, surfaceTemple);
+	textureCardDragon = SDL_CreateTextureFromSurface(sdlRenderer, surfaceCardDragon);
+	textureCardHorse = SDL_CreateTextureFromSurface(sdlRenderer, surfaceCardHorse);
+	textureCardMantis = SDL_CreateTextureFromSurface(sdlRenderer, surfaceCardMantis);
+	textureCardOx = SDL_CreateTextureFromSurface(sdlRenderer, surfaceCardOx);
+	textureCardRabbit = SDL_CreateTextureFromSurface(sdlRenderer, surfaceCardRabbit);
 
 	SDL_FreeSurface(surfaceButtonLegend);
 	SDL_FreeSurface(surfaceRedWin);
@@ -95,20 +95,20 @@ void Renderer::LoadTextures()
 void Renderer::DrawButtonLegend()
 {
 	Color color = Color::White();
-	SDL_SetRenderDrawColor(SDLRenderer, color.r, color.g, color.b, color.a);
+	SDL_SetRenderDrawColor(sdlRenderer, color.r, color.g, color.b, color.a);
 
 	SDL_Rect Tile;
 	Tile.x = TILEPADDING;
 	Tile.y = TILEPADDING * 4 + CARDHEIGHT + BOARDSIZE * TILESIZE + BOARDSIZE * TILEPADDING;
 	Tile.w = CARDHEIGHT;
 	Tile.h = CARDHEIGHT;
-	SDL_RenderCopy(SDLRenderer, textureButtonLegend, nullptr, &Tile);
+	SDL_RenderCopy(sdlRenderer, textureButtonLegend, nullptr, &Tile);
 }
 
 void Renderer::DrawBackground(const Color _color) const
 {
-	SDL_SetRenderDrawColor(SDLRenderer, _color.r, _color.g, _color.b, SDL_ALPHA_OPAQUE);
-	SDL_RenderClear(SDLRenderer);
+	SDL_SetRenderDrawColor(sdlRenderer, _color.r, _color.g, _color.b, SDL_ALPHA_OPAQUE);
+	SDL_RenderClear(sdlRenderer);
 }
 
 void Renderer::DrawWinScreen(const E_PLAYERCOLOR _playerColor)
@@ -122,7 +122,7 @@ void Renderer::DrawWinScreen(const E_PLAYERCOLOR _playerColor)
 	Color color = Color::White();
 	SDL_Texture* texture = _playerColor == E_PLAYERCOLOR::red ? textureRedWin : textureBlueWin;
 	SDL_SetTextureColorMod(texture, color.r, color.g, color.b);
-	SDL_RenderCopy(SDLRenderer, texture, nullptr, &Tile);
+	SDL_RenderCopy(sdlRenderer, texture, nullptr, &Tile);
 }
 
 void Renderer::DrawTiles(const Color _color) const
@@ -131,14 +131,14 @@ void Renderer::DrawTiles(const Color _color) const
 	{
 		for (size_t j = 0; j < BOARDSIZE; j++)
 		{
-			SDL_SetRenderDrawColor(SDLRenderer, _color.r, _color.g, _color.b, _color.a);
+			SDL_SetRenderDrawColor(sdlRenderer, _color.r, _color.g, _color.b, _color.a);
 
 			SDL_Rect Tile;
 			Tile.x = SIDEPANELWIDTH + TILEPADDING + i * TILESIZE + i * TILEPADDING;
 			Tile.y = CARDPANELHEIGHT + TILEPADDING + j * TILESIZE + j * TILEPADDING;
 			Tile.w = TILESIZE;
 			Tile.h = TILESIZE;
-			SDL_RenderFillRect(SDLRenderer, &Tile);
+			SDL_RenderFillRect(sdlRenderer, &Tile);
 		}
 	}
 }
@@ -154,14 +154,14 @@ void Renderer::DrawMoveTiles(const Game& _game, const Color _color) const
 
 	for (auto& moveTile : moveTiles)
 	{
-		SDL_SetRenderDrawColor(SDLRenderer, _color.r, _color.g, _color.b, _color.a);
+		SDL_SetRenderDrawColor(sdlRenderer, _color.r, _color.g, _color.b, _color.a);
 
 		SDL_Rect Tile;
 		Tile.x = SIDEPANELWIDTH + TILEPADDING + moveTile.x * TILESIZE + moveTile.x * TILEPADDING;
 		Tile.y = CARDPANELHEIGHT + TILEPADDING + moveTile.y * TILESIZE + moveTile.y * TILEPADDING;
 		Tile.w = TILESIZE;
 		Tile.h = TILESIZE;
-		SDL_RenderFillRect(SDLRenderer, &Tile);
+		SDL_RenderFillRect(sdlRenderer, &Tile);
 	}
 }
 
@@ -179,7 +179,7 @@ void Renderer::DrawTemple(const Player* _player) const
 	Color color = GetColorByPlayerColor(playerColor, redTempleColor, blueTempleColor);
 
 	SDL_SetTextureColorMod(textureTemple, color.r, color.g, color.b);
-	SDL_RenderCopy(SDLRenderer, textureTemple, nullptr, &Tile);
+	SDL_RenderCopy(sdlRenderer, textureTemple, nullptr, &Tile);
 }
 
 void Renderer::DrawPieces(const Game& _game, const Player* _player)
@@ -213,7 +213,7 @@ void Renderer::DrawSinglePiece(const Game& _game, const Piece* _piece)
 
 	Color color = GetPieceColor(_game, _piece);
 	SDL_SetTextureColorMod(texture, color.r, color.g, color.b);
-	SDL_RenderCopy(SDLRenderer, texture, nullptr, &Tile);
+	SDL_RenderCopy(sdlRenderer, texture, nullptr, &Tile);
 }
 
 void Renderer::DrawCards(const Game& _game)
@@ -243,7 +243,7 @@ void Renderer::DrawCards(const Game& _game)
 
 		SDL_Texture* tempCardTexture = cardTypeMap.find(card->GetCardType())->second;
 		SDL_SetTextureColorMod(tempCardTexture, color.r, color.g, color.b);
-		SDL_RenderCopyEx(SDLRenderer, tempCardTexture, nullptr, &Tile, cardRotation, nullptr, SDL_FLIP_NONE);
+		SDL_RenderCopyEx(sdlRenderer, tempCardTexture, nullptr, &Tile, cardRotation, nullptr, SDL_FLIP_NONE);
 	}
 }
 

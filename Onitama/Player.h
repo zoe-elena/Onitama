@@ -25,7 +25,7 @@ private:
 	Vector2 templePosition;
 
 	void InitPlayer();
-	void SetInitPiecePositions(int _row);
-	void SetInitTemplePositions(int _row);
+	void SetInitPiecePositions(const int _row);
+	void SetInitTemplePositions(const int _row);
 };
 

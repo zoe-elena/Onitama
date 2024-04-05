@@ -35,7 +35,7 @@ void Player::InitPlayer()
 	playerPieces.back() = new Piece(this, E_PIECETYPE::master, initMasterPosition);
 }
 
-void Player::SetInitPiecePositions(int _row)
+void Player::SetInitPiecePositions(const int _row)
 {
 	initStudentPositions[0] = Vector2(0, _row);
 	initStudentPositions[1] = Vector2(1, _row);
@@ -44,7 +44,7 @@ void Player::SetInitPiecePositions(int _row)
 	initStudentPositions[3] = Vector2(4, _row);
 }
 
-void Player::SetInitTemplePositions(int _row)
+void Player::SetInitTemplePositions(const int _row)
 {
 	templePosition = Vector2(2, _row);
 }

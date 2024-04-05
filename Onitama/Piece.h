@@ -13,9 +13,9 @@ public:
 	const bool isOnBoard() const;
 	const E_PLAYERCOLOR GetColor() const;
 	const Vector2 GetIndex() const { return index; }
-	void SetIndex(Vector2 _index) { index = _index; }
+	void SetIndex(const Vector2 _index) { index = _index; }
 	const bool IsCaptured() const { return isCaptured; }
-	void SetCaptured(bool _isCaptured) { isCaptured = _isCaptured; }
+	void SetCaptured(const bool _isCaptured) { isCaptured = _isCaptured; }
 	const Player* GetOwner() const { return player; }
 	const int GetXIndex() const { return index.x; }
 	const int GetYIndex() const { return index.y; }

@@ -16,7 +16,7 @@ public:
 	void DrawGame(Game& _game);
 
 private:
-	SDL_Renderer* SDLRenderer = nullptr;
+	SDL_Renderer* sdlRenderer = nullptr;
 	SDL_Texture* textureButtonLegend = nullptr;
 	SDL_Texture* textureRedWin = nullptr;
 	SDL_Texture* textureBlueWin = nullptr;
