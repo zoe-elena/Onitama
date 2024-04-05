@@ -1,3 +1,4 @@
+#include <iostream>
 #include <chrono>
 #include <thread>
 #include "SDL.h"
@@ -26,22 +27,22 @@ int main(int argc, char* argv[])
 	do	{
 		Game game(sdlRenderer);
 		Renderer renderer(sdlRenderer);
-		while (game.HasQuit() == false && game.DoRestart() == false)
+		while (game.DoQuit() == false && game.DoRestart() == false)
 		{
 			game.Update();
 			renderer.DrawGame(game);
 
-			PrintFPS(frameStartTime, fpsCounter);
+			//PrintFPS(frameStartTime, fpsCounter);
 			std::this_thread::sleep_for(std::chrono::milliseconds(50));
 		}
 		restart = game.DoRestart();
 	} while (restart);
 
-	if (sdlRenderer)
+	if (sdlRenderer != nullptr)
 	{
 		SDL_DestroyRenderer(sdlRenderer);
 	}
-	if (SDLWindow)
+	if (SDLWindow != nullptr)
 	{
 		SDL_DestroyWindow(SDLWindow);
 	}

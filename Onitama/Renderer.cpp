@@ -36,7 +36,10 @@ void Renderer::DrawGame(Game& _game)
 	DrawTemple(_game.GetPlayerBlue());
 	DrawPieces(_game, _game.GetPlayerRed());
 	DrawPieces(_game, _game.GetPlayerBlue());
-	DrawCards(_game);
+	if(_game.IsWin() == false)
+	{
+		DrawCards(_game);
+	}
 
 	SDL_RenderPresent(SDLRenderer);
 }

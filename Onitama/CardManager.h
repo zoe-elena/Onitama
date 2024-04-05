@@ -32,7 +32,7 @@ private:
 	std::vector<Vector2> movesMantis{ Vector2(-1, -1), Vector2(1, -1), Vector2(0, 1) };
 	std::vector<Vector2> movesDragon{ Vector2(-2, -1), Vector2(-1, 1), Vector2(1, 1), Vector2(2, -1) };
 	std::vector<Vector2> movesOx{ Vector2(0, -1), Vector2(0, 1), Vector2(1, 0) };
-	std::vector<Vector2> movesHorse{ Vector2(-1, 0), Vector2(0, -4), Vector2(0, 1) };
+	std::vector<Vector2> movesHorse{ Vector2(-1, 0), Vector2(0, -1), Vector2(0, 1) };
 	std::vector<Vector2> movesRabbit{ Vector2(-1, 1), Vector2(1, -1), Vector2(2, 0) };
 
 	Player* playerBlue;

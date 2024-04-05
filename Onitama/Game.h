@@ -1,19 +1,20 @@
 #pragma once
-#include <iostream>
 #include "SDL.h"
 #include "ActionStack.h"
-#include "Player.h"
-#include "TileManager.h"
 #include "InputManager.h"
+#include "TileManager.h"
 #include "CardManager.h"
+#include "Player.h"
 
 class Game
 {
 public:
 	Game(SDL_Renderer* _SDLRenderer);
 
-	void InitGame();
+	const bool DoQuit() const { return hasQuit; }
+	const bool DoRestart() const { return hasRestart; }
 	void Update();
+
 	void SelectCard(Card* _card);
 	void SelectPiece(Piece* _piece);
 	bool TrySetMoveTiles(Card* _card, Piece* _piece, Player* _activePlayer);
@@ -25,48 +26,46 @@ public:
 
 	const Player* GetPlayerRed() const { return &playerRed; }
 	const Player* GetPlayerBlue() const { return &playerBlue; }
-	Tile GetTile(const Vector2 _index) const { return tileManager.GetTile(_index); }
-	bool HasQuit() const { return hasQuit; }
-	bool DoRestart() const { return hasRestart; }
-	std::vector<Vector2> GetValidMoves() const { return validMovesTileIndices; }
-	Card* GetSelectedCard() const { return selectedCard; }
-	bool IsActivePlayer(Player* _player) const { return activePlayer == _player; }
-	Piece* GetHoveredPiece() const { return hoveredPiece; }
-	Piece* GetSelectedPiece() const { return selectedPiece; }
-	bool IsSelectedCard(Card* _card) const { return selectedCard == _card; }
-	bool IsSelectedPiece(Piece* _piece) const { return selectedPiece == _piece; }
-	bool IsHoveredPiece(Piece* _piece) const { return hoveredPiece == _piece; }
-	bool IsPieceSelected() const { return selectedPiece != nullptr; }
-	std::array<Card*, CARDS> GetAllCards() const { return cardManager.GetCards(); }
-	std::array<Vector2, CARDSLOTS> GetAllCardPositions() const { return cardManager.GetCardPositions(); }
-	std::map<E_CARDPOSITIONTYPE, Vector2> GetCardPositionMap() { return cardManager.GetCardPositionMap(); }
+	const std::vector<Vector2> GetValidMoves() const { return validMovesTileIndices; }
+	const Card* GetSelectedCard() const { return selectedCard; }
+	const bool IsActivePlayer(Player* _player) const { return activePlayer == _player; }
+	const bool IsSelectedPiece(Piece* _piece) const { return selectedPiece == _piece; }
+	const bool IsHoveredPiece(Piece* _piece) const { return hoveredPiece == _piece; }
+	const bool IsPieceSelected() const { return selectedPiece != nullptr; }
+	const bool IsWin() const { return isWin; }
+	const std::array<Card*, CARDS> GetAllCards() const { return cardManager.GetCards(); }
+	const std::array<Vector2, CARDSLOTS> GetAllCardPositions() const { return cardManager.GetCardPositions(); }
+	const std::map<E_CARDPOSITIONTYPE, Vector2> GetCardPositionMap() const { return cardManager.GetCardPositionMap(); }
 
 private:
 	bool isWin = false;
 	bool hasQuit = false;
 	bool hasRestart = false;
-	ActionStack actionStack;
 
+	ActionStack actionStack;
+	InputManager inputManager;
+	TileManager tileManager;
+	CardManager cardManager;
 	Player playerRed;
 	Player playerBlue;
-	Player* activePlayer = nullptr;
-	TileManager tileManager;
-	InputManager inputManager;
-	CardManager cardManager;
 
+	Player* activePlayer = nullptr;
 	Piece* hoveredPiece = nullptr;
 	Piece* selectedPiece = nullptr;
 	Card* selectedCard = nullptr;
 	std::vector<Vector2> validMovesTileIndices;
 
+	void InitGame();
 	void UpdateTilePointer();
+	bool CheckForGameEnd();
 	void DoTurn();
-	void CheckForWin(Piece* _capturedPiece);
-	void UnselectAll();
-	void ResolveLeftMouseDown(Vector2 _mousePos);
+	void ResolveLeftMouseButtonPressed(Vector2 _mousePos);
 	void TryHoverPiece(Vector2 _mousePos);
-	bool TryMovePiece(Tile _tile);
 	bool TrySelectPiece(Piece* _piece);
-	bool IsValidMove(Vector2 _move);
-	void NextPlayer(Player* _activePlayer);
+	const bool IsValidMove(const Vector2 _move) const;
+	const bool TryMovePiece(const Tile _selectedTile) const;
+	const bool CheckForWin(const Piece* _capturedPiece) const;
+	void DoWin();
+	void NextPlayer(const Player* _activePlayer);
+	void UnselectAll();
 };

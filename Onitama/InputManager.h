@@ -8,10 +8,10 @@ public:
 	void PollEvents();
 
 	Vector2 GetMousePosition() const { return mousePosition; }
-	bool IsMouseButtonDown() const { return leftButtonDown; }
-	bool IsRButtonDown() const { return rButtonDown; }
-	bool IsArrowLeftButtonDown() const { return arrowLeftButtonDown; }
-	bool IsEscButtonDown() const { return escButtonDown; }
+	bool IsLeftMouseButtonPressed() const { return leftButtonDown; }
+	bool IsRestartButtonPressed() const { return rButtonDown; }
+	bool IsLeftArrowButtonPressed() const { return arrowLeftButtonDown; }
+	bool IsQuitButtonPressed() const { return escButtonDown; }
 
 private:
 	Vector2 mousePosition;

@@ -6,7 +6,8 @@
 #include "SelectCardAction.h"
 #include "SelectPieceAction.h"
 
-Game::Game(SDL_Renderer* _sdlRenderer) : playerRed(E_PLAYERCOLOR::red), playerBlue(E_PLAYERCOLOR::blue), cardManager(&playerRed, &playerBlue)
+Game::Game(SDL_Renderer* _sdlRenderer) :
+	playerRed(E_PLAYERCOLOR::red), playerBlue(E_PLAYERCOLOR::blue), cardManager(&playerRed, &playerBlue)
 {
 	InitGame();
 }
@@ -26,26 +27,18 @@ void Game::Update()
 {
 	inputManager.PollEvents();
 
-	if (inputManager.IsEscButtonDown())
+	if (CheckForGameEnd() || isWin)
 	{
-		hasQuit = true;
-		return;
-	}
-	else if (inputManager.IsRButtonDown())
-	{
-		hasRestart = true;
 		return;
 	}
 
-	if (isWin == false)
-	{
-		DoTurn();
-	}
-
-	if (inputManager.IsArrowLeftButtonDown())
+	if (inputManager.IsLeftArrowButtonPressed())
 	{
 		actionStack.UndoLastAction(*this);
+		return;
 	}
+
+	DoTurn();
 }
 
 void Game::UpdateTilePointer()
@@ -57,14 +50,30 @@ void Game::UpdateTilePointer()
 	}
 }
 
+bool Game::CheckForGameEnd()
+{
+	if (inputManager.IsQuitButtonPressed())
+	{
+		hasQuit = true;
+		return true;
+	}
+	else if (inputManager.IsRestartButtonPressed())
+	{
+		hasRestart = true;
+		return true;
+	}
+
+	return false;
+}
+
 void Game::DoTurn()
 {
 	Vector2 currentMousePos = inputManager.GetMousePosition();
-	bool leftMouseButtonDown = inputManager.IsMouseButtonDown();
+	bool leftMouseButtonDown = inputManager.IsLeftMouseButtonPressed();
 
 	if (leftMouseButtonDown)
 	{
-		ResolveLeftMouseDown(currentMousePos);
+		ResolveLeftMouseButtonPressed(currentMousePos);
 	}
 	else if (selectedCard)
 	{
@@ -72,25 +81,7 @@ void Game::DoTurn()
 	}
 }
 
-void Game::NextPlayer(Player* _activePlayer)
-{
-	if (_activePlayer == &playerRed)
-	{
-		activePlayer = &playerBlue;
-	}
-	else
-	{
-		activePlayer = &playerRed;
-	}
-}
-
-void Game::UnselectAll()
-{
-	selectedCard = nullptr;
-	selectedPiece = nullptr;
-}
-
-void Game::ResolveLeftMouseDown(Vector2 _mousePos)
+void Game::ResolveLeftMouseButtonPressed(Vector2 _mousePos)
 {
 	Vector2 tileIndex = tileManager.GetClosestTile(_mousePos);
 	Tile selectedTile = tileManager.GetTile(tileIndex);
@@ -121,7 +112,75 @@ void Game::ResolveLeftMouseDown(Vector2 _mousePos)
 	}
 }
 
-bool Game::TryMovePiece(Tile _selectedTile)
+void Game::TryHoverPiece(Vector2 _mousePos)
+{
+	Vector2 mouseIndex = tileManager.GetClosestTile(_mousePos);
+	Tile tile = tileManager.GetTile(mouseIndex);
+
+	// Check for Piece on mouse position
+	if (tileManager.IsInBounds(tile) && tile.IsOccupied())
+	{
+		Piece* currentHoveredPiece = tile.GetOccupyingPiece();
+
+		if (currentHoveredPiece->GetOwner() == activePlayer)
+		{
+			hoveredPiece = currentHoveredPiece;
+			return;
+		}
+	}
+
+	// Unhover last hovered piece if no new piece gets hovered
+	hoveredPiece = nullptr;
+}
+
+void Game::SelectCard(Card* _card)
+{
+	selectedCard = _card;
+}
+
+bool Game::TrySelectPiece(Piece* _piece)
+{
+	return _piece->GetOwner() == activePlayer && TrySetMoveTiles(selectedCard, _piece, activePlayer);
+}
+
+bool Game::TrySetMoveTiles(Card* _card, Piece* _piece, Player* _activePlayer)
+{
+	if (_card == nullptr || _piece == nullptr)
+	{
+		return false;
+	}
+
+	std::vector<Vector2> selectedCardMoves = _card->GetMoves();
+	std::vector<Vector2> tempValidMovesTileIndices = tileManager.GetValidMoveTileIndices(selectedCardMoves, _piece->GetIndex(), _activePlayer);
+
+	if (tempValidMovesTileIndices.empty() == false)
+	{
+		validMovesTileIndices = tempValidMovesTileIndices;
+		return true;
+	}
+
+	return false;
+}
+
+void Game::SelectPiece(Piece* _piece)
+{
+	selectedPiece = _piece;
+}
+
+const bool Game::IsValidMove(const Vector2 _index) const
+{
+	for (auto& tileIndex : validMovesTileIndices)
+	{
+		if (tileIndex == _index)
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
+
+const bool Game::TryMovePiece(const Tile _selectedTile) const
 {
 	return IsValidMove(_selectedTile.GetIndex());
 }
@@ -134,8 +193,11 @@ void Game::MovePiece(Tile _selectedTile, Piece* _selectedPiece, Card* _selectedC
 	tileManager.SetTilePiece(_selectedPiece);
 	validMovesTileIndices.clear();
 
-	CheckForWin(_capturedPiece);
-	if (isWin == false)
+	if (CheckForWin(_capturedPiece))
+	{
+		DoWin();
+	}
+	else
 	{
 		cardManager.MoveCardsAlong(_activePlayer, _selectedCard);
 		NextPlayer(_activePlayer);
@@ -173,95 +235,48 @@ void Game::MovePieceBack(Tile _prevTile, Piece* _piece, Card* _selectedCard, Car
 	TrySetMoveTiles(selectedCard, selectedPiece, activePlayer);
 }
 
-void Game::CheckForWin(Piece* _capturedPiece)
+const bool Game::CheckForWin(const Piece* _capturedPiece) const
 {
 	if (_capturedPiece && _capturedPiece->IsMaster())
 	{
-		isWin = true;
+		return true;
 	}
 
 	if (selectedPiece->IsMaster())
 	{
 		if (activePlayer == &playerRed)
 		{
-			isWin = selectedPiece->GetIndex() == playerBlue.GetTemplePosition();
+			return selectedPiece->GetIndex() == playerBlue.GetTemplePosition();
 		}
 		else if (activePlayer == &playerBlue)
 		{
-			isWin = selectedPiece->GetIndex() == playerRed.GetTemplePosition();
-		}
-	}
-
-	if (isWin)
-	{
-		activePlayer = nullptr;
-	}
-}
-
-bool Game::TrySelectPiece(Piece* _piece)
-{
-	return _piece->GetOwner() == activePlayer && TrySetMoveTiles(selectedCard, _piece, activePlayer);
-}
-
-bool Game::IsValidMove(Vector2 _index)
-{
-	for (auto& tileIndex : validMovesTileIndices)
-	{
-		if (tileIndex == _index)
-		{
-			return true;
+			return selectedPiece->GetIndex() == playerRed.GetTemplePosition();
 		}
 	}
 
 	return false;
 }
 
-void Game::SelectCard(Card* _card)
+void Game::DoWin()
 {
-	selectedCard = _card;
+	activePlayer = nullptr;
+	isWin = true;
 }
 
-void Game::TryHoverPiece(Vector2 _mousePos)
+void Game::NextPlayer(const Player* _activePlayer)
 {
-	Vector2 mouseIndex = tileManager.GetClosestTile(_mousePos);
-	Tile tile = tileManager.GetTile(mouseIndex);
-
-	// Check for Piece on mouse position
-	if (tileManager.IsInBounds(tile) && tile.IsOccupied())
+	if (_activePlayer == &playerRed)
 	{
-		Piece* currentHoveredPiece = tile.GetOccupyingPiece();
-
-		if (currentHoveredPiece->GetOwner() == activePlayer)
-		{
-			hoveredPiece = currentHoveredPiece;
-			return;
-		}
+		activePlayer = &playerBlue;
 	}
-
-	// Unhover last hovered piece if no new piece gets hovered
-	hoveredPiece = nullptr;
+	else
+	{
+		activePlayer = &playerRed;
+	}
 }
 
-bool Game::TrySetMoveTiles(Card* _card, Piece* _piece, Player* _activePlayer)
+void Game::UnselectAll()
 {
-	if (_card == nullptr || _piece == nullptr)
-	{
-		return false;
-	}
-
-	std::vector<Vector2> selectedCardMoves = _card->GetMoves();
-	std::vector<Vector2> tempValidMovesTileIndices = tileManager.GetValidMoveTileIndices(selectedCardMoves, _piece->GetIndex(), _activePlayer);
-
-	if (tempValidMovesTileIndices.empty() == false)
-	{
-		validMovesTileIndices = tempValidMovesTileIndices;
-		return true;
-	}
-
-	return false;
-}
-
-void Game::SelectPiece(Piece* _piece)
-{
-	selectedPiece = _piece;
+	selectedCard = nullptr;
+	selectedPiece = nullptr;
 }
